@@ -1,0 +1,12 @@
+<p>Here is 2 number and 1 operation
+    <br>
+    guess what is the right answer
+</p>
+<form action="/guess-answer" method="POST">
+    {{firstnumber}} {{operation}} {{secondnumber}} =
+    <input type="hidden" name="firstnumber" value="{{firstnumber}}">
+    <input type="hidden" name="secondnumber" value="{{secondnumber}}">
+    <input type="hidden" name="operation" value="{{operation}}">
+    <input type="text" name="answer">
+    <input type="submit" value="Guess!">
+</form>

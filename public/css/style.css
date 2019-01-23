@@ -1,0 +1,27 @@
+#entirepage{
+    width: 600px;
+    border: 1px solid black;
+    background-color: aqua;
+    margin: 0 auto;
+}
+
+header{
+	text-align: center;
+	font-size: 300%;
+	border-bottom: 1px solid black;
+}
+
+nav{
+	border-bottom: 1px solid black;
+}
+nav ul{
+    margin:0 ;
+    padding: 5px;
+}
+nav ul li {
+    display: inline;
+}
+
+main{
+    padding: 5px;
+}
