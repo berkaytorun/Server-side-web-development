@@ -2,14 +2,28 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 
-const app = express()
-const operators = {
-    '+': function (a, b) { return a + b },
-    '-': function (a, b) { return a - b },
-    '/': function (a, b) { return a / b },
-    '*': function (a, b) { return a * b }
-};
+const posts = [
+        {
+            id: 1,
+            name: "Alice",
+            message: "Great website!"
+        }, {
+            id: 2,
+            name: "Bob",
+            message: "Hello!"
+        }, {
+            id: 3,
+            name: "Claire",
+            message: "Hi!"
+        }, {
+            id: 4,
+            name: "Claire",
+            message: "Hi!"
+        }
+    ]
 
+
+const app = express()
 
 app.use(express.static("public"))
 
@@ -28,63 +42,34 @@ app.get('/about', function (request, response) {
     response.render("about.hbs")
 })
 
-app.get('/calculator', function (request, response) {
+app.get('/login', function (request, response) {
 
-    response.render("calculator.hbs")
-})
-
-app.get('/calculator/answer', function (request, response) {
-
-
-    const firstnumber = parseInt(request.query.first)
-    const secondnumber = parseInt(request.query.second)
-    const operation = request.query.operation
-    const answer = operators[operation](firstnumber, secondnumber)
-
-    const model = {
-        operation: operation,
-        firstnumber: firstnumber,
-        secondnumber: secondnumber,
-        answer: answer
-    }
-    response.render("view-answer.hbs", model)
+    response.render("login.hbs")
 })
 
 
-app.get('/guess', function (request, response) {
-    const operations = ['+', '-', '/', '*']
-    const firstnumber = Math.floor(Math.random() * 10) + 1
-    const secondnumber = Math.floor(Math.random() * 10) + 1
+app.post('/books', function (request, response) {
 
-    const operation = operations[Math.floor(Math.random() * 3)]
-    const model = {
-
-        operation: operation,
-        firstnumber: firstnumber,
-        secondnumber: secondnumber,
-    }
-    response.render("guess.hbs", model)
+    response.render("login.hbs")
+})
+app.get('/books/:id', function (request, response) {
+	const model = {
+		posts: posts
+	}
+    response.render("books/books_search.hbs", model)
 })
 
-app.post('/guess-answer', function (request, response) {
+/*
+app.update('/books/:id', function (request, response) {
 
-    const firstnumber = parseInt(request.body.firstnumber)
-    const secondnumber = parseInt(request.body.secondnumber)
-    const operation = request.body.operation
-    const answer = request.body.answer
-    const realanswer = operators[operation](firstnumber, secondnumber)
-    var str = ""
-    if (answer == realanswer) {
-        str = "Correct!"
-    }
-    else {
-        str = "Wrong!"
-    }
-
-    model = {
-        str: str
-    }
-    response.render('guess-answer.hbs', model)
-
+    response.render("login.hbs")
 })
+app.delete('/books/:id', function (request, response) {
+    
+    response.render("login.hbs")
+})
+*/
+
+
+
 app.listen(8080)
