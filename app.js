@@ -1,5 +1,5 @@
 const express = require('express')
-const handlebars = require('express-handlebars')
+const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 
 const app = express()
@@ -16,7 +16,7 @@ app.use(express.static("public"))
 app.use(bodyParser.urlencoded({
     extended: false
 }))
-app.engine('hbs', handlebars({
+app.engine('hbs', hbs({
     defaultLayout: 'main',
     extname: '.hbs'
 }))
