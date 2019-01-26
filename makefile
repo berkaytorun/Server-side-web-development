@@ -6,3 +6,6 @@ install:
 	npm install express
 	npm install express-handlebars
 	npm install body-parser
+
+	npm install --save sqlite3
+	npm install --save sequelize

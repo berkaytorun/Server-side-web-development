@@ -1,6 +1,24 @@
 const express = require('express')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const requestHandler = require('./dal/request_handler')
+
+const createAccount = requestHandler.createAccount
+const createBook = requestHandler.createBook
+
+
+var Account
+var Book
+const db = require('./dal/models')
+db.init({
+    force: true
+}).then((models) => {
+    Account = models.Account,
+    Book = models.Book
+}).catch(reason => {
+    console.log("bug")
+})
+   
 
 const posts = [
         {
@@ -23,6 +41,8 @@ const posts = [
     ]
 
 
+
+
 const app = express()
 
 app.use(express.static("public"))
@@ -35,38 +55,97 @@ app.engine('hbs', hbs({
     extname: '.hbs'
 }))
 
-app.get('/', function (request, response) {
-    response.render("home.hbs")
+app.get('/', function (req, res) {
+    res.render("home.hbs")
 })
-app.get('/about', function (request, response) {
-    response.render("about.hbs")
+app.get('/about', function (req, res) {
+    new Promise(function(resolve, reject) {
+        if (true) {
+            resolve()
+        }
+        else {
+            reject()
+        }
+    }).then(function() {
+        
+        res.render("./about.hbs")
+    }).catch(result => {
+        res.status(res.status).json(res)
+    })
 })
 
-app.get('/login', function (request, response) {
 
-    response.render("login.hbs")
+app.get('/signup', function (req, res) {
+    
+    req.body = {
+        userName: "The username",
+        password: "my password"
+    }
+    return createAccount(req, Account)
+    .then(function(result) {
+        
+        const model = {
+            posts: [result]
+        }
+        res.render("books/books_search.hbs", model)
+
+    }).catch(function(result) {
+        console.log("blaj");
+    })
 })
 
 
-app.post('/books', function (request, response) {
 
-    response.render("login.hbs")
+app.get('/login', function (req, res) {
+
+    res.render("login.hbs")
 })
-app.get('/books/:id', function (request, response) {
-	const model = {
-		posts: posts
-	}
-    response.render("books/books_search.hbs", model)
+
+
+app.post('/books', function (req, res) {
+
+    
+    req.body = {
+        userName: "The username",
+        password: "my password"
+    }
+
+    return createBook(req, Book)
+    .then(function(result) {
+        
+        const model = {
+            posts: [result]
+        }
+        res.render("books/books_search.hbs", model)
+
+    }).catch(function(result) {
+        console.log("blaj");
+    })
+
+})
+app.get('/books/:id', function (req, res) {
+    
+    return createBook(req, Book)
+    .then(function(result) {
+        
+        const model = {
+            posts: [result]
+        }
+        res.render("books/books_search.hbs", model)
+
+    }).catch(function(result) {
+        console.log("blaj");
+    })
 })
 
 /*
-app.update('/books/:id', function (request, response) {
+app.update('/books/:id', function (req, res) {
 
-    response.render("login.hbs")
+    res.render("login.hbs")
 })
-app.delete('/books/:id', function (request, response) {
+app.delete('/books/:id', function (req, res) {
     
-    response.render("login.hbs")
+    res.render("login.hbs")
 })
 */
 
