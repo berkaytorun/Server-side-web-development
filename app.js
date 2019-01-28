@@ -3,8 +3,11 @@ const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const requestHandler = require('./dal/request_handler')
 
+const mockData = require('./dal/mock_data').mockData
+
 const createAccount = requestHandler.createAccount
 const createBook = requestHandler.createBook
+const getBooks = requestHandler.getBooks
 
 
 var Account
@@ -44,6 +47,13 @@ const posts = [
 const app = express()
 
 app.use(express.static("public"))
+
+// used for debugging.. using mock data
+// remove before release!
+app.use(function(req, res, next) {
+    req.mockData = mockData
+    return next()
+})
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -101,7 +111,21 @@ app.get('/login', function (req, res) {
 
 
 app.post('/books', function (req, res) {
+    
+    return createBook(req, Book)
+    .then(function(result) {
+        
+        return getBooks(req, Book);
 
+    }).then(function(result) {
+        const model = {
+            posts: [result]
+        }
+        res.render("books/books_search.hbs", model)
+    })
+    .catch(function(result) {
+        res.status(500).end("Error");
+    })
     
     req.body = {
         userName: "The username",
@@ -119,8 +143,26 @@ app.post('/books', function (req, res) {
     }).catch(function(result) {
         console.log("blaj");
     })
-
 })
+
+app.get('/books', function (req, res) {
+
+    return createBook(req, Book)
+    .then(function(result) {
+        
+        return getBooks(req, Book);
+
+    }).then(function(books) {
+        const model = {
+            books: books
+        }
+        res.render(__dirname + "/views/books/books_search.hbs", model)
+    })
+    .catch(function(result) {
+        res.status(500).end("Error");
+    })
+})
+
 app.get('/books/:id', function (req, res) {
     
     return createBook(req, Book)
@@ -133,38 +175,9 @@ app.get('/books/:id', function (req, res) {
 
     }).catch(function(result) {
         console.log("blaj");
+        res.render("books/books_search.hbs", model)
     })
 
-})
-
-app.get('/books', function (req, res) {
-
-    const bookname = req.query.SearchBox
-
-    if (bookname == null || bookname == "") {
-        const model = {
-            posts: posts
-        }
-        res.render("./books/books_search.hbs", model)
-    }
-    else if (bookname != null) {
-        const post = posts.filter(p => p.name.toLocaleLowerCase() == bookname.toLocaleLowerCase())
-
-        const model = {
-            posts: post,
-            bookname: bookname
-        }
-        res.render("./books/books_search.hbs", model)
-
-
-    }
-    else {
-        const model = {
-            posts: posts
-        }
-        res.render("./books/books_search.hbs", model)
-
-    }
 })
 
 /*

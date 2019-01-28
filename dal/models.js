@@ -70,7 +70,7 @@ const init = function(options) {
             },
             title: {
                 type: Sequelize.STRING(bookValid.title.max),
-                allowNull: false,
+                allowNull: true,
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
@@ -80,41 +80,37 @@ const init = function(options) {
                     }
                 }
             },
-            signID: {
+            signId: {
                 type: Sequelize.INTEGER,
-                unique: {
-                    args: true,
-                    msg: ""
-                },
                 allowNull: true,
             },
             publicationYear: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
                         msg: "Book name needs to be between " +
-                            bookValid.title.min + " and " +
-                            bookValid.title.max + " characters long."
+                            bookValid.publicationYear.min + " and " +
+                            bookValid.publicationYear.max + " characters long."
                     }
                 }
             },
             publicationInfo: {
                 type: Sequelize.STRING(bookValid.title.max),
-                allowNull: false,
+                allowNull: true,
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
                         msg: "Book name needs to be between " +
-                            bookValid.title.min + " and " +
-                            bookValid.title.max + " characters long."
+                            bookValid.publicationInfo.min + " and " +
+                            bookValid.publicationInfo.max + " characters long."
                     }
                 }
             },
             pages: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
@@ -127,7 +123,7 @@ const init = function(options) {
         })
 
         const classification = db.define('classification', {
-            signID: {
+            signId: {
                 type: Sequelize.STRING,
                 primaryKey: true,
             },
@@ -156,7 +152,7 @@ const init = function(options) {
 
 
         const Author = db.define('author', {
-            id: {
+            Id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
             },
