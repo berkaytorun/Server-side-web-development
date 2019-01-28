@@ -16,31 +16,29 @@ db.init({
     Account = models.Account,
     Book = models.Book
 }).catch(reason => {
-    console.log("bug")
+    console.log("Check init for DB! DB not working!")
 })
    
 
 const posts = [
-        {
-            id: 1,
-            name: "Alice",
-            message: "Great website!"
-        }, {
-            id: 2,
-            name: "Bob",
-            message: "Hello!"
-        }, {
-            id: 3,
-            name: "Claire",
-            message: "Hi!"
-        }, {
-            id: 4,
-            name: "Claire",
-            message: "Hi!"
-        }
-    ]
-
-
+    {
+        id: 1,
+        name: "Alice",
+        message: "Great website!"
+    }, {
+        id: 2,
+        name: "Bob",
+        message: "Hello!"
+    }, {
+        id: 3,
+        name: "Claire",
+        message: "Hi!"
+    }, {
+        id: 4,
+        name: "Claire",
+        message: "Hi!sss"
+    }
+]
 
 
 const app = express()
@@ -136,6 +134,37 @@ app.get('/books/:id', function (req, res) {
     }).catch(function(result) {
         console.log("blaj");
     })
+
+})
+
+app.get('/books', function (req, res) {
+
+    const bookname = req.query.SearchBox
+
+    if (bookname == null || bookname == "") {
+        const model = {
+            posts: posts
+        }
+        res.render("./books/books_search.hbs", model)
+    }
+    else if (bookname != null) {
+        const post = posts.filter(p => p.name.toLocaleLowerCase() == bookname.toLocaleLowerCase())
+
+        const model = {
+            posts: post,
+            bookname: bookname
+        }
+        res.render("./books/books_search.hbs", model)
+
+
+    }
+    else {
+        const model = {
+            posts: posts
+        }
+        res.render("./books/books_search.hbs", model)
+
+    }
 })
 
 /*
