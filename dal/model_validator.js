@@ -12,19 +12,51 @@ const accValid = {
 }
 
 const bookValid = {
-    name: {
+    ISBN: {
+        min: 15,
+        max: 15
+    },
+    title: {
         min: 3,
         max: 40
     },
-    desc: {
-        min: 0,
-        max: 100
+    publicationYear: {
+        min: 10,
+        max: 10
     },
-    passw: {
+    publicationInfo: {
         min: 0,
-        max: 200
+        max: 255
+    }
+
+}
+const classifications = {
+    signum: {
+        min: 0,
+        max: 50
+    },
+    description: {
+        min: 0,
+        max: 255
+    }
+}
+
+const author = {
+    firstName: {
+        min: 0,
+        max: 50
+    },
+    lastName: {
+        min: 0,
+        max: 50
+    },
+    birthYear: {
+        min: 0,
+        max: 10
     }
 }
 
 exports.accValid = accValid
 exports.bookValid = bookValid
+exports.classifications = classifications
+exports.author = author

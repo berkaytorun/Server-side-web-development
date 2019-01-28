@@ -7,7 +7,8 @@ const ValidatorObjects = require('./model_validator')
 
 const accValid = ValidatorObjects.accValid
 const bookValid = ValidatorObjects.bookValid
-const messValid = ValidatorObjects.messValid
+const classifications = ValidatorObjects.classifications
+const author = ValidatorObjects.author
 
 const init = function(options) {
     return new Promise(function(resolve, reject) {
@@ -59,35 +60,142 @@ const init = function(options) {
         })
 
         const Book = db.define('book', {
-            name: {
-                type: Sequelize.STRING(bookValid.name.max),
+            ISBN: {
+                type: Sequelize.STRING,
+                primaryKey: true,
+                unique: {
+                    args: true,
+                    msg: "That ISBN already exists."
+                }
+            },
+            title: {
+                type: Sequelize.STRING(bookValid.title.max),
+                allowNull: false,
+                validate: {
+                    len: {
+                        args: [bookValid.title.min, bookValid.title.max],
+                        msg: "Book name needs to be between " +
+                            bookValid.title.min + " and " +
+                            bookValid.title.max + " characters long."
+                    }
+                }
+            },
+            signID: {
+                type: Sequelize.INTEGER,
                 unique: {
                     args: true,
                     msg: ""
                 },
+                allowNull: true,
+            },
+            publicationYear: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 validate: {
                     len: {
-                        args: [bookValid.name.min, bookValid.name.max],
+                        args: [bookValid.title.min, bookValid.title.max],
                         msg: "Book name needs to be between " +
-                            bookValid.name.min + " and " +
-                            bookValid.name.max + " characters long."
+                            bookValid.title.min + " and " +
+                            bookValid.title.max + " characters long."
+                    }
+                }
+            },
+            publicationInfo: {
+                type: Sequelize.STRING(bookValid.title.max),
+                allowNull: false,
+                validate: {
+                    len: {
+                        args: [bookValid.title.min, bookValid.title.max],
+                        msg: "Book name needs to be between " +
+                            bookValid.title.min + " and " +
+                            bookValid.title.max + " characters long."
+                    }
+                }
+            },
+            pages: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                validate: {
+                    len: {
+                        args: [bookValid.title.min, bookValid.title.max],
+                        msg: "Book name needs to be between " +
+                            bookValid.title.min + " and " +
+                            bookValid.title.max + " characters long."
+                    }
+                }
+            },
+        })
+
+        const classification = db.define('classification', {
+            signID: {
+                type: Sequelize.STRING,
+                primaryKey: true,
+            },
+            signum: {
+                type: Sequelize.STRING,
+                allowNull: true,
+                validate: {
+                    len: {
+                        args: [classifications.signum.min, classifications.signum.max],
+                        msg: "ISBN must be between exactly " + bookValid.ISBN.min + " characters long."
                     }
                 }
             },
             description: {
-                type: Sequelize.STRING(bookValid.desc.max),
-                allowNull: true,
+                type: Sequelize.STRING,
                 validate: {
                     len: {
-                        args: [bookValid.desc.min, bookValid.desc.max],
-                        msg: "Description needs to be between " +
-                            bookValid.desc.min + " and " +
-                            bookValid.desc.max + " characters long."
+                        args: [bookValid.ISBN.min, bookValid.ISBN.max],
+                        msg: "ISBN must be between exactly " + bookValid.ISBN.min + " characters long."
                     }
                 }
             }
         })
+
+        classification.belongsTo(Book)
+
+
+        const Author = db.define('author', {
+            id: {
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+            },
+            firstName: {
+                type: Sequelize.STRING,
+                validate: {
+                    len: {
+                        args: [author.firstName.min, author.firstName.max],
+                        msg: "First name must be between " + author.firstName.min + " and " + author.firstName.max + " characters long."
+                    }
+                }
+            },
+            lastName: {
+                type: Sequelize.STRING,
+                validate: {
+                    len: {
+                        args: [author.lastName.min, author.lastName.max],
+                        msg: "Last name must be between " + author.lastName.min + " and " + author.lastName.max + " characters long."
+                    }
+                }
+            },
+            birthYear: {
+                type: Sequelize.STRING,
+                allowNull: true,
+                validate: {
+                    len: {
+                        args: [author.birthYear.min, author.birthYear.max],
+                        msg: "Birthday must be between exactly " + bookValid.ISBN.min + " characters long."
+                    }
+                }
+            }
+
+        })
+
+        const BookAuthor = db.define('bookAuthor', { })
+        Book.belongsToMany(Author, { through: BookAuthor} )
+        Author.belongsToMany(Book, { through: BookAuthor} )
+
+
 
         db.sync({force: options}).then(() => {
             resolve({
@@ -95,6 +203,7 @@ const init = function(options) {
                 Book: Book
             })
         });
+
         /*
         db.query('SET FOREIGN_KEY_CHECKS = 0')
         .then(function() {
