@@ -65,6 +65,15 @@ app.use(function(req, res, next) {
     return next()
 })
 
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
+app.engine('hbs', hbs({
+    defaultLayout: 'main',
+    extname: '.hbs'
+}))
+
+
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
     if (!req.query.title) {
@@ -73,24 +82,15 @@ app.use(function(req, res, next) {
     if (!req.query.ISBN) {
         req.query.ISBN = ""
     }
-    if (!req.query.searchString) {
-        req.query.searchString = ""
+    if (req.query.searchString) {
+        req.query.searchString = "%" + req.query.searchString + "%"
     }
     else {
-        let str = req.query.searchString
-        req.query.searchString = str
+        req.query.searchString = ""
     }
 
     return next()
 })
-
-app.use(bodyParser.urlencoded({
-    extended: false
-}))
-app.engine('hbs', hbs({
-    defaultLayout: 'main',
-    extname: '.hbs'
-}))
 
 let mockDataUpdated = false
 function createMockups() {

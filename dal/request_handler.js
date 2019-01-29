@@ -1,6 +1,6 @@
 "use strict";
 
-const Sequelize = require('sequelize')
+const Op = require('sequelize').Op
 
 function createAccount(req, Account) {
     return new Promise((resolve, reject) => {
@@ -77,7 +77,7 @@ function getBooks(req, Book) {
 
             where: {
                 title: {
-                    [Sequelize.Op.gt]: [req.query.title]
+                    [Op.gt]: [req.query.title]
                 }
             }
         })
@@ -115,9 +115,15 @@ function searchBooks(req, Book, Classification) {
         let findWhere = { where: { } }
         if (req.query.searchString !== "") {
             findWhere.where = {
-                [Sequelize.Op.or]: [
-                    {ISBN: req.query.searchString},
-                    {title: req.query.searchString}
+                [Op.or]: [
+                    {ISBN: {
+                        [Op.like]: req.query.searchString, 
+                        }
+                    },
+                    {title: {
+                        [Op.like]: req.query.searchString, 
+                        }
+                    }
                 ]
             }
         }
