@@ -1,21 +1,14 @@
-
-<!-- This below is your code --> 
-<div>ISBN: {{ISBN}}</div>
-<div>Title: {{title}}</div>
-{{#if signId}}
-    <div>Signum: {{signId.signum}}</div>
-    <div>Description: {{signId.description}}</div>
-{{/if}}
-<div>publicationYear: {{publicationYear}}</div>
-<div>PublicationInfo: {{publicationInfo}}</div>
-<div>Pages: {{pages}}</div>
-
-<!-- This above is my code --> 
-
 <form action="" method="GET">
     <div id="book_info">
-        <div>id: {{post.id}}</div>
-        <div>Name: {{post.name}}</div>
+        <div>ISBN: {{ISBN}}</div>
+        <div>Title: {{title}}</div>
+        {{#if signId}}
+            <div>Signum: {{signId.signum}}</div>
+            <div>Description: {{signId.description}}</div>
+        {{/if}}
+        <div>publicationYear: {{publicationYear}}</div>
+        <div>PublicationInfo: {{publicationInfo}}</div>
+        <div>Pages: {{pages}}</div>
     </div>
 <input type="submit" value="Edit">
 </form>

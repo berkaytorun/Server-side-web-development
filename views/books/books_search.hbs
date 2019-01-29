@@ -1,24 +1,7 @@
 <div>
     <form action="/books" method="GET">
-        <input type="search" name="SearchBox" id="sb1" placeholder="Enter a Book name to search">
+        <input type="search" name="searchString" id="sb1" placeholder="Enter a Book name to search">
         <input type="submit" value="Search" >
     </form>
 </div>
-{{#if post}}
-  <div id="book_info">
-            <a href="/books/{{post.id}}">
-                <div>Id: {{post.id}}</div>
-                <div>Name: {{post.name}}</div>
-            </a>
-        </div>
-{{/if}}
-{{#if posts}}
-    {{#each posts}}
-        <div id="book_info">
-             <a href="/books/{{id}}">
-                <div>Id: {{id}}</div>
-                <div>Name: {{name}}</div>
-            </a>
-        </div>
-    {{/each}}
-{{/if}}    
+
