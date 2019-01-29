@@ -133,20 +133,21 @@ function searchBooks(query, Book) {
                 ]
             }
         }
-        Book.findAll(findWhere)
+        Book.findAndCountAll(findWhere)
         .then((books) => {
-            if (books.length > 0) {
+            if (books.rows.length > 0) {
                 let booksList = [ ]
-                for (let i = 0, len = books.length; i < len; i++) {
+                for (let i = 0, len = books.rows.length; i < len; i++) {
                     booksList.push({
-                        ISBN: books[i].ISBN,
-                        title: books[i].title,
-                        signId: books[i].signId,
-                        publicationYear: books[i].publicationYear,
-                        publicationInfo: books[i].publicationInfo,
-                        pages: books[i].pages
+                        ISBN: books.rows[i].ISBN,
+                        title: books.rows[i].title,
+                        signId: books.rows[i].signId,
+                        publicationYear: books.rows[i].publicationYear,
+                        publicationInfo: books.rows[i].publicationInfo,
+                        pages: books.rows[i].pages
                     })
                 }
+                booksList.total = books.count
                 resolve(booksList)
             } 
             else {
