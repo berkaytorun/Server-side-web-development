@@ -1,5 +1,7 @@
 "use strict";
 
+const Sequelize = require('sequelize')
+
 function createAccount(req, Account) {
     return new Promise((resolve, reject) => {
         Account.create({
@@ -16,7 +18,7 @@ function createAccount(req, Account) {
                 reject(response)
             }
         }).catch((error) => {
-            reject(parseError(error))
+            reject(error)
         })
     })
 }
@@ -35,15 +37,30 @@ function createBook(req, Book) {
                 reject(response)
             }
         }).catch((error) => {
-            reject(parseError(error))
+            reject(error)
         })
     })
 }
 
 function getBooks(req, Book) {
+
     return new Promise((resolve, reject) => {
+        let limit = 5
+        let offset = 0
         Book.findAll({
+
+            order: [
+                ['title', 'ASC']
+            ],
             
+            limit: limit,
+            offset: offset,
+
+            where: {
+                title: {
+                    [Sequelize.Op.gt]: [req.query.title]
+                }
+            }
         })
         .then((books) => {
             let response = {}
@@ -66,7 +83,37 @@ function getBooks(req, Book) {
                 reject(response)
             }
         }).catch((error) => {
-            reject(parseError(error))
+            reject(error)
+        })
+    })
+}
+
+function getBook(req, Book, Classification) {
+
+    return new Promise((resolve, reject) => {
+        Book.findOne({
+                where: {ISBN: req.query.ISBN},
+                include: [{
+                    model: Classification,
+                }]
+            })
+        .then((book) => {
+            if (book) {
+                let theBook = {
+                    ISBN: book.ISBN,
+                    title: book.title,
+                    signID: book.signID,
+                    publicationYear: book.publicationYear,
+                    publicationInfo: book.publicationInfo,
+                    pages: book.pages
+                    }
+                resolve(theBook)
+            } else {
+                let res = req.query.ISBN + " could not be found."
+                reject(res)
+            }
+        }).catch((error) => {
+            reject(error)
         })
     })
 }
@@ -74,4 +121,5 @@ function getBooks(req, Book) {
 
 exports.createAccount = createAccount
 exports.createBook = createBook
+exports.getBook = getBook
 exports.getBooks = getBooks
