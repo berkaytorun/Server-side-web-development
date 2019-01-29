@@ -123,11 +123,11 @@ function searchBooks(query, Book) {
             findWhere.where = {
                 [Op.or]: [
                     {ISBN: {
-                        [Op.like]: "%" + query.searchString + "%", 
+                        [Op.like]: query.searchString, 
                         }
                     },
                     {title: {
-                        [Op.like]: "%" + query.searchString + "%", 
+                        [Op.like]: query.searchString, 
                         }
                     }
                 ]
