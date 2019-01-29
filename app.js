@@ -122,6 +122,11 @@ function initMockData() {
     })
 }
 
+
+app.get('/', function (req, res) {
+    res.render(__dirname + "/views/home.hbs")
+})
+
 app.post('/accounts', function (req, res) {
     
     req.body = {
@@ -140,8 +145,6 @@ app.post('/accounts', function (req, res) {
     })
 })
 
-
-
 app.get('/signup', function (req, res) {
 
     return createAccount(req, Account)
@@ -158,7 +161,7 @@ app.get('/signup', function (req, res) {
 
 app.get('/login', function (req, res) {
 
-    res.render("login.hbs")
+    res.render(__dirname + "/views/accounts/login.hbs")
 })
 
 /*
