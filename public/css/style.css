@@ -25,3 +25,13 @@ nav ul li {
 main{
     padding: 5px;
 }
+
+#sb1{
+    width: 60%;
+}
+
+#book_info{
+    padding: 3px 0 3px 3px;
+    margin: 5px 0 5px 0;
+    border: 1px solid black;
+}

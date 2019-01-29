@@ -1,0 +1,15 @@
+<form action="" method="GET">
+    <div id="book_info">
+        <div>ISBN: {{ISBN}}</div>
+        <div>Title: {{title}}</div>
+        {{#if signId}}
+            <div>Signum: {{signId.signum}}</div>
+            <div>Description: {{signId.description}}</div>
+        {{/if}}
+        <div>publicationYear: {{publicationYear}}</div>
+        <div>PublicationInfo: {{publicationInfo}}</div>
+        <div>Pages: {{pages}}</div>
+    </div>
+<input type="submit" value="Edit">
+</form>
+
