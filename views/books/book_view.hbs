@@ -1,7 +1,10 @@
 
 <div>ISBN: {{ISBN}}</div>
 <div>Title: {{title}}</div>
-<div>pignID: {{signId}}</div>
+{{#if signId}}
+    <div>Signum: {{signId.signum}}</div>
+    <div>Description: {{signId.description}}</div>
+{{/if}}
 <div>publicationYear: {{publicationYear}}</div>
 <div>PublicationInfo: {{publicationInfo}}</div>
 <div>Pages: {{pages}}</div>

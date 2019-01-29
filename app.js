@@ -60,7 +60,7 @@ app.use(express.static("public"))
 // used for debugging.. using mock data
 // remove before release!
 app.use(function(req, res, next) {
-    createMockups();
+    initMockData();
     req.mockData = mockData
     return next()
 })
@@ -83,7 +83,7 @@ app.use(function(req, res, next) {
         req.query.ISBN = ""
     }
     if (req.query.searchString) {
-        req.query.searchString = "%" + req.query.searchString + "%"
+        req.query.searchString = req.query.searchString
     }
     else {
         req.query.searchString = ""
@@ -93,22 +93,29 @@ app.use(function(req, res, next) {
 })
 
 let mockDataUpdated = false
-function createMockups() {
+function initMockData() {
     if (mockDataUpdated) { return }
     if (!resetDatabase) { mockDataUpdated = true; return }
     mockDataUpdated = true
 
+    
+    Classification.bulkCreate(mockData.classifications)
+    .then(function(classifications) {
+        
+    }).catch(function(reason) {
+        console.log("Couldn't initiate mockdata classifications")
+    })
     Book.bulkCreate(mockData.books)
     .then(function(books) {
         
-    }).catch(function() {
-        console.log("Couldn't initiate mockdata.")
+    }).catch(function(reason) {
+        console.log("Couldn't initiate mockdata books")
     })
     Author.bulkCreate(mockData.authors)
     .then(function(authors) {
         
-    }).catch(function() {
-        console.log("Couldn't initiate mockdata.")
+    }).catch(function(reason) {
+        console.log("Couldn't initiate mockdata authors")
     })
 }
 
@@ -177,7 +184,7 @@ app.post('/books', function (req, res) {
 
 app.get('/books', function (req, res) {
 
-    return searchBooks(req.query, Book, Classification)
+    return searchBooks(req.query, Book)
     .then(function(books) {
         const model = {
             books: books
@@ -185,7 +192,7 @@ app.get('/books', function (req, res) {
         res.render(__dirname + "/views/books/books_list.hbs", model)
     })
     .catch(function(result) {
-        res.render(__dirname + "/views/error.hbs")
+        res.render(__dirname + "/views/error.hbs", {message: result})
     })
 })
 

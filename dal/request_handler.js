@@ -13,9 +13,10 @@ function createAccount(req, Account) {
                 response.accountId = result.id
                 response.userName = result.userName
                 resolve(response)
-            } else {
-                response.error = "Unauthorized"
-                reject(response)
+            } 
+            else {
+                let res = "No maches found."
+                reject(res)
             }
         }).catch((error) => {
             reject(error)
@@ -32,9 +33,10 @@ function createAuthor(req, Author) {
                 response.accountId = result.id
                 response.userName = result.userName
                 resolve(response)
-            } else {
-                response.error = "Unauthorized"
-                reject(response)
+            } 
+            else {
+                let res = "No maches found."
+                reject(res)
             }
         }).catch((error) => {
             reject(error)
@@ -51,9 +53,10 @@ function createBook(req, Book) {
                 response.accountId = result.id
                 response.userName = result.userName
                 resolve(response)
-            } else {
-                response.error = "Unauthorized"
-                reject(response)
+            } 
+            else {
+                let res = "No maches found."
+                reject(res)
             }
         }).catch((error) => {
             reject(error)
@@ -61,10 +64,17 @@ function createBook(req, Book) {
     })
 }
 
-function getBookInfo(ISBN, Book) {
+function getBookInfo(ISBN, Book, Classification) {
 
     return new Promise((resolve, reject) => {
-        Book.findById(ISBN)
+        Book.findOne({
+            where: {
+                ISBN: ISBN,
+            },
+            include: [
+                Classification
+            ]
+        })
         .then((book) => {
             let response = {}
             if (book) {
@@ -77,10 +87,17 @@ function getBookInfo(ISBN, Book) {
                     publicationInfo: book.publicationInfo,
                     pages: book.pages
                 }
+                if (theBook.signId) {
+                    theBook.signId = {
+                        signum: book.classification.signum,
+                        description: book.classification.description
+                    }
+                }
                 resolve(theBook)
-            } else {
-                response.error = "Unauthorized"
-                reject(response)
+            } 
+            else {
+                let res = "No maches found."
+                reject(res)
             }
         }).catch((error) => {
             reject(error)
@@ -88,8 +105,7 @@ function getBookInfo(ISBN, Book) {
     })
 }
 
-function searchBooks(query, Book, Classification) {
-
+function searchBooks(query, Book) {
 
     return new Promise((resolve, reject) => {
         
@@ -107,11 +123,11 @@ function searchBooks(query, Book, Classification) {
             findWhere.where = {
                 [Op.or]: [
                     {ISBN: {
-                        [Op.like]: query.searchString, 
+                        [Op.like]: "%" + query.searchString + "%", 
                         }
                     },
                     {title: {
-                        [Op.like]: query.searchString, 
+                        [Op.like]: "%" + query.searchString + "%", 
                         }
                     }
                 ]
@@ -132,7 +148,8 @@ function searchBooks(query, Book, Classification) {
                     })
                 }
                 resolve(booksList)
-            } else {
+            } 
+            else {
                 let res = "No maches found."
                 reject(res)
             }

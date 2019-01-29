@@ -148,7 +148,7 @@ const init = function(options) {
             }
         })
 
-        Book.belongsTo(Classification)
+        Book.belongsTo(Classification, {foreignKey: 'signId'})
 
 
         const Author = db.define('author', {
