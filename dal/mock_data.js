@@ -2075,7 +2075,7 @@ books = [
 
 /*TABLE `Classifications` DISABLE KEYS */;
 classifications = [
-	[1,'Pub',null],
+	[1,'Pub',"Whats this?"],
 	[2,'Puba',null],
 	[3,'Pubb',null],
 	[4,'Pubbz Ada',null],

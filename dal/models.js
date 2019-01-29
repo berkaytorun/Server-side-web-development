@@ -122,7 +122,7 @@ const init = function(options) {
             },
         })
 
-        const classification = db.define('classification', {
+        const Classification = db.define('classification', {
             signId: {
                 type: Sequelize.STRING,
                 primaryKey: true,
@@ -148,7 +148,7 @@ const init = function(options) {
             }
         })
 
-        classification.belongsTo(Book)
+        Book.belongsTo(Classification)
 
 
         const Author = db.define('author', {
@@ -196,7 +196,9 @@ const init = function(options) {
         db.sync({force: options}).then(() => {
             resolve({
                 Account: Account,
-                Book: Book
+                Book: Book,
+                BookAuthor: BookAuthor,
+                Classification: Classification
             })
         });
 

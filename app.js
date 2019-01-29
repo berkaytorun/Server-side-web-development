@@ -2,26 +2,32 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const requestHandler = require('./dal/request_handler')
+const Sequelize = require('sequelize')
 
 const mockData = require('./dal/mock_data').mockData
 
 const createAccount = requestHandler.createAccount
 const createBook = requestHandler.createBook
+const getBook = requestHandler.getBook
 const getBooks = requestHandler.getBooks
 
 
-var Account
-var Book
+let Account
+let Book
+let BookAuthor
+let Classification
+
 const db = require('./dal/models')
 db.init({
     force: true
 }).then((models) => {
     Account = models.Account,
-    Book = models.Book
+    Book = models.Book,
+    BookAuthor = models.BookAuthor,
+    Classification = models.Classification
 }).catch(reason => {
     console.log("Check init for DB! DB not working!")
 })
-   
 
 const posts = [
     {
@@ -51,7 +57,21 @@ app.use(express.static("public"))
 // used for debugging.. using mock data
 // remove before release!
 app.use(function(req, res, next) {
+    createMockups();
     req.mockData = mockData
+    return next()
+})
+
+
+app.use(function(req, res, next) {
+    if (!req.query) { req.query = { } }
+    if (!req.query.title) {
+        req.query.title = ""
+    }
+    if (!req.query.ISBN) {
+        req.query.ISBN = ""
+    }
+
     return next()
 })
 
@@ -62,6 +82,19 @@ app.engine('hbs', hbs({
     defaultLayout: 'main',
     extname: '.hbs'
 }))
+
+let mockCreated = false
+function createMockups() {
+    if (mockCreated) { return }
+    Book.bulkCreate(mockData.books)
+    .then(function(books) {
+        mockCreated = true
+    }).catch(function() {
+        console.log("Couldn't initiate mockdata.")
+    })
+}
+
+app.use
 
 app.get('/', function (req, res) {
     res.render("home.hbs")
@@ -98,7 +131,7 @@ app.get('/signup', function (req, res) {
         res.render("books/books_search.hbs", model)
 
     }).catch(function(result) {
-        console.log("blaj");
+        res.render(__dirname + "/views/error.hbs")
     })
 })
 
@@ -114,68 +147,41 @@ app.post('/books', function (req, res) {
     
     return createBook(req, Book)
     .then(function(result) {
-        
-        return getBooks(req, Book);
-
-    }).then(function(result) {
         const model = {
             posts: [result]
         }
-        res.render("books/books_search.hbs", model)
+        res.render(__dirname + "/views/booksCreated.hbs")
     })
     .catch(function(result) {
-        res.status(500).end("Error");
-    })
-    
-    req.body = {
-        userName: "The username",
-        password: "my password"
-    }
-
-    return createBook(req, Book)
-    .then(function(result) {
-        
-        const model = {
-            posts: [result]
-        }
-        res.render("books/books_search.hbs", model)
-
-    }).catch(function(result) {
-        console.log("blaj");
+        res.render(__dirname + "/views/error.hbs")
     })
 })
 
 app.get('/books', function (req, res) {
 
-    return createBook(req, Book)
-    .then(function(result) {
-        
-        return getBooks(req, Book);
-
-    }).then(function(books) {
+    return getBooks(req, Book)
+    .then(function(books) {
         const model = {
             books: books
         }
         res.render(__dirname + "/views/books/books_search.hbs", model)
     })
     .catch(function(result) {
-        res.status(500).end("Error");
+        res.render(__dirname + "/views/error.hbs")
     })
 })
 
 app.get('/books/:id', function (req, res) {
-    
-    return createBook(req, Book)
-    .then(function(result) {
-        
+    req.query.ISBN = req.params.id
+    return getBook(req, Book, Classification)
+    .then(function(book) {
         const model = {
-            posts: [result]
+            book: book
         }
-        res.render("books/books_search.hbs", model)
-
-    }).catch(function(result) {
-        console.log("blaj");
-        res.render("books/books_search.hbs", model)
+        res.render(__dirname + "/views/books/book_view.hbs", book)
+    })
+    .catch(function(result) {
+        res.render(__dirname + "/views/error.hbs")
     })
 
 })
