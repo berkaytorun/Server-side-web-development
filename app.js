@@ -122,31 +122,8 @@ function initMockData() {
     })
 }
 
-app.use
-
-app.get('/', function (req, res) {
-    res.render("home.hbs")
-})
-
-app.get('/about', function (req, res) {
-    new Promise(function (resolve, reject) {
-        if (true) {
-            resolve()
-        }
-        else {
-            reject()
-        }
-    }).then(function () {
-
-        res.render("./about.hbs")
-    }).catch(result => {
-        res.status(res.status).json(res)
-    })
-})
-
-
-app.get('/signup', function (req, res) {
-
+app.post('/accounts', function (req, res) {
+    
     req.body = {
         userName: "The username",
         password: "my password"
@@ -160,7 +137,23 @@ app.get('/signup', function (req, res) {
 
     }).catch(function(result) {
         res.render(__dirname + "/views/error.hbs")
-    })        
+    })
+})
+
+
+
+app.get('/signup', function (req, res) {
+
+    return createAccount(req, Account)
+    .then(function (result) {
+        const model = {
+            posts: [result]
+        }
+        res.render("/views/books/books_search.hbs", model)
+
+    }).catch(function(result) {
+        res.render(__dirname + "/views/error.hbs")
+    })
 })
 
 app.get('/login', function (req, res) {
@@ -215,6 +208,23 @@ app.get('/books/:ISBN', function (req, res) {
             message: result
         }
         res.render(__dirname + "/views/error.hbs", model)
+    })
+})
+
+
+app.get('/about', function (req, res) {
+    new Promise(function (resolve, reject) {
+        if (true) {
+            resolve()
+        }
+        else {
+            reject()
+        }
+    }).then(function () {
+
+        res.render("./about.hbs")
+    }).catch(result => {
+        res.status(res.status).json(res)
     })
 })
 
