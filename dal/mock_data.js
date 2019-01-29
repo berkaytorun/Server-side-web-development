@@ -2146,7 +2146,7 @@ classifications = [
 let classification = [ ]
 for (let i = 0, len = classifications.length; i < len; i++) {
 	classification.push({
-		signID: classifications[i][0],
+		signId: classifications[i][0],
 		signum: classifications[i][1],
 		description: classifications[i][2]
 	})
@@ -2167,7 +2167,7 @@ for (let i = 0, len = books.length; i < len; i++) {
 	book.push({
 		ISBN: books[i][0],
 		title: books[i][1],
-		signID: books[i][2],
+		signId: books[i][2],
 		publicationYear: books[i][3],
 		publicationInfo: books[i][4],
 		pages: books[i][5]

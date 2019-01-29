@@ -10,7 +10,7 @@ const createAccount = requestHandler.createAccount
 
 const createBook = requestHandler.createBook
 const searchBooks = requestHandler.searchBooks
-const getBooks = requestHandler.getBooks
+const getBookInfo = requestHandler.getBookInfo
 
 
 let Account
@@ -177,7 +177,7 @@ app.post('/books', function (req, res) {
 
 app.get('/books', function (req, res) {
 
-    return searchBooks(req, Book, Classification)
+    return searchBooks(req.query, Book, Classification)
     .then(function(books) {
         const model = {
             books: books
@@ -195,9 +195,9 @@ app.get('/books_search', function (req, res) {
     res.render(__dirname + "/views/books/books_search.hbs")
 })
 
-app.get('/books/:searchString', function (req, res) {
+app.get('/books/:ISBN', function (req, res) {
     
-    return searchBooks(req.params.searchString, Book, Classification)
+    return getBookInfo(req.params.ISBN, Book, Classification)
     .then(function(book) {
         res.render(__dirname + "/views/books/book_view.hbs", book)
     })
