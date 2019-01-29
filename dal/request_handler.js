@@ -23,6 +23,25 @@ function createAccount(req, Account) {
     })
 }
 
+function createAuthor(req, Author) {
+    return new Promise((resolve, reject) => {
+        Author.bulkCreate(req.mockData.authors)
+        .then((result) => {
+            let response = {}
+            if (result) {
+                response.accountId = result.id
+                response.userName = result.userName
+                resolve(response)
+            } else {
+                response.error = "Unauthorized"
+                reject(response)
+            }
+        }).catch((error) => {
+            reject(error)
+        })
+    })
+}
+
 function createBook(req, Book) {
     return new Promise((resolve, reject) => {
         Book.bulkCreate(req.mockData.books)
@@ -88,28 +107,39 @@ function getBooks(req, Book) {
     })
 }
 
-function getBook(req, Book, Classification) {
+function searchBooks(req, Book, Classification) {
+
 
     return new Promise((resolve, reject) => {
-        Book.findOne({
-                where: {ISBN: req.query.ISBN},
-                include: [{
-                    model: Classification,
-                }]
-            })
-        .then((book) => {
-            if (book) {
-                let theBook = {
-                    ISBN: book.ISBN,
-                    title: book.title,
-                    signID: book.signID,
-                    publicationYear: book.publicationYear,
-                    publicationInfo: book.publicationInfo,
-                    pages: book.pages
-                    }
-                resolve(theBook)
+        
+        let findWhere = { where: { } }
+        if (req.query.searchString !== "") {
+            findWhere.where = {
+                [Sequelize.Op.or]: [
+                    {ISBN: req.query.searchString},
+                    {title: req.query.searchString}
+                ]
+            }
+        }
+        Book.findAll(
+            findWhere
+        )
+        .then((books) => {
+            if (books.length > 0) {
+                let booksList = [ ]
+                for (let i = 0, len = books.length; i < len; i++) {
+                    booksList.push({
+                        ISBN: books[i].ISBN,
+                        title: books[i].title,
+                        signID: books[i].signID,
+                        publicationYear: books[i].publicationYear,
+                        publicationInfo: books[i].publicationInfo,
+                        pages: books[i].pages
+                    })
+                }
+                resolve(booksList)
             } else {
-                let res = req.query.ISBN + " could not be found."
+                let res = "No maches found."
                 reject(res)
             }
         }).catch((error) => {
@@ -121,5 +151,5 @@ function getBook(req, Book, Classification) {
 
 exports.createAccount = createAccount
 exports.createBook = createBook
-exports.getBook = getBook
+exports.searchBooks = searchBooks
 exports.getBooks = getBooks
