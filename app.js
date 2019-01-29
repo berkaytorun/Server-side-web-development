@@ -48,7 +48,7 @@ const posts = [
     }, {
         id: 4,
         name: "Claire",
-        message: "Hi!sss"
+        message: "Hi!"
     }
 ]
 
@@ -125,15 +125,15 @@ app.get('/', function (req, res) {
     res.render("home.hbs")
 })
 app.get('/about', function (req, res) {
-    new Promise(function(resolve, reject) {
+    new Promise(function (resolve, reject) {
         if (true) {
             resolve()
         }
         else {
             reject()
         }
-    }).then(function() {
-        
+    }).then(function () {
+
         res.render("./about.hbs")
     }).catch(result => {
         res.status(res.status).json(res)
@@ -142,14 +142,13 @@ app.get('/about', function (req, res) {
 
 
 app.get('/signup', function (req, res) {
-    
+
     req.body = {
         userName: "The username",
         password: "my password"
     }
     return createAccount(req, Account)
-    .then(function(result) {
-        
+    .then(function (result) {
         const model = {
             posts: [result]
         }
@@ -157,7 +156,7 @@ app.get('/signup', function (req, res) {
 
     }).catch(function(result) {
         res.render(__dirname + "/views/error.hbs")
-    })
+    })        
 })
 
 
@@ -168,7 +167,8 @@ app.get('/login', function (req, res) {
 })
 
 
-app.post('/books', function (req, res) {
+/*app.post('/books', function (req, res) {
+
     
     return createBook(req, Book)
     .then(function(result) {
@@ -181,7 +181,7 @@ app.post('/books', function (req, res) {
         res.render(__dirname + "/views/error.hbs")
     })
 })
-
+*/
 app.get('/books', function (req, res) {
 
     return searchBooks(req.query, Book)
@@ -202,6 +202,7 @@ app.get('/books_search', function (req, res) {
     res.render(__dirname + "/views/books/books_search.hbs")
 })
 
+
 app.get('/books/:ISBN', function (req, res) {
     
     return getBookInfo(req.params.ISBN, Book, Classification)
@@ -214,8 +215,52 @@ app.get('/books/:ISBN', function (req, res) {
         }
         res.render(__dirname + "/views/error.hbs", model)
     })
-
 })
+
+app.get('/books', function (req, res) {
+
+    const bookname = req.query.SearchBox
+
+    if (bookname == null || bookname == "") {
+        const model = {
+            posts: posts
+        }
+        res.render("./books/books_search.hbs", model)
+    }
+    else if (bookname != null) {
+        const post = posts.find(p => p.name == bookname)
+
+        const model = {
+            post: post,
+            bookname: bookname
+        }
+        res.render("./books/books_search.hbs", model)
+
+
+    }
+    else {
+        const model = {
+            posts: posts
+        }
+        res.render("./books/books_search.hbs", model)
+
+    }
+})
+
+app.get('/books/:id', function (req, res) {
+    const id = req.params.id
+    const post = posts.find(p => p.id == id)
+    
+    model={
+        post:post
+    }
+    res.render("./books/book_view.hbs",model)
+})
+app.get('/login', function (req, res) {
+    
+    res.render("./login.hbs")
+})
+
 
 /*
 app.update('/books/:id', function (req, res) {
