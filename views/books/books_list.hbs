@@ -1,8 +1,12 @@
+
 {{#each books}}
-<a href="/books/{{ISBN}}">
-    <div>ISBN: {{ISBN}}</div>
-    <div>Title: {{title}}</div>
-    <div>Pages: {{pages}}</div>
-</a>
-<br>
+    <div id="book_info">
+        <a href="/books/{{ISBN}}">
+
+            <div>ISBN: {{ISBN}}</div>
+            <div>Title: {{title}}</div>
+            <div>publicationYear: {{publicationYear}}</div>
+            <div>Pages: {{pages}}</div>
+        </a>
+    </div>
 {{/each}}

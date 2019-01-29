@@ -48,7 +48,7 @@ const posts = [
     }, {
         id: 4,
         name: "Claire",
-        message: "Hi!sss"
+        message: "Hi!"
     }
 ]
 
@@ -82,11 +82,14 @@ app.use(function(req, res, next) {
     if (!req.query.ISBN) {
         req.query.ISBN = ""
     }
-    if (req.query.searchString) {
-        req.query.searchString = req.query.searchString
-    }
-    else {
+    if (!req.query.searchString) {
         req.query.searchString = ""
+    }
+    if (!req.query.limit) {
+        req.query.limit = 100
+    }
+    if (!req.query.offset) {
+        req.query.offset = 0
     }
 
     return next()
@@ -124,16 +127,17 @@ app.use
 app.get('/', function (req, res) {
     res.render("home.hbs")
 })
+
 app.get('/about', function (req, res) {
-    new Promise(function(resolve, reject) {
+    new Promise(function (resolve, reject) {
         if (true) {
             resolve()
         }
         else {
             reject()
         }
-    }).then(function() {
-        
+    }).then(function () {
+
         res.render("./about.hbs")
     }).catch(result => {
         res.status(res.status).json(res)
@@ -142,32 +146,29 @@ app.get('/about', function (req, res) {
 
 
 app.get('/signup', function (req, res) {
-    
+
     req.body = {
         userName: "The username",
         password: "my password"
     }
     return createAccount(req, Account)
-    .then(function(result) {
-        
+    .then(function (result) {
         const model = {
             posts: [result]
         }
-        res.render("books/books_search.hbs", model)
+        res.render("/views/books/books_search.hbs", model)
 
     }).catch(function(result) {
         res.render(__dirname + "/views/error.hbs")
-    })
+    })        
 })
-
-
 
 app.get('/login', function (req, res) {
 
     res.render("login.hbs")
 })
 
-
+/*
 app.post('/books', function (req, res) {
     
     return createBook(req, Book)
@@ -181,6 +182,7 @@ app.post('/books', function (req, res) {
         res.render(__dirname + "/views/error.hbs")
     })
 })
+*/
 
 app.get('/books', function (req, res) {
 
@@ -214,19 +216,7 @@ app.get('/books/:ISBN', function (req, res) {
         }
         res.render(__dirname + "/views/error.hbs", model)
     })
-
 })
-
-/*
-app.update('/books/:id', function (req, res) {
-
-    res.render("login.hbs")
-})
-app.delete('/books/:id', function (req, res) {
-    
-    res.render("login.hbs")
-})
-*/
 
 
 
