@@ -61,42 +61,23 @@ function createBook(req, Book) {
     })
 }
 
-function getBooks(req, Book) {
+function getBookInfo(ISBN, Book) {
 
     return new Promise((resolve, reject) => {
-        let limit = 5
-        let offset = 0
-        Book.findAll({
-
-            order: [
-                ['title', 'ASC']
-            ],
-            
-            limit: limit,
-            offset: offset,
-
-            where: {
-                title: {
-                    [Op.gt]: [req.query.title]
-                }
-            }
-        })
-        .then((books) => {
+        Book.findById(ISBN)
+        .then((book) => {
             let response = {}
-            if (books) {
+            if (book) {
                             
-                let booksList = [ ]
-                for (let i = 0, len = books.length; i < len; i++) {
-                    booksList.push({
-                        ISBN: books[i].ISBN,
-                        title: books[i].title,
-                        signID: books[i].signID,
-                        publicationYear: books[i].publicationYear,
-                        publicationInfo: books[i].publicationInfo,
-                        pages: books[i].pages
-                    })
+                let theBook = {
+                    ISBN: book.ISBN,
+                    title: book.title,
+                    signId: book.signId,
+                    publicationYear: book.publicationYear,
+                    publicationInfo: book.publicationInfo,
+                    pages: book.pages
                 }
-                resolve(booksList)
+                resolve(theBook)
             } else {
                 response.error = "Unauthorized"
                 reject(response)
@@ -107,29 +88,36 @@ function getBooks(req, Book) {
     })
 }
 
-function searchBooks(req, Book, Classification) {
+function searchBooks(query, Book, Classification) {
 
 
     return new Promise((resolve, reject) => {
         
-        let findWhere = { where: { } }
-        if (req.query.searchString !== "") {
+        let findWhere = { 
+            
+            order: [
+                ['title', 'ASC']
+            ],
+            limit: 5,
+            offset: 0,
+            where: { } 
+        }
+        if (query.searchString !== "") {
+
             findWhere.where = {
                 [Op.or]: [
                     {ISBN: {
-                        [Op.like]: req.query.searchString, 
+                        [Op.like]: query.searchString, 
                         }
                     },
                     {title: {
-                        [Op.like]: req.query.searchString, 
+                        [Op.like]: query.searchString, 
                         }
                     }
                 ]
             }
         }
-        Book.findAll(
-            findWhere
-        )
+        Book.findAll(findWhere)
         .then((books) => {
             if (books.length > 0) {
                 let booksList = [ ]
@@ -137,7 +125,7 @@ function searchBooks(req, Book, Classification) {
                     booksList.push({
                         ISBN: books[i].ISBN,
                         title: books[i].title,
-                        signID: books[i].signID,
+                        signId: books[i].signId,
                         publicationYear: books[i].publicationYear,
                         publicationInfo: books[i].publicationInfo,
                         pages: books[i].pages
@@ -158,4 +146,4 @@ function searchBooks(req, Book, Classification) {
 exports.createAccount = createAccount
 exports.createBook = createBook
 exports.searchBooks = searchBooks
-exports.getBooks = getBooks
+exports.getBookInfo = getBookInfo
