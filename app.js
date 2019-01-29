@@ -7,21 +7,24 @@ const Sequelize = require('sequelize')
 const mockData = require('./dal/mock_data').mockData
 
 const createAccount = requestHandler.createAccount
+
 const createBook = requestHandler.createBook
-const getBook = requestHandler.getBook
+const searchBooks = requestHandler.searchBooks
 const getBooks = requestHandler.getBooks
 
 
 let Account
 let Book
-let BookAuthor
+let BookAuthor // a join table
 let Classification
 
+let resetDatabase = true
 const db = require('./dal/models')
 db.init({
-    force: true
+    force: resetDatabase
 }).then((models) => {
     Account = models.Account,
+    Author = models.Author
     Book = models.Book,
     BookAuthor = models.BookAuthor,
     Classification = models.Classification
@@ -62,7 +65,6 @@ app.use(function(req, res, next) {
     return next()
 })
 
-
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
     if (!req.query.title) {
@@ -70,6 +72,13 @@ app.use(function(req, res, next) {
     }
     if (!req.query.ISBN) {
         req.query.ISBN = ""
+    }
+    if (!req.query.searchString) {
+        req.query.searchString = ""
+    }
+    else {
+        let str = req.query.searchString
+        req.query.searchString = str
     }
 
     return next()
@@ -83,12 +92,21 @@ app.engine('hbs', hbs({
     extname: '.hbs'
 }))
 
-let mockCreated = false
+let mockDataUpdated = false
 function createMockups() {
-    if (mockCreated) { return }
+    if (mockDataUpdated) { return }
+    if (!resetDatabase) { mockDataUpdated = true; return }
+    mockDataUpdated = true
+
     Book.bulkCreate(mockData.books)
     .then(function(books) {
-        mockCreated = true
+        
+    }).catch(function() {
+        console.log("Couldn't initiate mockdata.")
+    })
+    Author.bulkCreate(mockData.authors)
+    .then(function(authors) {
+        
     }).catch(function() {
         console.log("Couldn't initiate mockdata.")
     })
@@ -159,29 +177,35 @@ app.post('/books', function (req, res) {
 
 app.get('/books', function (req, res) {
 
-    return getBooks(req, Book)
+    return searchBooks(req, Book, Classification)
     .then(function(books) {
         const model = {
             books: books
         }
-        res.render(__dirname + "/views/books/books_search.hbs", model)
+        res.render(__dirname + "/views/books/books_list.hbs", model)
     })
     .catch(function(result) {
         res.render(__dirname + "/views/error.hbs")
     })
 })
 
-app.get('/books/:id', function (req, res) {
-    req.query.ISBN = req.params.id
-    return getBook(req, Book, Classification)
+
+app.get('/books_search', function (req, res) {
+
+    res.render(__dirname + "/views/books/books_search.hbs")
+})
+
+app.get('/books/:searchString', function (req, res) {
+    
+    return searchBooks(req.params.searchString, Book, Classification)
     .then(function(book) {
-        const model = {
-            book: book
-        }
         res.render(__dirname + "/views/books/book_view.hbs", book)
     })
     .catch(function(result) {
-        res.render(__dirname + "/views/error.hbs")
+        model = {
+            message: result
+        }
+        res.render(__dirname + "/views/error.hbs", model)
     })
 
 })

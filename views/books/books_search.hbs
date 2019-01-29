@@ -1,7 +1,9 @@
-{{#each books}}
-<a href="/books/{{ISBN}}?isbn={{ISBN}}&title={{title}}">
-    <div>ISBN: {{ISBN}}</div>
-    <div>Title: {{title}}</div>
-    <div>Pages: {{pages}}</div>
-</a>
-{{/each}}
+
+<h2>Search</h2>
+<form action="/books/" method="get">
+
+    Book title: <input type="text" name="searchString"><br>
+    <input type="submit" value="Search">
+
+
+</form>

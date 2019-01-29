@@ -196,6 +196,7 @@ const init = function(options) {
         db.sync({force: options}).then(() => {
             resolve({
                 Account: Account,
+                Author: Author,
                 Book: Book,
                 BookAuthor: BookAuthor,
                 Classification: Classification
