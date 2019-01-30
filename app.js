@@ -2,7 +2,6 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const requestHandler = require('./dal/request_handler')
-const Sequelize = require('sequelize')
 
 const mockData = require('./dal/mock_data').mockData
 
@@ -23,35 +22,14 @@ const db = require('./dal/models')
 db.init({
     force: resetDatabase
 }).then((models) => {
-    Account = models.Account,
+    Account = models.Account
     Author = models.Author
-    Book = models.Book,
-    BookAuthor = models.BookAuthor,
+    Book = models.Book
+    BookAuthor = models.BookAuthor
     Classification = models.Classification
 }).catch(reason => {
     console.log("Check init for DB! DB not working!")
 })
-
-const posts = [
-    {
-        id: 1,
-        name: "Alice",
-        message: "Great website!"
-    }, {
-        id: 2,
-        name: "Bob",
-        message: "Hello!"
-    }, {
-        id: 3,
-        name: "Claire",
-        message: "Hi!"
-    }, {
-        id: 4,
-        name: "Claire",
-        message: "Hi!"
-    }
-]
-
 
 const app = express()
 
@@ -68,11 +46,14 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({
     extended: false
 }))
+
 app.engine('hbs', hbs({
     defaultLayout: 'main',
-    extname: '.hbs'
+    extname: '.hbs',
+    layoutsDir: __dirname + "/pl/views/layouts"
 }))
 
+app.set("views", __dirname + "/pl/views/")
 
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
@@ -125,7 +106,7 @@ function initMockData() {
 
 
 app.get('/', function (req, res) {
-    res.render(__dirname + "/views/home.hbs")
+    res.render("home.hbs")
 })
 
 app.post('/accounts', function (req, res) {
@@ -139,10 +120,10 @@ app.post('/accounts', function (req, res) {
         const model = {
             posts: [result]
         }
-        res.render("/views/books/books_search.hbs", model)
+        res.render("books/books_search.hbs", model)
 
     }).catch(function(result) {
-        res.render(__dirname + "/views/error.hbs")
+        res.render("error.hbs")
     })
 })
 
@@ -153,16 +134,16 @@ app.get('/signup', function (req, res) {
         const model = {
             posts: [result]
         }
-        res.render("/views/books/books_search.hbs", model)
+        res.render("books/books_search.hbs", model)
 
     }).catch(function(result) {
-        res.render(__dirname + "/views/error.hbs")
+        res.render("error.hbs")
     })
 })
 
 app.get('/login', function (req, res) {
 
-    res.render(__dirname + "/views/accounts/login.hbs")
+    res.render("accounts/login.hbs")
 })
 
 /*
@@ -173,47 +154,50 @@ app.post('/books', function (req, res) {
         const model = {
             posts: [result]
         }
-        res.render(__dirname + "/views/booksCreated.hbs")
+        res.render("booksCreated.hbs")
     })
     .catch(function(result) {
-        res.render(__dirname + "/views/error.hbs")
+        res.render("error.hbs")
     })
 })
 */
 
 function createPagesNumbers(totalPages, currentPage) {
+    currentPage = Number(currentPage)
+
     totalPages = Math.round(totalPages + 0.5)
     const pagesArray = []
     const pagesClip = 5
-    if (totalPages > 10) {
-        for (let i = 1; i <= pagesClip; i++) {
-            if (currentPage == i) {
-                pagesArray.push({hasValue: true, value: i, isCurrent: true})
-            }
-            else {
-                pagesArray.push({hasValue: true, value: i, isCurrent: false})
-            }
+    const firstPage = 1
+    const lastPage = totalPages
+    
+    let start = currentPage <= pagesClip ? firstPage : currentPage - pagesClip
+    let end = currentPage > pagesClip ? currentPage + pagesClip : (pagesClip * 2) + 1
+    if (end > lastPage) {
+        end = lastPage
+        start = end - (pagesClip * 2)
+        start = start < 1? 1 : start
+    }
+
+    let hasFirstPage = start == firstPage
+
+    if (!hasFirstPage) {
+        pagesArray.push({value: firstPage, isFirstPage: true})
+    }
+    for (let i = start; i <= end; i++) {
+        if (i == currentPage) {
+            pagesArray.push({value: i, isCurrent: true})
         }
-        pagesArray.push({hasValue: false})
-        for (let i = totalPages - pagesClip + 1; i <= totalPages; i++) {
-            if (currentPage == i) {
-                pagesArray.push({hasValue: true, value: i, isCurrent: true})
-            }
-            else {
-                pagesArray.push({hasValue: true, value: i, isCurrent: false})
-            }
+        else {
+            pagesArray.push({value: i, isCurrent: false})
         }
     }
-    else {
-        for (let i = 1; i < totalPages; i++) {
-            if (currentPage == i) {
-                pagesArray.push({hasValue: true, value: i, isCurrent: true})
-            }
-            else {
-                pagesArray.push({hasValue: true, value: i, isCurrent: false})
-            }
-        }
+    
+    let hasLastPage = end == lastPage
+    if (!hasLastPage) {
+        pagesArray.push({value: lastPage, isLastPage: true})
     }
+    
     return pagesArray
 }
 
@@ -230,30 +214,30 @@ app.get('/books', function (req, res) {
         const model = {
             books: books
         }
-        res.render(__dirname + "/views/books/books_list.hbs", model)
+        res.render("books/books_list.hbs", model)
     })
     .catch(function(result) {
-        res.render(__dirname + "/views/error.hbs", {message: result})
+        res.render("error.hbs", {message: result})
     })
 })
 
 
 app.get('/books_search', function (req, res) {
 
-    res.render(__dirname + "/views/books/books_search.hbs")
+    res.render("books/books_search.hbs")
 })
 
 app.get('/books/:ISBN', function (req, res) {
     
     return getBookInfo(req.params.ISBN, Book, Classification)
     .then(function(book) {
-        res.render(__dirname + "/views/books/book_view.hbs", book)
+        res.render("books/book_view.hbs", book)
     })
     .catch(function(result) {
         model = {
             message: result
         }
-        res.render(__dirname + "/views/error.hbs", model)
+        res.render("error.hbs", model)
     })
 })
 
@@ -268,7 +252,7 @@ app.get('/about', function (req, res) {
         }
     }).then(function () {
 
-        res.render("./about.hbs")
+        res.render("about.hbs")
     }).catch(result => {
         res.status(res.status).json(res)
     })
