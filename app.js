@@ -187,7 +187,7 @@ function createPagesNumbers(totalPages, currentPage) {
     const pagesClip = 5
     if (totalPages > 10) {
         for (let i = 1; i <= pagesClip; i++) {
-            if (i == 1) {
+            if (currentPage == i) {
                 pagesArray.push({hasValue: true, value: i, isCurrent: true})
             }
             else {
@@ -196,12 +196,22 @@ function createPagesNumbers(totalPages, currentPage) {
         }
         pagesArray.push({hasValue: false})
         for (let i = totalPages - pagesClip + 1; i <= totalPages; i++) {
-            pagesArray.push({hasValue: true, value: i, isCurrent: false})
+            if (currentPage == i) {
+                pagesArray.push({hasValue: true, value: i, isCurrent: true})
+            }
+            else {
+                pagesArray.push({hasValue: true, value: i, isCurrent: false})
+            }
         }
     }
     else {
         for (let i = 1; i < totalPages; i++) {
-            pagesArray.push({hasValue: true, value: i, isCurrent: false})
+            if (currentPage == i) {
+                pagesArray.push({hasValue: true, value: i, isCurrent: true})
+            }
+            else {
+                pagesArray.push({hasValue: true, value: i, isCurrent: false})
+            }
         }
     }
     return pagesArray
@@ -213,8 +223,9 @@ app.get('/books', function (req, res) {
     .then(function(books) {
         
         const totalPages = (books.total) / req.query.limit
-        books.pages = createPagesNumbers(totalPages, req.query.limit)
+        books.pages = createPagesNumbers(totalPages, req.query.page)
         books.searchString = req.query.searchString
+
 
         const model = {
             books: books
