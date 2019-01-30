@@ -18,7 +18,7 @@ let Book
 let BookAuthor // a join table
 let Classification
 
-let resetDatabase = true
+let resetDatabase = false
 const db = require('./dal/models')
 db.init({
     force: resetDatabase
@@ -97,8 +97,7 @@ app.use(function(req, res, next) {
 
 let mockDataUpdated = false
 function initMockData() {
-    if (mockDataUpdated) { return }
-    if (!resetDatabase) { mockDataUpdated = true; return }
+    if (resetDatabase && mockDataUpdated) { return }
     mockDataUpdated = true
 
     

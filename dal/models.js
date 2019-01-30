@@ -1,7 +1,6 @@
 "use strict";
 
 const Sequelize = require('sequelize')
-var sqlite3 = require('sqlite3').verbose();
 
 const ValidatorObjects = require('./model_validator')
 
@@ -15,6 +14,7 @@ const init = function(options) {
         const db = new Sequelize('joyl', 'joyl', 'joyljoyl', {
             host: 'localhost',
             dialect: 'sqlite',
+            operatorsAliases: false,
 
             pool: {
                 max: 5,
@@ -30,7 +30,7 @@ const init = function(options) {
 
         const Account = db.define("account", {
             userName: {
-                type: Sequelize.STRING(accValid.name.max),
+                type: Sequelize.TEXT(accValid.name.max),
                 allowNull: false,
                 unique: {
                     args: true,
@@ -46,7 +46,7 @@ const init = function(options) {
                 }
             },
             password: {
-                type: Sequelize.STRING(accValid.passw.max),
+                type: Sequelize.TEXT(accValid.passw.max),
                 allowNull: false,
                 validate: {
                     len: {
@@ -61,7 +61,7 @@ const init = function(options) {
 
         const Book = db.define('book', {
             ISBN: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 primaryKey: true,
                 unique: {
                     args: true,
@@ -69,7 +69,7 @@ const init = function(options) {
                 }
             },
             title: {
-                type: Sequelize.STRING(bookValid.title.max),
+                type: Sequelize.TEXT(bookValid.title.max),
                 allowNull: true,
                 validate: {
                     len: {
@@ -97,7 +97,7 @@ const init = function(options) {
                 }
             },
             publicationInfo: {
-                type: Sequelize.STRING(bookValid.title.max),
+                type: Sequelize.TEXT(bookValid.title.max),
                 allowNull: true,
                 validate: {
                     len: {
@@ -124,11 +124,11 @@ const init = function(options) {
 
         const Classification = db.define('classification', {
             signId: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 primaryKey: true,
             },
             signum: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 allowNull: true,
                 validate: {
                     len: {
@@ -138,7 +138,7 @@ const init = function(options) {
                 }
             },
             description: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 validate: {
                     len: {
                         args: [bookValid.ISBN.min, bookValid.ISBN.max],
@@ -157,7 +157,7 @@ const init = function(options) {
                 primaryKey: true,
             },
             firstName: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 validate: {
                     len: {
                         args: [author.firstName.min, author.firstName.max],
@@ -166,7 +166,7 @@ const init = function(options) {
                 }
             },
             lastName: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 validate: {
                     len: {
                         args: [author.lastName.min, author.lastName.max],
@@ -175,7 +175,7 @@ const init = function(options) {
                 }
             },
             birthYear: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT,
                 allowNull: true,
                 validate: {
                     len: {
