@@ -12,7 +12,17 @@
 {{/each}}
 
 {{#each books.pages}}
-    <a href="/books?page={{this.value}}">
-        <input type="button" value="{{this.value}}">
-    </a>
+    {{#if this.hasValue }}
+        {{#if this.isCurrent}}
+            <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+                <span class="pageNumber" id="pageCurrent">{{this.value}}</span>
+            </a>
+        {{else}}
+            <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+                <span class="pageNumber">{{this.value}}</span>
+            </a>
+        {{/if}}
+    {{else}}
+        <span class="pageDots">...</span>
+    {{/if}}
 {{/each}}

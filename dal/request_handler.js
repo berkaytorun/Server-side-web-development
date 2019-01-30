@@ -114,6 +114,7 @@ function searchBooks(query, Book) {
             order: [
                 ['title', 'ASC']
             ],
+            
             limit: query.limit,
             offset: query.offset,
             where: { } 

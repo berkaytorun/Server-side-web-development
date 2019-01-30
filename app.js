@@ -18,7 +18,7 @@ let Book
 let BookAuthor // a join table
 let Classification
 
-let resetDatabase = false
+let resetDatabase = true
 const db = require('./dal/models')
 db.init({
     force: resetDatabase
@@ -96,12 +96,19 @@ app.use(function(req, res, next) {
     return next()
 })
 
-let mockDataUpdated = false
+let mockDataUpdated = true
 function initMockData() {
-    if (resetDatabase && mockDataUpdated) { return }
-    mockDataUpdated = true
+    if (!resetDatabase || !mockDataUpdated) {
+        return 
+    }
+    mockDataUpdated = false
 
-    
+    Author.bulkCreate(mockData.authors)
+    .then(function(authors) {
+        
+    }).catch(function(reason) {
+        console.log("Couldn't initiate mockdata authors")
+    })
     Classification.bulkCreate(mockData.classifications)
     .then(function(classifications) {
         
@@ -113,12 +120,6 @@ function initMockData() {
         
     }).catch(function(reason) {
         console.log("Couldn't initiate mockdata books")
-    })
-    Author.bulkCreate(mockData.authors)
-    .then(function(authors) {
-        
-    }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata authors")
     })
 }
 
@@ -186,16 +187,21 @@ function createPagesNumbers(totalPages, currentPage) {
     const pagesClip = 5
     if (totalPages > 10) {
         for (let i = 1; i <= pagesClip; i++) {
-            pagesArray.push({value: i})
+            if (i == 1) {
+                pagesArray.push({hasValue: true, value: i, isCurrent: true})
+            }
+            else {
+                pagesArray.push({hasValue: true, value: i, isCurrent: false})
+            }
         }
-        pagesArray.push({})
+        pagesArray.push({hasValue: false})
         for (let i = totalPages - pagesClip + 1; i <= totalPages; i++) {
-            pagesArray.push({value: i})
+            pagesArray.push({hasValue: true, value: i, isCurrent: false})
         }
     }
     else {
         for (let i = 1; i < totalPages; i++) {
-            pagesArray.push({value: i})
+            pagesArray.push({hasValue: true, value: i, isCurrent: false})
         }
     }
     return pagesArray
@@ -208,7 +214,8 @@ app.get('/books', function (req, res) {
         
         const totalPages = (books.total) / req.query.limit
         books.pages = createPagesNumbers(totalPages, req.query.limit)
-        
+        books.searchString = req.query.searchString
+
         const model = {
             books: books
         }
