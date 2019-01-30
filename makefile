@@ -8,4 +8,5 @@ install:
 	npm install body-parser
 
 	npm install --save sqlite3
+	npm install --save mysql2
 	npm install --save sequelize

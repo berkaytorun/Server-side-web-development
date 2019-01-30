@@ -1,0 +1,52 @@
+
+{{#each books.pages}}
+    {{#if this.isCurrent}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span class="pageNumber" id="pageCurrent">{{this.value}}</span>
+        </a>
+    {{else if this.isFirstPage}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span id="pageFirst">First page</span>
+        </a>
+    {{else if this.isLastPage}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span id="pageLast">Last page</span>
+        </a>
+    {{else}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span class="pageNumber">{{this.value}}</span>
+        </a>
+    {{/if}}
+{{/each}}
+
+{{#each books}}
+    <div id="book_info">
+        <a href="/books/{{ISBN}}">
+
+            <div>ISBN: {{ISBN}}</div>
+            <div>Title: {{title}}</div>
+            <div>publicationYear: {{publicationYear}}</div>
+            <div>Pages: {{pages}}</div>
+        </a>
+    </div>
+{{/each}}
+
+{{#each books.pages}}
+    {{#if this.isCurrent}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span class="pageNumber" id="pageCurrent">{{this.value}}</span>
+        </a>
+    {{else if this.isFirstPage}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span id="pageFirst">First page</span>
+        </a>
+    {{else if this.isLastPage}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span id="pageLast">Last page</span>
+        </a>
+    {{else}}
+        <a href="/books?page={{this.value}}&searchString={{../books.searchString}}">
+            <span class="pageNumber">{{this.value}}</span>
+        </a>
+    {{/if}}
+{{/each}}
