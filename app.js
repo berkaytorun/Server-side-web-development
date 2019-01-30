@@ -86,11 +86,12 @@ app.use(function(req, res, next) {
         req.query.searchString = ""
     }
     if (!req.query.limit) {
-        req.query.limit = 100
+        req.query.limit = 20
     }
-    if (!req.query.offset) {
-        req.query.offset = 0
+    if (!req.query.page) {
+        req.query.page = 1
     }
+    req.query.offset = (req.query.page - 1) * req.query.limit
 
     return next()
 })
@@ -179,10 +180,35 @@ app.post('/books', function (req, res) {
 })
 */
 
+function createPagesNumbers(totalPages, currentPage) {
+    totalPages = Math.round(totalPages + 0.5)
+    const pagesArray = []
+    const pagesClip = 5
+    if (totalPages > 10) {
+        for (let i = 1; i <= pagesClip; i++) {
+            pagesArray.push({value: i})
+        }
+        pagesArray.push({})
+        for (let i = totalPages - pagesClip + 1; i <= totalPages; i++) {
+            pagesArray.push({value: i})
+        }
+    }
+    else {
+        for (let i = 1; i < totalPages; i++) {
+            pagesArray.push({value: i})
+        }
+    }
+    return pagesArray
+}
+
 app.get('/books', function (req, res) {
 
     return searchBooks(req.query, Book)
     .then(function(books) {
+        
+        const totalPages = (books.total) / req.query.limit
+        books.pages = createPagesNumbers(totalPages, req.query.limit)
+        
         const model = {
             books: books
         }

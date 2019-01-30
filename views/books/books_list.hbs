@@ -10,3 +10,9 @@
         </a>
     </div>
 {{/each}}
+
+{{#each books.pages}}
+    <a href="/books?page={{this.value}}">
+        <input type="button" value="{{this.value}}">
+    </a>
+{{/each}}
