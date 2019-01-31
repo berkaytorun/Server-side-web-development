@@ -44,27 +44,3 @@ function createAuthor(req, Author) {
     })
 }
 
-function createBook(req, Book) {
-    return new Promise((resolve, reject) => {
-        Book.bulkCreate(req.mockData.books)
-        .then((result) => {
-            let response = {}
-            if (result) {
-                response.accountId = result.id
-                response.userName = result.userName
-                resolve(response)
-            } 
-            else {
-                let res = "No maches found."
-                reject(res)
-            }
-        }).catch((error) => {
-            reject(error)
-        })
-    })
-}
-
-
-
-exports.createAccount = createAccount
-exports.createBook = createBook

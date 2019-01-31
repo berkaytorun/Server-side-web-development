@@ -4,7 +4,7 @@ const Op = require('sequelize').Op
 const db = require("./request_handler")
 
 
-exports.searchBooks = function(req, callback) {
+exports.searchBooks = function(req) {
     return new Promise(function(resolve, reject) {
 
         let findWhere = {
@@ -66,7 +66,7 @@ exports.searchBooks = function(req, callback) {
     })
 }
     
-exports.getBookInfo = function(req, callback) {
+exports.getBookInfo = function(req) {
     return new Promise(function(resolve, reject) {
 
         req.models.Book.findOne({
@@ -111,7 +111,35 @@ exports.getBookInfo = function(req, callback) {
         })
     })
 }
-    
+
+exports.bookDelete = function(req) {
+    return new Promise(function(resolve, reject) {
+
+        req.models.Book.destroy({
+            where: {
+                ISBN: req.query.ISBN,
+            }
+        }).then((book)=> {
+            if (book) {
+                resolve()
+            }
+            else {
+                const error = {
+                    errors: [
+                        {message: "No matches found."}
+                    ]
+                }
+                reject(error)
+            }
+        }).catch((error)=> {
+            if (error.errors.length == 0) {
+                setTimeout(function() { throw error; });
+            }
+            return reject(error.errors)
+        })
+    })
+}
+
 exports.createBook = function(req) {
     return new Promise(function(resolve, reject) {
         req.models.Book.create({
