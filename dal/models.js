@@ -87,6 +87,7 @@ const init = function(options) {
             publicationYear: {
                 type: Sequelize.INTEGER,
                 allowNull: true,
+                /* remove this on release
                 validate: {
                     isNumeric: {
                         args: true,
@@ -98,6 +99,7 @@ const init = function(options) {
                             bookValid.publicationYear.fixedSize + " digits long."
                     }
                 }
+                */
             },
             publicationInfo: {
                 type: Sequelize.TEXT(bookValid.title.max),

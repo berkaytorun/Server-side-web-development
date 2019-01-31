@@ -87,10 +87,13 @@ app.use(function(req, res, next) {
 
 let mockDataUpdated = true
 function initMockData() {
-    if (!resetDatabase || !mockDataUpdated) {
+    if (!mockDataUpdated) {
         return 
     }
     mockDataUpdated = false
+    if (!resetDatabase) {
+        return
+    }
 
     Author.bulkCreate(mockData.authors)
     .then(function(authors) {
