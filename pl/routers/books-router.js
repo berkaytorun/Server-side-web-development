@@ -52,14 +52,30 @@ router.get("/create", function(req, res) {
 
 router.post("/create", function(req, res) {
     
-    bll.createBook(req, function(book) {
-    }).then(function(book) {
+    bll.createBook(req)
+    .then(function(book) {
         res.render("books/book_view.hbs", book)
     }).catch(function(errors) {
         const model = {
             errors: errors
         }
         res.render("error.hbs", model)
+    })
+})
+
+router.post("/delete/:ISBN", function(req, res) {
+    
+    req.query.ISBN = req.params.ISBN
+    bll.bookDelete(req)
+    .then(function() {
+        const message = {
+            errors: [
+                {message: "Book was removed"}
+            ]
+        }
+        res.render("error.hbs", message)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
     })
 })
 

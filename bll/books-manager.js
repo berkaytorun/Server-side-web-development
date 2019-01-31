@@ -13,6 +13,17 @@ exports.searchBooks = function(req) {
     })
 }
 
+exports.bookDelete = function(req) {
+    return new Promise(function(resolve, reject) {
+        return dal.bookDelete(req)
+        .then(function() {
+            resolve()
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
+
 exports.getBookInfo = function(req) {
     return new Promise(function(resolve, reject) {
         return dal.getBookInfo(req)
