@@ -65,25 +65,20 @@ router.post("/create", function(req, res) {
 
 // search for many books that match a string and filters
 router.get("/", function(req, res) {
+    
+    bll.searchBooks(req)
+    .then(function(books) {
+        const pages = (books.total) / req.query.limit
+        books.pages = generatePageNumbers(pages, req.query.currentPage)
+        books.searchString = req.query.searchString
 
-    try {
-        bll.searchBooks(req, function(books) {
-
-            const pages = (books.total) / req.query.limit
-            books.pages = generatePageNumbers(pages, req.query.currentPage)
-            books.searchString = req.query.searchString
-
-
-            const model = {
-                books: books
-            }
-            res.render("books/books_list.hbs", model)
-        })
-    }
-    catch (reason) {
-        res.render("error.hbs", {message: reason})
-    }
-
+        const model = {
+            books: books
+        }
+        res.render("books/books_list.hbs", model)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
 })
 
 
@@ -93,16 +88,15 @@ router.get("/search", function(req, res) {
 
 // Search for a specific book via ISBN
 router.get("/:ISBN", function (req, res) {
-    try {
-        req.query.ISBN = req.params.ISBN
-        bll.getBookInfo(req, function(book) {
-            res.render("books/book_view.hbs", book)
-        })
-    }
-    catch (reason) {
-        res.render("error.hbs", {message: reason})
-    }
+    req.query.ISBN = req.params.ISBN
+    bll.getBookInfo(req)
+    .then(function(bookInfo) {
+        res.render("books/book_view.hbs", bookInfo)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
 })
+
 
 
 module.exports = router
