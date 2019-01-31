@@ -21,10 +21,13 @@ const bookValid = {
         max: 40
     },
     publicationYear: {
-        min: 10,
-        max: 10
+        fixedSize: 10
     },
     publicationInfo: {
+        min: 0,
+        max: 255
+    },
+    pages: {
         min: 0,
         max: 255
     }

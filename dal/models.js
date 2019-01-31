@@ -74,7 +74,7 @@ const init = function(options) {
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
-                        msg: "Book name needs to be between " +
+                        msg: "Book title needs to be between " +
                             bookValid.title.min + " and " +
                             bookValid.title.max + " characters long."
                     }
@@ -88,11 +88,14 @@ const init = function(options) {
                 type: Sequelize.INTEGER,
                 allowNull: true,
                 validate: {
+                    isNumeric: {
+                        args: true,
+                        msg: "Publication-year can only have numeric values."
+                    },
                     len: {
-                        args: [bookValid.title.min, bookValid.title.max],
-                        msg: "Book name needs to be between " +
-                            bookValid.publicationYear.min + " and " +
-                            bookValid.publicationYear.max + " characters long."
+                        args: [bookValid.publicationYear.fixedSize, bookValid.publicationYear.fixedSize],
+                        msg: "Publication-year needs to be " +
+                            bookValid.publicationYear.fixedSize + " digits long."
                     }
                 }
             },
@@ -102,7 +105,7 @@ const init = function(options) {
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
-                        msg: "Book name needs to be between " +
+                        msg: "Publication-info field needs to be between " +
                             bookValid.publicationInfo.min + " and " +
                             bookValid.publicationInfo.max + " characters long."
                     }
@@ -114,9 +117,9 @@ const init = function(options) {
                 validate: {
                     len: {
                         args: [bookValid.title.min, bookValid.title.max],
-                        msg: "Book name needs to be between " +
-                            bookValid.title.min + " and " +
-                            bookValid.title.max + " characters long."
+                        msg: "Pages field needs to be between " +
+                            bookValid.pages.min + " and " +
+                            bookValid.pages.max + " digits long."
                     }
                 }
             },
@@ -202,20 +205,7 @@ const init = function(options) {
                 Classification: Classification
             })
         });
-
-        /*
-        db.query('SET FOREIGN_KEY_CHECKS = 0')
-        .then(function() {
-            return db.sync(options)
-        }).then(function() {
-            return db.query('SET FOREIGN_KEY_CHECKS = 1')
-        }).then(function() {
-        }).catch(function(reason) {
-            reject(reason)
-        })
-        */
     })
 }
-
 
 exports.init = init

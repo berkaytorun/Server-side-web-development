@@ -1,2 +1,4 @@
 <h2>Server Error</h2>
-<p>{{message}}</p>
+{{#each errors}}
+    {{this.message}} </br>
+{{/each}}
