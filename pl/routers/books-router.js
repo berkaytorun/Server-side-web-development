@@ -10,6 +10,7 @@ function generatePageNumbers(totalPages, currentPage) {
     totalPages = Math.ceil(totalPages)
 
     const pagesArray = []
+    const pagination = {}
     const pagesClip = 5
 
     const firstPage = 1 
@@ -24,9 +25,10 @@ function generatePageNumbers(totalPages, currentPage) {
     }
 
     let hasFirstPage = start == firstPage
+    
 
     if (!hasFirstPage) {
-        pagesArray.push({value: firstPage, isFirstPage: true})
+        pagination.hasFirstPage = true
     }
     for (let i = start; i <= end; i++) {
         if (i == currentPage) {
@@ -39,10 +41,12 @@ function generatePageNumbers(totalPages, currentPage) {
     
     let hasLastPage = end == lastPage
     if (!hasLastPage) {
-        pagesArray.push({value: lastPage, isLastPage: true})
+        pagination.hasLastPage = true
     }
     
-    return pagesArray
+    pagination.pages = pagesArray
+
+    return pagination
 }
 
 
@@ -89,6 +93,7 @@ router.get("/", function(req, res) {
         books.searchString = req.query.searchString
 
         const model = {
+            pagination: books.pages,
             books: books
         }
         res.render("books/books_list.hbs", model)

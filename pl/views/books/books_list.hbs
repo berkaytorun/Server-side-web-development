@@ -1,23 +1,34 @@
 
-{{#each books.pages}}
-    {{#if this.isCurrent}}
-        <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">
-            <span class="pageNumber" id="pageCurrent">{{this.value}}</span>
-        </a>
-    {{else if this.isFirstPage}}
-        <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">
-            <span id="pageFirst">First page</span>
-        </a>
-    {{else if this.isLastPage}}
-        <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">
-            <span id="pageLast">Last page</span>
-        </a>
-    {{else}}
-        <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">
-            <span class="pageNumber">{{this.value}}</span>
-        </a>
+<pagination>
+    {{#if pagination.hasFirstPage}}
+            <li class="pageNumber" id="pageFirst">
+                <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">First Page</a>
+            </li>
     {{/if}}
-{{/each}}
+    <ul>
+        {{#each pagination.pages}}
+            {{#if this.isCurrent}}
+
+                <li class="pageNumber" id="pageCurrent">
+                    <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">{{this.value}}</a>
+                </li>
+
+            {{else}}
+
+                <li class="pageNumber" >
+                    <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">{{this.value}}</a>
+                </li>
+
+            {{/if}}
+        {{/each}}
+    </ul>
+
+    {{#if pagination.hasLastPage}}
+        <li class="pageNumber" id="pageLast">
+            <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">Last Page</a>
+        </li>
+    {{/if}}
+</pagination>
 
 {{#each books}}
     <div id="book_info">
