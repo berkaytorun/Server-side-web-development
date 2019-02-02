@@ -1,23 +1,12 @@
 const express = require("express")
 const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
-const requestHandler = require("./dal/request_handler")
 
 const mockData = require("./dal/mock_data").mockData
-
-const createAccount = requestHandler.createAccount
 
 const app = express()
 
 app.use(express.static("public"))
-
-// used for debugging.. using mock data
-// remove before release!
-app.use(function(req, res, next) {
-    initMockData();
-    req.mockData = mockData
-    return next()
-})
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -32,27 +21,28 @@ app.engine("hbs", hbs({
 
 app.set("views", __dirname + "/pl/views/")
 
+require("./dal/models/relationships").init()
 
-let Account
-let Author
-let Book
-const routerBooks = require("./pl/routers/books-router")
-let BookAuthor // a join table
-let Classification
-
+/* */
 let resetDatabase = true
-const db = require("./dal/models")
-db.init({
-    force: resetDatabase
-}).then((models) => {
-    Account = models.Account
-    Author = models.Author
-    Book = models.Book
-    BookAuthor = models.BookAuthor
-    Classification = models.Classification
-}).catch(reason => {
-    console.log("Check init for DB! DB not working!")
+require("./dal/sequelize_settings").db
+.sync({force: resetDatabase})
+.then(function(result) {
+    console.log(result)
+}).catch(function(error) {
+    console.log(error)
 })
+/* */
+
+// used for debugging.. using mock data
+// remove before release!
+app.use(function(req, res, next) {
+    initMockData();
+    req.mockData = mockData
+    return next()
+})
+
+const routerBooks = require("./pl/routers/books-router")
 
 // Setup req object
 app.use(function(req, res, next) {
@@ -74,14 +64,6 @@ app.use(function(req, res, next) {
         req.query.currentPage = 1
     }
     req.query.offset = (req.query.currentPage - 1) * req.query.limit
-    
-    req.models = {
-        Account: Account,
-        Author: Author,
-        Book: Book,
-        BookAuthor: BookAuthor,
-        Classification: Classification
-    }
 
     return next()
 })
@@ -96,12 +78,18 @@ function initMockData() {
         return
     }
 
+    let Author = require("./dal/models/author_model").Author
+    let Book = require("./dal/models/book_model").Book
+    let Classification = require("./dal/models/classification_model").Classification
+
+    /* */
     Author.bulkCreate(mockData.authors)
     .then(function(authors) {
         
     }).catch(function(reason) {
         console.log("Couldn't initiate mockdata authors")
     })
+    /* */
     Classification.bulkCreate(mockData.classifications)
     .then(function(classifications) {
         

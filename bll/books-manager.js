@@ -1,5 +1,5 @@
 const express = require('express')
-const dal = require("../dal/books-repository")
+const dal = require("../dal/repositories/books-repository")
 
 
 

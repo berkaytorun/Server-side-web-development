@@ -1,31 +1,53 @@
 
 <pagination>
-    {{#if pagination.hasFirstPage}}
-            <li class="pageNumber" id="pageFirst">
-                <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">First Page</a>
+    {{#if pages.firstPage}}
+        {{#if searchString}}
+            <li class="pageNumber" id="pageLast">
+                <a href="/books?currentPage={{pages.firstPage}}&searchString={{searchString}}">Last Page</a>
             </li>
+        {{else}}
+            <li class="pageNumber" id="pageLast">
+                <a href="/books?currentPage={{pages.firstPage}}">Last Page</a>
+            </li>
+        {{/if}}
     {{/if}}
+
     <ul>
-        {{#each pagination.pages}}
+        {{#each pages.pageList}}
             {{#if this.isCurrent}}
-
-                <li class="pageNumber" id="pageCurrent">
-                    <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">{{this.value}}</a>
-                </li>
-
+                {{#if ../searchString}}
+                    <li class="pageNumber" id="pageCurrent">
+                        <a href="/books?currentPage={{this.value}}&searchString={{../searchString}}">{{this.value}}</a>
+                    </li>
+                {{else}}
+                    <li class="pageNumber" id="pageCurrent">
+                        <a href="/books?currentPage={{this.value}}">{{this.value}}</a>
+                    </li>
+                {{/if}}
             {{else}}
-
-                <li class="pageNumber" >
-                    <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">{{this.value}}</a>
-                </li>
-
+                {{#if ../searchString}}
+                    <li class="pageNumber" >
+                        <a href="/books?currentPage={{this.value}}&searchString={{../searchString}}">{{this.value}}</a>
+                    </li>
+                {{else}}
+                    <li class="pageNumber" >
+                        <a href="/books?currentPage={{this.value}}">{{this.value}}</a>
+                    </li>
+                {{/if}}
+                
             {{/if}}
         {{/each}}
     </ul>
 
-    {{#if pagination.hasLastPage}}
-        <li class="pageNumber" id="pageLast">
-            <a href="/books?currentPage={{this.value}}&searchString={{../books.searchString}}">Last Page</a>
-        </li>
+    {{#if pages.lastPage}}
+            {{#if searchString}}
+            <li class="pageNumber" id="pageLast">
+                <a href="/books?currentPage={{pages.lastPage}}&searchString={{searchString}}">Last Page</a>
+            </li>
+        {{else}}
+            <li class="pageNumber" id="pageLast">
+                <a href="/books?currentPage={{pages.lastPage}}">Last Page</a>
+            </li>
+        {{/if}}
     {{/if}}
 </pagination>

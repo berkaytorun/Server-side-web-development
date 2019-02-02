@@ -1,8 +1,8 @@
+
 const express = require('express')
 const router = express.Router();
 
 const bll = require("../../bll/books-manager")
-
 
 function generatePageNumbers(totalPages, currentPage) {
     currentPage = Number(currentPage)
@@ -10,7 +10,7 @@ function generatePageNumbers(totalPages, currentPage) {
     totalPages = Math.ceil(totalPages)
 
     const pagination = {
-        pages: []
+        pageList: []
     }
     const pagesClip = 5
 
@@ -25,18 +25,18 @@ function generatePageNumbers(totalPages, currentPage) {
         start = start < 1? 1 : start
     }
 
-    pagination.hasFirstPage = start != firstPage
+    pagination.firstPage = start != firstPage ? firstPage : false
     
     for (let i = start; i <= end; i++) {
         if (i == currentPage) {
-            pagination.pages.push({value: i, isCurrent: true})
+            pagination.pageList.push({value: i, isCurrent: true})
         }
         else {
-            pagination.pages.push({value: i, isCurrent: false})
+            pagination.pageList.push({value: i, isCurrent: false})
         }
     }
     
-    pagination.hasLastPage = end != lastPage
+    pagination.lastPage = end != lastPage ? lastPage : false
 
     return pagination
 }
@@ -81,12 +81,12 @@ router.get("/", function(req, res) {
     bll.searchBooks(req)
     .then(function(books) {
         const pages = (books.total) / req.query.limit
-        books.pages = generatePageNumbers(pages, req.query.currentPage)
-        books.searchString = req.query.searchString
+        const pagesArray = generatePageNumbers(pages, req.query.currentPage)
 
         const model = {
-            pagination: books.pages,
-            books: books
+            pages: pagesArray,
+            books: books,
+            searchString: req.query.searchString
         }
         res.render("books/books_list.hbs", model)
     }).catch(function(error) {

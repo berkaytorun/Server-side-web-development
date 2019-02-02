@@ -1,8 +1,8 @@
-const express = require('express')
+
 const Op = require('sequelize').Op
 
-const db = require("./request_handler")
-
+const Book = require("../models/book_model").Book
+const Classification = require("../models/classification_model").Classification
 
 exports.searchBooks = function(req) {
     return new Promise(function(resolve, reject) {
@@ -32,7 +32,7 @@ exports.searchBooks = function(req) {
                 ]
             }
         }
-        req.models.Book.findAndCountAll(findWhere)
+        Book.findAndCountAll(findWhere)
         .then((books)=> {
             if (books.rows.length > 0) {
                 let booksList = [ ]
@@ -69,12 +69,12 @@ exports.searchBooks = function(req) {
 exports.getBookInfo = function(req) {
     return new Promise(function(resolve, reject) {
 
-        req.models.Book.findOne({
+        Book.findOne({
             where: {
                 ISBN: req.query.ISBN,
             },
             include: [
-                req.models.Classification
+                Classification
             ]
         }).then((book)=> {
             if (book) {
@@ -115,7 +115,7 @@ exports.getBookInfo = function(req) {
 exports.bookDelete = function(req) {
     return new Promise(function(resolve, reject) {
 
-        req.models.Book.destroy({
+        Book.destroy({
             where: {
                 ISBN: req.query.ISBN,
             }
@@ -142,7 +142,7 @@ exports.bookDelete = function(req) {
 
 exports.editBookInfo = function(req) {
     return new Promise(function(resolve, reject) {
-        req.models.Book.update({
+        Book.update({
             title: req.body.title,
             pages:req.body.pages,
             publicationInfo:req.body.publicationInfo,
@@ -172,7 +172,7 @@ exports.editBookInfo = function(req) {
 
 exports.createBook = function(req) {
     return new Promise(function(resolve, reject) {
-        req.models.Book.create({
+        Book.create({
             ISBN: req.body.ISBN,
             title: req.body.title,
             pages:req.body.pages,

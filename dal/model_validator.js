@@ -44,7 +44,7 @@ const classifications = {
     }
 }
 
-const author = {
+const authorVal = {
     firstName: {
         min: 0,
         max: 50
@@ -62,4 +62,4 @@ const author = {
 exports.accValid = accValid
 exports.bookValid = bookValid
 exports.classifications = classifications
-exports.author = author
+exports.authorVal = authorVal
