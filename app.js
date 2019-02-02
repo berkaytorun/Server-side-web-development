@@ -26,7 +26,8 @@ app.use(bodyParser.urlencoded({
 app.engine("hbs", hbs({
     defaultLayout: "main",
     extname: ".hbs",
-    layoutsDir: __dirname + "/pl/views/layouts"
+    layoutsDir: __dirname + "/pl/views/layouts",
+    partialsDir:__dirname + "/pl/views/partials"
 }))
 
 app.set("views", __dirname + "/pl/views/")

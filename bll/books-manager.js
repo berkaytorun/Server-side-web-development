@@ -1,6 +1,21 @@
 const express = require('express')
 const dal = require("../dal/books-repository")
 
+
+
+exports.editBookInfo = function(req) {
+    return new Promise(function(resolve, reject) {
+
+        return dal.editBookInfo(req)
+        .then(function(books) {
+            resolve(books)
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
+
+
 exports.searchBooks = function(req) {
     return new Promise(function(resolve, reject) {
 

@@ -140,6 +140,36 @@ exports.bookDelete = function(req) {
     })
 }
 
+exports.editBookInfo = function(req) {
+    return new Promise(function(resolve, reject) {
+        req.models.Book.update({
+            title: req.body.title,
+            pages:req.body.pages,
+            publicationInfo:req.body.publicationInfo,
+            publicationYear:req.body.publicationYear,
+            
+        },
+        {where: {ISBN: req.body.ISBN}}
+        ).then((affectedBooks) => {
+            if (affectedBooks > 0) {
+                return resolve(affectedBooks)
+            }
+            const error = {
+                errors: [
+                    {message: "No matches found."}
+                ]
+            }
+            reject(error)
+        }).catch((error) => {
+            if (error.errors.length == 0) {
+                setTimeout(function() { throw error; });
+            }
+            return reject(error.errors)
+        })
+    })
+}
+
+
 exports.createBook = function(req) {
     return new Promise(function(resolve, reject) {
         req.models.Book.create({

@@ -18,7 +18,7 @@ const bookValid = {
     },
     title: {
         min: 3,
-        max: 40
+        max: 200
     },
     publicationYear: {
         fixedSize: 10

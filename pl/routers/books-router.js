@@ -9,8 +9,9 @@ function generatePageNumbers(totalPages, currentPage) {
 
     totalPages = Math.ceil(totalPages)
 
-    const pagesArray = []
-    const pagination = {}
+    const pagination = {
+        pages: []
+    }
     const pagesClip = 5
 
     const firstPage = 1 
@@ -24,27 +25,18 @@ function generatePageNumbers(totalPages, currentPage) {
         start = start < 1? 1 : start
     }
 
-    let hasFirstPage = start == firstPage
+    pagination.hasFirstPage = start != firstPage
     
-
-    if (!hasFirstPage) {
-        pagination.hasFirstPage = true
-    }
     for (let i = start; i <= end; i++) {
         if (i == currentPage) {
-            pagesArray.push({value: i, isCurrent: true})
+            pagination.pages.push({value: i, isCurrent: true})
         }
         else {
-            pagesArray.push({value: i, isCurrent: false})
+            pagination.pages.push({value: i, isCurrent: false})
         }
     }
     
-    let hasLastPage = end == lastPage
-    if (!hasLastPage) {
-        pagination.hasLastPage = true
-    }
-    
-    pagination.pages = pagesArray
+    pagination.hasLastPage = end != lastPage
 
     return pagination
 }
@@ -107,6 +99,33 @@ router.get("/search", function(req, res) {
     res.render("books/books_search.hbs")
 })
 
+
+router.get("/edit/:ISBN", function(req, res) {
+    req.query.ISBN = req.params.ISBN
+    bll.getBookInfo(req)
+    .then(function(bookInfo) {
+        res.render("books/book_edit.hbs", bookInfo)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
+})
+
+router.post("/edit/:ISBN", function(req, res) {
+    req.query.ISBN = req.params.ISBN
+    bll.editBookInfo(req)
+    .then(function(bookInfo) {
+
+        bll.getBookInfo(req)
+        .then(function(bookInfo) {
+            res.render("books/book_view.hbs", bookInfo)
+        }).catch(function(error) {
+            res.render("error.hbs", error)
+        })
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
+})
+
 // Search for a specific book via ISBN
 router.get("/:ISBN", function (req, res) {
     req.query.ISBN = req.params.ISBN
@@ -117,6 +136,7 @@ router.get("/:ISBN", function (req, res) {
         res.render("error.hbs", error)
     })
 })
+
 
 
 
