@@ -17,7 +17,16 @@ const db = new Sequelize('joyl', 'joyl', 'joyljoyl', {
     //operatorsAliases: false,
     storage: __dirname + '/database.sqlite'
 })
-
-
 exports.Sequelize = Sequelize
 exports.db = db
+
+let resetDatabase = require("./database").initRelations()
+
+db.sync({force: true})
+.then(function(result) {
+    if (resetDatabase) {
+        require("./database").initMockData()
+    }
+}).catch(function(error) {
+    console.log(error)
+})

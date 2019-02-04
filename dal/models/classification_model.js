@@ -1,16 +1,16 @@
 
-const classifications = require('../model_validator').classifications
+const classifications = require('./model_validator').classifications
 
 const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
 
 exports.Classification = db.define('classification', {
     signId: {
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT, // size 11
         primaryKey: true,
     },
     signum: {
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT, // size 50
         allowNull: true,
         validate: {
             len: {
