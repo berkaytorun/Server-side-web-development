@@ -1,5 +1,5 @@
 
-const bookValid = require('../model_validator').bookValid
+const bookValid = require('./model_validator').bookValid
 
 const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
@@ -15,7 +15,6 @@ exports.Book = db.define('book', {
     },
     title: {
         type: Sequelize.TEXT(bookValid.title.max),
-        allowNull: true,
         validate: {
             len: {
                 args: [bookValid.title.min, bookValid.title.max],
@@ -25,13 +24,8 @@ exports.Book = db.define('book', {
             }
         }
     },
-    signId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-    },
     publicationYear: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         /* remove this on release
         validate: {
             isNumeric: {
@@ -48,7 +42,6 @@ exports.Book = db.define('book', {
     },
     publicationInfo: {
         type: Sequelize.TEXT(bookValid.title.max),
-        allowNull: true,
         validate: {
             len: {
                 args: [bookValid.title.min, bookValid.title.max],
@@ -60,7 +53,6 @@ exports.Book = db.define('book', {
     },
     pages: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         validate: {
             len: {
                 args: [bookValid.title.min, bookValid.title.max],
@@ -69,5 +61,9 @@ exports.Book = db.define('book', {
                     bookValid.pages.max + " digits long."
             }
         }
+    },
+    signId: {
+        type: Sequelize.INTEGER,
+        unique: false
     },
 })

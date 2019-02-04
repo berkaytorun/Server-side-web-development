@@ -2,8 +2,6 @@ const express = require("express")
 const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 
-const mockData = require("./dal/mock_data").mockData
-
 const app = express()
 
 app.use(express.static("public"))
@@ -21,39 +19,15 @@ app.engine("hbs", hbs({
 
 app.set("views", __dirname + "/pl/views/")
 
-require("./dal/models/relationships").init()
-
-/* */
-let resetDatabase = true
-require("./dal/sequelize_settings").db
-.sync({force: resetDatabase})
-.then(function(result) {
-    console.log(result)
-}).catch(function(error) {
-    console.log(error)
-})
-/* */
-
-// used for debugging.. using mock data
-// remove before release!
-app.use(function(req, res, next) {
-    initMockData();
-    req.mockData = mockData
-    return next()
-})
+require("./dal/sequelize_settings")
 
 const routerBooks = require("./pl/routers/books-router")
+const routerAuthors = require("./pl/routers/authors-router")
 
 // Setup req object
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
 
-    if (!req.query.title) {
-        req.query.title = ""
-    }
-    if (!req.query.ISBN) {
-        req.query.ISBN = ""
-    }
     if (!req.query.searchString) {
         req.query.searchString = ""
     }
@@ -68,42 +42,8 @@ app.use(function(req, res, next) {
     return next()
 })
 
-let mockDataUpdated = true
-function initMockData() {
-    if (!mockDataUpdated) {
-        return 
-    }
-    mockDataUpdated = false
-    if (!resetDatabase) {
-        return
-    }
-
-    let Author = require("./dal/models/author_model").Author
-    let Book = require("./dal/models/book_model").Book
-    let Classification = require("./dal/models/classification_model").Classification
-
-    /* */
-    Author.bulkCreate(mockData.authors)
-    .then(function(authors) {
-        
-    }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata authors")
-    })
-    /* */
-    Classification.bulkCreate(mockData.classifications)
-    .then(function(classifications) {
-        
-    }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata classifications")
-    })
-    Book.bulkCreate(mockData.books)
-    .then(function(books) {
-        
-    }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata books")
-    })
-}
-
+app.use("/books", routerBooks)
+app.use("/authors", routerAuthors)
 
 app.get("/home", function (req, res) {
     res.render("home.hbs")
@@ -146,7 +86,6 @@ app.get("/login", function (req, res) {
     res.render("accounts/login.hbs")
 })
 
-app.use("/books", routerBooks)
 
 app.get("/about", function (req, res) {
     new Promise(function (resolve, reject) {

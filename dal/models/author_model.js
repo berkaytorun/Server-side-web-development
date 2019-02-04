@@ -1,14 +1,14 @@
 
-const authorVal = require('../model_validator').authorVal
+const authorVal = require('./model_validator').authorVal
 
 const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
-
 
 exports.Author = db.define('author', {
     Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true
     },
     firstName: {
         type: Sequelize.TEXT,
