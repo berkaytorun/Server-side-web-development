@@ -20,9 +20,10 @@ const db = new Sequelize('joyl', 'joyl', 'joyljoyl', {
 exports.Sequelize = Sequelize
 exports.db = db
 
-let resetDatabase = require("./database").initRelations()
+let resetDatabase = true
+require("./database").initRelations()
 
-db.sync({force: true})
+db.sync({force: resetDatabase})
 .then(function(result) {
     if (resetDatabase) {
         require("./database").initMockData()

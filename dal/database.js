@@ -4,14 +4,12 @@ const Author = require("./models/author_model").Author
 const Classification = require("./models/classification_model").Classification
 
 exports.initRelations = function() {
-    const resetDatabase = true
 
     Book.belongsTo(Classification, {foreignKey: 'signId'})
     
     Author.belongsToMany(Book, { through: "bookauthor"} )
     Book.belongsToMany(Author, { through: "bookauthor"} )
     
-    return resetDatabase
 }
 
 exports.initMockData = function () {
