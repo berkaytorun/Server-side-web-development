@@ -75,13 +75,25 @@ p{
 }
 #pageLast {
     border: 1px solid #0ee !important;
-    margin: 0;
+    margin: 0 2px 0 auto;
     padding: 0 4px 0 4px;
     text-decoration: none;
 }
 #pageFirst {
     border: 1px solid #0ee !important;
-    margin: 0;
+    margin: 0 auto 0 2px;
     padding: 0 4px 0 4px;
     text-decoration: none;
 }
+
+.pagination {
+    margin: 0px;
+}
+pagination ul li a:link,a:visited{
+    text-decoration: none;
+}
+pagination ul li:hover {
+    text-decoration: none;
+    background-color: #0aa;
+}
+
