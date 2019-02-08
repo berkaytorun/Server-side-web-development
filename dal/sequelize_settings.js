@@ -1,9 +1,9 @@
 
 const Sequelize = require('sequelize')
 
-const db = new Sequelize('joyl', 'joyl', 'joyljoyl', {
-    host: 'localhost',
-    dialect: 'sqlite',
+const db = new Sequelize('projectGroupN', 'groupN', 'lkjwmnmnfsdlk', {
+    host: 'petersmysql.cgonxecdluoj.eu-west-1.rds.amazonaws.com',
+    dialect: 'mysql',
     operatorsAliases: false,
 
     pool: {
@@ -11,11 +11,7 @@ const db = new Sequelize('joyl', 'joyl', 'joyljoyl', {
         min: 0,
         acquire: 30000,
         idle: 10000
-    },
-
-    // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
-    //operatorsAliases: false,
-    storage: __dirname + '/database.sqlite'
+    }
 })
 exports.Sequelize = Sequelize
 exports.db = db
@@ -23,11 +19,19 @@ exports.db = db
 let resetDatabase = true
 require("./database").initRelations()
 
-db.sync({force: resetDatabase})
-.then(function(result) {
+db.query('SET FOREIGN_KEY_CHECKS = 0')
+.then(function(results) {
+    return db.sync({force: true})
+}).then(function(result) {
     if (resetDatabase) {
-        require("./database").initMockData()
+        require("./database").initMockData(db)
     }
+    /*
+    db.query('show tables')
+    .then((allTables) => {
+        console.log(allTables);
+    })
+    */
 }).catch(function(error) {
     console.log(error)
 })

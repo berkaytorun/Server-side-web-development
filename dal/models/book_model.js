@@ -6,7 +6,7 @@ const db = require("../sequelize_settings").db
 
 exports.Book = db.define('book', {
     ISBN: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(15),
         primaryKey: true,
         unique: {
             args: true,
@@ -14,7 +14,7 @@ exports.Book = db.define('book', {
         }
     },
     title: {
-        type: Sequelize.TEXT(bookValid.title.max),
+        type: Sequelize.CHAR(bookValid.title.max),
         validate: {
             len: {
                 args: [bookValid.title.min, bookValid.title.max],
@@ -41,7 +41,7 @@ exports.Book = db.define('book', {
         */
     },
     publicationInfo: {
-        type: Sequelize.TEXT(bookValid.title.max),
+        type: Sequelize.CHAR(bookValid.title.max),
         validate: {
             len: {
                 args: [bookValid.title.min, bookValid.title.max],
@@ -63,7 +63,7 @@ exports.Book = db.define('book', {
         }
     },
     signId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.CHAR(11),
         unique: false
     },
 })
