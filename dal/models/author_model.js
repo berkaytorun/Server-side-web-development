@@ -11,7 +11,7 @@ exports.Author = db.define('author', {
         autoIncrement: true
     },
     firstName: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(50),
         validate: {
             len: {
                 args: [authorVal.firstName.min, authorVal.firstName.max],
@@ -20,7 +20,7 @@ exports.Author = db.define('author', {
         }
     },
     lastName: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(50),
         validate: {
             len: {
                 args: [authorVal.lastName.min, authorVal.lastName.max],
@@ -29,7 +29,7 @@ exports.Author = db.define('author', {
         }
     },
     birthYear: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(10),
         allowNull: true,
         validate: {
             len: {
@@ -38,5 +38,4 @@ exports.Author = db.define('author', {
             }
         }
     }
-
 })

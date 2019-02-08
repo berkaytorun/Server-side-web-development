@@ -6,11 +6,11 @@ const db = require("../sequelize_settings").db
 
 exports.Classification = db.define('classification', {
     signId: {
-        type: Sequelize.TEXT, // size 11
+        type: Sequelize.CHAR(11), // size 11
         primaryKey: true,
     },
     signum: {
-        type: Sequelize.TEXT, // size 50
+        type: Sequelize.CHAR(50), // size 50
         allowNull: true,
         validate: {
             len: {
@@ -20,7 +20,7 @@ exports.Classification = db.define('classification', {
         }
     },
     description: {
-        type: Sequelize.TEXT,
+        type: Sequelize.CHAR(255),
         validate: {
             len: {
                 args: [classifications.description.min, classifications.description.max],
