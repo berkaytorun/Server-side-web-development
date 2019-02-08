@@ -3,6 +3,7 @@ const db = require("../sequelize_settings").db
 const Sequelize = require("../sequelize_settings").Sequelize
 
 exports.BookAuthor = db.define('bookauthor', {
+    /*
     authorId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -18,5 +19,5 @@ exports.BookAuthor = db.define('bookauthor', {
             model: "Book",
             key: "ISBN"
         }
-    }
+    }*/
 })
