@@ -32,6 +32,9 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
         console.log(allTables);
     })
     */
+    setTimeout(function() {
+        db.query('SET FOREIGN_KEY_CHECKS = 1')
+    }, 10000)
 }).catch(function(error) {
     console.log(error)
 })

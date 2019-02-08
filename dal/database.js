@@ -26,7 +26,7 @@ exports.initMockData = function (db) {
     /* */
     
     /* */
-    Classification.bulkCreate(mockData.classifications)
+    Classification.bulkCreate(mockData.classifications, {ignoreDuplicates: true})
     .then(function(classifications) {
         
     }).catch(function(reason) {
@@ -35,7 +35,7 @@ exports.initMockData = function (db) {
     /* */
 
     /* */
-    Book.bulkCreate(mockData.books)
+    Book.bulkCreate(mockData.books, {ignoreDuplicates: true})
     .then(function(books) {
         
     }).catch(function(reason) {
@@ -46,7 +46,7 @@ exports.initMockData = function (db) {
     /* */
     BookAuthor.bulkCreate(mockData.bookAuthors, {ignoreDuplicates: true})
     .then(function(events) {
-        db.query('SET FOREIGN_KEY_CHECKS = 1')
+        
     }).catch(function(err) {
         console.log("Couldn't initiate mockdata bookauthors")
     })
