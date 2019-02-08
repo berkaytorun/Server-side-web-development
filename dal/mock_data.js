@@ -1642,7 +1642,7 @@ for (let i = 0, len = classifications.length; i < len; i++) {
 let author = [ ]
 for (let i = 0, len = authors.length; i < len; i++) {
 	author.push({
-		id: authors[i][0],
+		Id: authors[i][0],
 		firstName: authors[i][1],
 		lastName: authors[i][2],
 		birthYear: authors[i][3]
