@@ -1,8 +1,15 @@
 {{> pagination}}
 
+
+<!-- Possibly add admin controll here start-->
+    <form action="/authors/create" method="GET">
+        <button type="submit">Create Author</button>
+    </form>
+<!-- Possibly add admin controll here /end -->
+
 {{#each authors}}
     <div id="book_info">
-        <a href="/books/{{this.Id}}">
+        <a href="/authors/{{this.Id}}">
 
             <div>Id: {{Id}}</div>
             <div>firstName: {{this.firstName}}</div>
@@ -10,6 +17,9 @@
             <div>birthYear: {{this.birthYear}}</div>
         </a>
     </div>
+    <form action="authors/delete/{{Id}}"  method="post">
+        <input type="submit" value="Delete"/>
+    </form>
     
 {{/each}}
 
