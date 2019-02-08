@@ -1,0 +1,16 @@
+{{> pagination}}
+
+{{#each authors}}
+    <div id="book_info">
+        <a href="/books/{{this.Id}}">
+
+            <div>Id: {{Id}}</div>
+            <div>firstName: {{this.firstName}}</div>
+            <div>lastName: {{this.lastName}}</div>
+            <div>birthYear: {{this.birthYear}}</div>
+        </a>
+    </div>
+    
+{{/each}}
+
+{{> pagination}}
