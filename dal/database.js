@@ -17,9 +17,9 @@ exports.initMockData = function (db) {
     const mockData = require("./mock_data").mockData
 
     /* */
-    Author.bulkCreate(mockData.authors)
+    Author.bulkCreate(mockData.authors, {ignoreDuplicates: true})
     .then(function(authors) {
-        
+        console.log(authors)
     }).catch(function(reason) {
         console.log("Couldn't initiate mockdata authors")
     })
