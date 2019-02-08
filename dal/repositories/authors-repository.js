@@ -18,7 +18,7 @@ exports.searchAuthors = function(req) {
             limit: req.query.limit,
             offset: req.query.offset,
             where: { },
-            include: [ Book ]
+            //include: [ Book ]
         }
         if (req.query.searchString !== "") {
     
