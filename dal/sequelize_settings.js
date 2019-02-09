@@ -17,7 +17,12 @@ exports.Sequelize = Sequelize
 exports.db = db
 
 let resetDatabase = true
-require("./database").initRelations()
+
+let delayTimer = 3000
+if (resetDatabase == true) { delayTimer = 0 }
+setTimeout(function() {
+    require("./database").initRelations()
+}, delayTimer)
 
 db.query('SET FOREIGN_KEY_CHECKS = 0')
 .then(function(results) {
@@ -29,12 +34,15 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
     /*
     db.query('show tables')
     .then((allTables) => {
-        console.log(allTables);
+    console.log(allTables);
     })
     */
+    let delayTimer = 3000
+    if (resetDatabase == false) { delayTimer = 0 }
     setTimeout(function() {
         db.query('SET FOREIGN_KEY_CHECKS = 1')
-    }, 10000)
+    }, delayTimer)
+
 }).catch(function(error) {
     console.log(error)
 })

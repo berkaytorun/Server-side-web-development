@@ -1,14 +1,14 @@
-<form action="../edit/{{ISBN}}" method="POST">
+<form action="../edit/{{book.ISBN}}" method="POST">
     <div id="book_info">
-       ISBN <input type="text" name="ISBN" value="{{ISBN}}">
-       Title <input type="text" name="title" value="{{title}}">
-        {{#if signId}}
-       Signum     <input type="text" name="signum" value="{{signId.signum}}">
+        ISBN <input type="text" name="ISBN" value="{{book.ISBN}}">
+        Title <input type="text" name="title" value="{{book.title}}">
+        {{#if book.classification}}
+            Signum <input type="text" name="signum" value="{{book.classification.signum}}">
         {{/if}}
-      Year  <input type="text" name="publicationYear" value="{{publicationYear}}"> 
-        Info<input type="text" name="publicationInfo" value="{{publicationInfo}}">
-      Pages  <input type="text" name="pages" value="{{pages}}">
+        Year  <input type="text" name="publicationYear" value="{{book.publicationYear}}"> 
+        Info<input type="text" name="publicationInfo" value="{{book.publicationInfo}}">
+        Pages  <input type="text" name="pages" value="{{book.pages}}">
     </div>
-<input type="submit" value="Submit">
+    <input type="submit" value="Submit">
 </form>
 

@@ -19,9 +19,9 @@ exports.initMockData = function (db) {
     /* */
     Author.bulkCreate(mockData.authors, {ignoreDuplicates: true})
     .then(function(authors) {
-        console.log(authors)
+        
     }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata authors")
+        throw "Couldn't initiate mockdata authors"
     })
     /* */
     
@@ -30,7 +30,7 @@ exports.initMockData = function (db) {
     .then(function(classifications) {
         
     }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata classifications")
+        throw "Couldn't initiate mockdata classifications"
     })
     /* */
 
@@ -39,16 +39,16 @@ exports.initMockData = function (db) {
     .then(function(books) {
         
     }).catch(function(reason) {
-        console.log("Couldn't initiate mockdata books")
+        throw "Couldn't initiate mockdata books"
     })
     /* */
     
     /* */
     BookAuthor.bulkCreate(mockData.bookAuthors, {ignoreDuplicates: true})
-    .then(function(events) {
-        
+    .then(function(bookauthors) {
+
     }).catch(function(err) {
-        console.log("Couldn't initiate mockdata bookauthors")
+        throw "Couldn't initiate mockdata bookauthors"
     })
     /* */
 }

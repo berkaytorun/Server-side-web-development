@@ -44,7 +44,7 @@ router.get("/", function(req, res) {
     
     bll.searchBooks(req)
     .then(function(books) {
-        const pages = (books.total) / req.query.limit
+        const pages = (books.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
 
         const model = {
@@ -68,8 +68,11 @@ router.get("/search", function(req, res) {
 router.get("/edit/:ISBN", function(req, res) {
     req.query.ISBN = req.params.ISBN
     bll.getBookInfo(req)
-    .then(function(bookInfo) {
-        res.render("books/book_edit.hbs", bookInfo)
+    .then(function(book) {
+        const model = {
+            book: book
+        }
+        res.render("books/book_edit.hbs", model)
     }).catch(function(error) {
         res.render("error.hbs", error)
     })
@@ -95,8 +98,11 @@ router.post("/edit/:ISBN", function(req, res) {
 router.get("/:ISBN", function (req, res) {
     req.query.ISBN = req.params.ISBN
     bll.getBookInfo(req)
-    .then(function(bookInfo) {
-        res.render("books/book_view.hbs", bookInfo)
+    .then(function(book) {
+        const model = {
+            book: book
+        }
+        res.render("books/book_view.hbs", model)
     }).catch(function(error) {
         res.render("error.hbs", error)
     })

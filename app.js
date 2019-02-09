@@ -21,9 +21,6 @@ app.set("views", __dirname + "/pl/views/")
 
 require("./dal/sequelize_settings")
 
-const routerBooks = require("./pl/routers/books-router")
-const routerAuthors = require("./pl/routers/authors-router")
-
 // Setup req object
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
@@ -42,67 +39,75 @@ app.use(function(req, res, next) {
     return next()
 })
 
-app.use("/books", routerBooks)
-app.use("/authors", routerAuthors)
 
-app.get("/home", function (req, res) {
-    res.render("home.hbs")
-})
-
-app.post("/accounts", function (req, res) {
+setTimeout(function() {
+    // delay this part, until db is done.
+    const routerBooks = require("./pl/routers/books-router")
+    const routerAuthors = require("./pl/routers/authors-router")
     
-    req.body = {
-        userName: "The username",
-        password: "my password"
-    }
-    return createAccount(req, Account)
-    .then(function (result) {
-        const model = {
-            posts: [result]
-        }
-        res.render("books/books_search.hbs", model)
-
-    }).catch(function(result) {
-        res.render("error.hbs")
+    app.use("/books", routerBooks)
+    app.use("/authors", routerAuthors)
+    
+    app.get("/home", function (req, res) {
+        res.render("home.hbs")
     })
-})
 
-app.get("/signup", function (req, res) {
-
-    return createAccount(req, Account)
-    .then(function (result) {
-        const model = {
-            posts: [result]
+    app.post("/accounts", function (req, res) {
+        
+        req.body = {
+            userName: "The username",
+            password: "my password"
         }
-        res.render("books/books_search.hbs", model)
+        return createAccount(req, Account)
+        .then(function (result) {
+            const model = {
+                posts: [result]
+            }
+            res.render("books/books_search.hbs", model)
 
-    }).catch(function(result) {
-        res.render("error.hbs")
+        }).catch(function(result) {
+            res.render("error.hbs")
+        })
     })
-})
 
-app.get("/login", function (req, res) {
+    app.get("/signup", function (req, res) {
 
-    res.render("accounts/login.hbs")
-})
+        return createAccount(req, Account)
+        .then(function (result) {
+            const model = {
+                posts: [result]
+            }
+            res.render("books/books_search.hbs", model)
 
-
-app.get("/about", function (req, res) {
-    new Promise(function (resolve, reject) {
-        if (true) {
-            resolve()
-        }
-        else {
-            reject()
-        }
-    }).then(function () {
-
-        res.render("about.hbs")
-    }).catch(result => {
-        res.status(res.status).json(res)
+        }).catch(function(result) {
+            res.render("error.hbs")
+        })
     })
-})
+
+    app.get("/login", function (req, res) {
+
+        res.render("accounts/login.hbs")
+    })
+
+
+    app.get("/about", function (req, res) {
+        new Promise(function (resolve, reject) {
+            if (true) {
+                resolve()
+            }
+            else {
+                reject()
+            }
+        }).then(function () {
+
+            res.render("about.hbs")
+        }).catch(result => {
+            res.status(res.status).json(res)
+        })
+    })
 
 
 
-app.listen(8080)
+    app.listen(8080)
+
+}, 3000)
