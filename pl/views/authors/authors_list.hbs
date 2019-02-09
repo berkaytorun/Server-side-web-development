@@ -8,7 +8,7 @@
 <!-- Possibly add admin controll here /end -->
 
 {{#each authors}}
-    <div id="book_info">
+    <div id="author_info">
         <a href="/authors/{{this.Id}}">
 
             <div>Id: {{this.Id}}</div>
@@ -17,6 +17,14 @@
             <div>birthYear: {{this.birthYear}}</div>
         </a>
     </div>
+    {{#if this.books}}
+        {{#each this.books}}
+            <div>ISBN: {{this.ISBN}}</div>
+            <div>Title: {{this.title}}</div>
+            <div>publicationYear: {{this.publicationYear}}</div>
+            <div>Pages: {{this.pages}}</div>
+        {{/each}}
+    {{/if}}
     <form action="authors/delete/{{Id}}"  method="post">
         <input type="submit" value="Delete"/>
     </form>

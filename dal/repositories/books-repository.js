@@ -15,7 +15,10 @@ exports.searchBooks = function(req) {
             
             limit: req.query.limit,
             offset: req.query.offset,
-            where: { } 
+            where: { },
+            include: [
+                Classification
+            ] 
         }
         if (req.query.searchString !== "") {
     
@@ -35,19 +38,8 @@ exports.searchBooks = function(req) {
         Book.findAndCountAll(findWhere)
         .then((books)=> {
             if (books.rows.length > 0) {
-                let booksList = [ ]
-                for (let i = 0, len = books.rows.length; i < len; i++) {
-                    booksList.push({
-                        ISBN: books.rows[i].ISBN,
-                        title: books.rows[i].title,
-                        signId: books.rows[i].signId,
-                        publicationYear: books.rows[i].publicationYear,
-                        publicationInfo: books.rows[i].publicationInfo,
-                        pages: books.rows[i].pages
-                    })
-                }
-                booksList.total = books.count
-                resolve(booksList)
+                books.rows.count = books.count
+                resolve(books.rows)
             } 
             else {
                 const error = {
@@ -78,22 +70,7 @@ exports.getBookInfo = function(req) {
             ]
         }).then((book)=> {
             if (book) {
-                            
-                let theBook = {
-                    ISBN: book.ISBN,
-                    title: book.title,
-                    signId: book.signId,
-                    publicationYear: book.publicationYear,
-                    publicationInfo: book.publicationInfo,
-                    pages: book.pages
-                }
-                if (theBook.signId) {
-                    theBook.signId = {
-                        signum: book.classification.signum,
-                        description: book.classification.description
-                    }
-                }
-                resolve(theBook)
+                resolve(book)
             }
             else {
                 const error = {

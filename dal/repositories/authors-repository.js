@@ -11,15 +11,17 @@ exports.searchAuthors = function(req) {
 
         let findWhere = {
         
-            order: [
-                ['firstName', 'ASC']
-            ],
-            
+            //order: [['firstName', 'ASC']],
+            distinct: true,
             limit: req.query.limit,
             offset: req.query.offset,
             where: { },
-            //include: [ Book ]
+            include: [{
+                model: Book,
+                required: false 
+            }],
         }
+        
         if (req.query.searchString !== "") {
     
             findWhere.where = {
@@ -35,20 +37,12 @@ exports.searchAuthors = function(req) {
                 ]
             }
         }
+
         Author.findAndCountAll(findWhere)
         .then((authors)=> {
             if (authors.rows.length > 0) {
-                let authorslist = [ ]
-                for (let i = 0, len = authors.rows.length; i < len; i++) {
-                    authorslist.push({
-                        Id: authors.rows[i].Id,
-                        firstName: authors.rows[i].firstName,
-                        lastName: authors.rows[i].lastName,
-                        birthYear: authors.rows[i].birthYear,
-                    })
-                }
-                authorslist.total = authors.count
-                resolve(authorslist)
+                authors.rows.count = authors.count
+                resolve(authors.rows)
             } 
             else {
                 const error = {
@@ -59,7 +53,10 @@ exports.searchAuthors = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors.length = 0) {
+            if (error.errors && error.errors.length == 0) {
+                setTimeout(function() { throw error; });
+            }
+            else {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)

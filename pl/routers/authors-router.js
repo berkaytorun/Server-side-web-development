@@ -9,7 +9,7 @@ const generatePageNumbers = require("./help_functions").generatePageNumbers
 router.get("/", function(req, res) {
     bll.searchAuthors(req)
     .then(function(authors) {
-        const pages = (authors.total) / req.query.limit
+        const pages = (authors.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
 
         const model = {
