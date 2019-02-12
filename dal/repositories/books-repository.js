@@ -50,7 +50,7 @@ exports.searchBooks = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -81,7 +81,7 @@ exports.getBookInfo = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -109,7 +109,7 @@ exports.bookDelete = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -138,7 +138,7 @@ exports.editBookInfo = function(req) {
             }
             reject(error)
         }).catch((error) => {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -168,7 +168,7 @@ exports.createBook = function(req) {
                 return resolve(newBook)
             }
         }).catch((error) => {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)

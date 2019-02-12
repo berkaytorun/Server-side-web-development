@@ -52,10 +52,7 @@ exports.searchAuthors = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors && error.errors.length == 0) {
-                setTimeout(function() { throw error; });
-            }
-            else {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -91,7 +88,7 @@ exports.getAuthorInfo = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors.length == "0") {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -120,7 +117,7 @@ exports.authorDelete = function(req) {
                 reject(error)
             }
         }).catch((error)=> {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -146,7 +143,7 @@ exports.createAuthor = function(req) {
                 return resolve(newAuthor)
             }
         }).catch((error) => {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
@@ -176,7 +173,7 @@ exports.editAuthorInfo = function(req) {
             }
             reject(error)
         }).catch((error) => {
-            if (error.errors.length == 0) {
+            if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
             return reject(error.errors)
