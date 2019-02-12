@@ -3,7 +3,6 @@ const Op = require('sequelize').Op
 
 const Author = require("../models/author_model").Author
 const Book = require("../models/book_model").Book
-const Classification = require("../models/classification_model").Classification
 
 
 exports.searchAuthors = function(req) {

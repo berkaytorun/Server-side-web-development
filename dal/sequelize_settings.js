@@ -18,19 +18,14 @@ exports.db = db
 
 let resetDatabase = true
 
-let delayTimer = 3000
-if (resetDatabase == true) { delayTimer = 0 }
-setTimeout(function() {
-    require("./database").initRelations()
-}, delayTimer)
+require("./database").initRelations()
+if (resetDatabase == false) { return resetDatabase }
 
 db.query('SET FOREIGN_KEY_CHECKS = 0')
 .then(function(results) {
     return db.sync({force: true})
 }).then(function(result) {
-    if (resetDatabase) {
-        require("./database").initMockData(db)
-    }
+    require("./database").initMockData(db)
     /*
     db.query('show tables')
     .then((allTables) => {
@@ -42,7 +37,7 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
     setTimeout(function() {
         db.query('SET FOREIGN_KEY_CHECKS = 1')
     }, delayTimer)
-
+    return resetDatabase
 }).catch(function(error) {
     console.log(error)
 })

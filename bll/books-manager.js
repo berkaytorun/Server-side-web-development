@@ -6,6 +6,8 @@ const dal = require("../dal/repositories/books-repository")
 exports.editBookInfo = function(req) {
     return new Promise(function(resolve, reject) {
 
+        
+
         return dal.editBookInfo(req)
         .then(function(books) {
             resolve(books)
@@ -14,7 +16,6 @@ exports.editBookInfo = function(req) {
         })
     })
 }
-
 
 exports.searchBooks = function(req) {
     return new Promise(function(resolve, reject) {

@@ -19,8 +19,6 @@ app.engine("hbs", hbs({
 
 app.set("views", __dirname + "/pl/views/")
 
-require("./dal/sequelize_settings")
-
 // Setup req object
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
@@ -39,9 +37,13 @@ app.use(function(req, res, next) {
     return next()
 })
 
+const resetDatabase = require("./dal/sequelize_settings")
+let startDelay = 0;
+if (resetDatabase) { startDelay = 3000 }
 
 setTimeout(function() {
     // delay this part, until db is done.
+    const routerAccounts
     const routerBooks = require("./pl/routers/books-router")
     const routerAuthors = require("./pl/routers/authors-router")
     
@@ -106,8 +108,6 @@ setTimeout(function() {
         })
     })
 
-
-
     app.listen(8080)
 
-}, 3000)
+}, startDelay)

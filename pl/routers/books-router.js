@@ -4,7 +4,7 @@ const router = express.Router();
 
 const bll = require("../../bll/books-manager")
 
-const generatePageNumbers = require("./help_functions").generatePageNumbers
+const generatePageNumbers = require("../functionality/help_functions").generatePageNumbers
 
 router.get("/create", function(req, res) {
     res.render("books/book_create.hbs")
@@ -46,12 +46,12 @@ router.get("/", function(req, res) {
     .then(function(books) {
         const pages = (books.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
-
+        
         const model = {
             pages: pagesArray,
             books: books,
             searchString: req.query.searchString,
-            table: "books"
+            table: req.baseUrl
         }
         res.render("books/books_list.hbs", model)
     }).catch(function(error) {

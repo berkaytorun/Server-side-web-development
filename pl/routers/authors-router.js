@@ -4,7 +4,7 @@ const router = express.Router();
 
 const bll = require("../../bll/authors-manager")
 
-const generatePageNumbers = require("./help_functions").generatePageNumbers
+const generatePageNumbers = require("../functionality/help_functions").generatePageNumbers
 
 router.get("/", function(req, res) {
     bll.searchAuthors(req)
@@ -16,7 +16,7 @@ router.get("/", function(req, res) {
             pages: pagesArray,
             authors: authors,
             searchString: req.query.searchString,
-            table: "authors"
+            table: req.baseUrl
         }
         res.render("authors/authors_list.hbs", model)
     }).catch(function(error) {

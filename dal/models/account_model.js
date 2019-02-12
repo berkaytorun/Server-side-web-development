@@ -1,13 +1,18 @@
 
+const authoreties = [
+    "Moderator",
+    "Admin",
+    "Super"
+]
 
-const accValid = require('../model_validator').accValid
+const accValid = require('../models/model_validator').accValid
 
 const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
 
 exports.Account = db.define("account", {
     userName: {
-        type: Sequelize.TEXT(accValid.name.max),
+        type: Sequelize.CHAR(accValid.name.max),
         allowNull: false,
         unique: {
             args: true,
@@ -23,7 +28,7 @@ exports.Account = db.define("account", {
         }
     },
     password: {
-        type: Sequelize.TEXT(accValid.passw.max),
+        type: Sequelize.CHAR(accValid.passw.max),
         allowNull: false,
         validate: {
             len: {
@@ -33,5 +38,15 @@ exports.Account = db.define("account", {
                     accValid.passw.max + " characters long."
             }
         }
-    },            
+    },
+    authorityLevel: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+        customValidation(value) {
+            if (authoreties.includes(value)) {
+                return;
+            }
+            throw new Error('serial number already exists!')
+        }
+    }
 })
