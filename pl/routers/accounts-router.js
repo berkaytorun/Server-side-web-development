@@ -4,9 +4,33 @@ const router = express.Router();
 
 const bll = require("../../bll/accounts-manager")
 
-const generatePageNumbers = require("../functionality/help_functions").generatePageNumbers
 
+router.get("/create", function(req, res) {
+    const model = {
+        levels: require("../../dal/models/account_model").levels
+    }
+    res.render("accounts/create.hbs", model)
+})
 
+router.post("/create", function(req, res) {
+    const account = {
+        userName: req.body.userName,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        authorityLevel: req.body.authorityLevel
+    }
+    
+    bll.create(account)
+    .then(function(author) {
+        res.render("books/book_view.hbs", author)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors
+        }
+        res.render("error.hbs", model)
+    })
+})
 
 
 

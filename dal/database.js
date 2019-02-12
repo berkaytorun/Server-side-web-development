@@ -1,6 +1,5 @@
 
 const Account = require("./models/account_model").Account
-//const AccountAuthority = require("./models/account_authority").AccountAuthority
 
 const Book = require("./models/book_model").Book
 const Author = require("./models/author_model").Author
@@ -18,6 +17,15 @@ exports.initRelations = function() {
 
 exports.initMockData = function (db) {
     const mockData = require("./mock_data").mockData
+
+    /* */
+    BookAuthor.bulkCreate(mockData.bookAuthors, {ignoreDuplicates: true})
+    .then(function(bookauthors) {
+
+    }).catch(function(err) {
+        throw "Couldn't initiate mockdata bookauthors"
+    })
+    /* */
 
     /* */
     Author.bulkCreate(mockData.authors, {ignoreDuplicates: true})
@@ -43,15 +51,6 @@ exports.initMockData = function (db) {
         
     }).catch(function(reason) {
         throw "Couldn't initiate mockdata books"
-    })
-    /* */
-    
-    /* */
-    BookAuthor.bulkCreate(mockData.bookAuthors, {ignoreDuplicates: true})
-    .then(function(bookauthors) {
-
-    }).catch(function(err) {
-        throw "Couldn't initiate mockdata bookauthors"
     })
     /* */
 }

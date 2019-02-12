@@ -3,10 +3,10 @@ const dal = require("../dal/repositories/accounts-repository")
 
 
 
-exports.editAuthorInfo = function(req) {
+exports.create = function(account) {
     return new Promise(function(resolve, reject) {
 
-        return dal.editAuthorInfo(req)
+        return dal.create(account)
         .then(function(authors) {
             resolve(authors)
         }).catch(function(error) {

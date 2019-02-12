@@ -43,10 +43,11 @@ if (resetDatabase) { startDelay = 3000 }
 
 setTimeout(function() {
     // delay this part, until db is done.
-    const routerAccounts
+    const routerAccounts = require("./pl/routers/accounts-router")
     const routerBooks = require("./pl/routers/books-router")
     const routerAuthors = require("./pl/routers/authors-router")
     
+    app.use("/accounts", routerAccounts)
     app.use("/books", routerBooks)
     app.use("/authors", routerAuthors)
     
