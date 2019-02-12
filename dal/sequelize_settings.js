@@ -16,7 +16,7 @@ const db = new Sequelize('projectGroupN', 'groupN', 'lkjwmnmnfsdlk', {
 exports.Sequelize = Sequelize
 exports.db = db
 
-let resetDatabase = true
+let resetDatabase = false
 
 require("./database").initRelations()
 if (resetDatabase == false) { return resetDatabase }

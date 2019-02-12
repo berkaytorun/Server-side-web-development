@@ -1,9 +1,10 @@
 
-const authoreties = [
+const levels = [
     "Moderator",
     "Admin",
     "Super"
 ]
+exports.levels = levels
 
 const accValid = require('../models/model_validator').accValid
 
@@ -11,6 +12,7 @@ const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
 
 exports.Account = db.define("account", {
+
     userName: {
         type: Sequelize.CHAR(accValid.name.max),
         allowNull: false,
@@ -39,14 +41,40 @@ exports.Account = db.define("account", {
             }
         }
     },
+    firstName: {
+        type: Sequelize.CHAR(accValid.passw.max),
+        allowNull: false,
+        validate: {
+            len: {
+                args: [accValid.passw.min, accValid.passw.max],
+                msg: "Password needs to be between " +
+                    accValid.passw.min + " and " +
+                    accValid.passw.max + " characters long."
+            }
+        }
+    },
+    lastName: {
+        type: Sequelize.CHAR(accValid.passw.max),
+        allowNull: false,
+        validate: {
+            len: {
+                args: [accValid.passw.min, accValid.passw.max],
+                msg: "Password needs to be between " +
+                    accValid.passw.min + " and " +
+                    accValid.passw.max + " characters long."
+            }
+        }
+    },
     authorityLevel: {
         type: Sequelize.TEXT,
-        allowNull: false,
-        customValidation(value) {
-            if (authoreties.includes(value)) {
+        allowNull: false, 
+        validate: {
+          customValidation(value) {
+            if (levels.includes(value)) {
                 return;
             }
-            throw new Error('serial number already exists!')
+            throw new Error("Error?")
+          }
         }
     }
 })
