@@ -55,44 +55,6 @@ setTimeout(function() {
         res.render("home.hbs")
     })
 
-    app.post("/accounts", function (req, res) {
-        
-        req.body = {
-            userName: "The username",
-            password: "my password"
-        }
-        return createAccount(req, Account)
-        .then(function (result) {
-            const model = {
-                posts: [result]
-            }
-            res.render("books/books_search.hbs", model)
-
-        }).catch(function(result) {
-            res.render("error.hbs")
-        })
-    })
-
-    app.get("/signup", function (req, res) {
-
-        return createAccount(req, Account)
-        .then(function (result) {
-            const model = {
-                posts: [result]
-            }
-            res.render("books/books_search.hbs", model)
-
-        }).catch(function(result) {
-            res.render("error.hbs")
-        })
-    })
-
-    app.get("/login", function (req, res) {
-
-        res.render("accounts/login.hbs")
-    })
-
-
     app.get("/about", function (req, res) {
         new Promise(function (resolve, reject) {
             if (true) {
