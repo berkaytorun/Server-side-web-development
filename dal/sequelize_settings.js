@@ -32,7 +32,7 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
     console.log(allTables);
     })
     */
-    let delayTimer = 3000
+    let delayTimer = 1000
     if (resetDatabase == false) { delayTimer = 0 }
     setTimeout(function() {
         db.query('SET FOREIGN_KEY_CHECKS = 1')

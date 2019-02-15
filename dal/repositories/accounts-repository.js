@@ -26,3 +26,30 @@ exports.create = function(account) {
         })
     })
 }
+
+exports.searchFor = function(options) {
+    options = {
+
+    }
+    return new Promise(function(resolve, reject) {
+        Account.findAll(options)
+        .then((accounts) => {
+            if (accounts) {
+                resolve(accounts)
+            }
+            else {
+                const error = {
+                    errors: [
+                        {message: "Could not add account."}
+                    ]
+                }
+                reject(error)
+            }
+        }).catch((error) => {
+            if (error.errors == null || error.errors.length == 0) {
+                setTimeout(function() { throw error; });
+            }
+            return reject(error.errors)
+        })
+    })
+}
