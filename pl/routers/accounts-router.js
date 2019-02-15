@@ -31,6 +31,23 @@ router.post("/create", function(req, res) {
         res.render("error.hbs", model)
     })
 })
+router.get("/getall", function(req, res) {
+    const account = {}
+    const options = {}
+    
+    bll.searchFor(account, options)
+    .then(function(accounts) {
+        model = {
+            accounts: accounts
+        }
+        res.render("accounts/accounts_list.hbs", model)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors
+        }
+        res.render("error.hbs", model)
+    })
+})
 
 
 

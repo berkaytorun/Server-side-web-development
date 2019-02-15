@@ -12,7 +12,11 @@ const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
 
 exports.Account = db.define("account", {
-
+    Id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     userName: {
         type: Sequelize.CHAR(accValid.name.max),
         allowNull: false,
@@ -71,9 +75,9 @@ exports.Account = db.define("account", {
         validate: {
           customValidation(value) {
             if (levels.includes(value)) {
-                return;
+                return; // accepted
             }
-            throw new Error("Error?")
+            throw new Error(value + " is not a recognized authority level.")
           }
         }
     }
