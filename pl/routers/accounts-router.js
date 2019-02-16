@@ -17,12 +17,14 @@ router.post("/create", function(req, res) {
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        authorityLevel: req.body.authorityLevel
+        authorityLevel: req.body.authorityLevel,
+        Id:req.body.Id
+        
     }
     
     bll.create(account)
-    .then(function(author) {
-        res.render("books/book_view.hbs", author)
+    .then(function(account) {
+        res.render("accounts/account_view.hbs", account)
     }).catch(function(errors) {
         const model = {
             errors: errors
@@ -70,6 +72,68 @@ router.get("/getall", function(req, res) {
         res.render("error.hbs", model)
     })
 })
+
+
+router.get("/edit/:Id", function(req, res) {
+    req.query.Id = req.params.Id
+    
+    bll.getAccountInfo(req)
+    .then(function(accountInfo) {
+        const model = {
+            levels: require("../../dal/models/account_model").levels,
+            accountInfo:accountInfo
+    }
+        res.render("accounts/account_edit.hbs", model)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
+})
+
+router.post("/edit/:Id", function(req, res) {
+    req.query.Id = req.params.Id
+    bll.editAccountInfo(req)
+    .then(function(accountInfo) {
+        bll.getAccountInfo(req)
+        .then(function(accountInfo) {
+            const model = {
+                levels: require("../../dal/models/account_model").levels,
+                accountInfo:accountInfo
+        }
+            res.render("accounts/account_edit.hbs", model)
+        }).catch(function(error) {
+            res.render("error.hbs", error)
+        })
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
+})
+
+router.get("/:Id", function(req, res) {
+    req.query.Id = req.params.Id
+    bll.getAccountInfo(req)
+    .then(function(accountInfo) {
+        res.render("accounts/account_view.hbs", accountInfo)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
+})
+
+
+router.post("/delete/:Id", function(req, res) {
+    req.query.Id = req.params.Id
+    bll.accountDelete(req)
+    .then(function() {
+        const message = {
+            errors: [
+                {message: "Account removed"}
+            ]
+        }
+        res.render("error.hbs", message)
+    }).catch(function(error) {
+        res.render("error.hbs", error)
+    })
+})
+
 
 
 

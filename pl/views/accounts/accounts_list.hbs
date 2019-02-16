@@ -1,8 +1,12 @@
 {{> pagination}}
 
+<form action="./create" method="GET">
+<input type="submit" value="Create">
+</form>
+
 {{#each accounts}}
     <div id="book_info">
-        <a href="">
+        <a href="{{this.Id}}">
 
             <div>Id: {{this.Id}}</div>
             <div>User Name: {{this.userName}}</div>
@@ -11,7 +15,7 @@
             <div>Authority: {{this.authorityLevel}}</div>
         </a>
     </div>
-    <form action="accounts/delete/{{Id}}"  method="post">
+    <form action="./delete/{{Id}}"  method="post">
         <input type="submit" value="Delete"/>
     </form>
     

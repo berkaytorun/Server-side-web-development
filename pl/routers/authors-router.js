@@ -67,10 +67,6 @@ router.post("/edit/:Id", function(req, res) {
     })
 })
 
-
-
-
-
 // Search for a specific Author via ID
 router.get("/:Id", function (req, res) {
     req.query.Id = req.params.Id

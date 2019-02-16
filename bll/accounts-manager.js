@@ -43,3 +43,40 @@ exports.searchFor = function(account, options) {
         })
     })
 }
+
+
+exports.getAccountInfo = function(req) {
+    return new Promise(function(resolve, reject) {
+        return dal.getAccountInfo(req)
+        .then(function(accountInfo) {
+            resolve(accountInfo)
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
+
+
+exports.editAccountInfo = function(req) {
+    return new Promise(function(resolve, reject) {
+
+        return dal.editAccountInfo(req)
+        .then(function(accounts) {
+            resolve(accounts)
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
+
+
+exports.accountDelete = function(req) {
+    return new Promise(function(resolve, reject) {
+        return dal.accountDelete(req)
+        .then(function() {
+            resolve()
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
