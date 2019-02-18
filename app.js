@@ -37,9 +37,7 @@ app.use(function(req, res, next) {
     return next()
 })
 
-const resetDatabase = require("./dal/sequelize_settings")
-let startDelay = 0;
-if (resetDatabase) { startDelay = 3000 }
+const startDelay = require("./dal/sequelize_settings")
 
 setTimeout(function() {
     // delay this part, until db is done.

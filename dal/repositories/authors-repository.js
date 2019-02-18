@@ -17,7 +17,7 @@ exports.searchAuthors = function(req) {
             where: { },
             include: [{
                 model: Book,
-                required: false 
+                required: false
             }],
         }
         

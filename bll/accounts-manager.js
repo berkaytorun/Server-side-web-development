@@ -23,7 +23,7 @@ exports.login = function(account) {
         .then(function(dbAccount) {
             return bcrypt.compare(account.password, dbAccount.password)
         }).then(function(success) {
-            console.log("hej")
+            
         }).then(function(result) {
             resolve(result)
         }).catch(function(error) {

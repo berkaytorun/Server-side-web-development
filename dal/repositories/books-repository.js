@@ -3,9 +3,13 @@ const Op = require('sequelize').Op
 
 const Book = require("../models/book_model").Book
 const Classification = require("../models/classification_model").Classification
+const Author = require("../models/author_model").Author
 
 exports.searchBooks = function(req) {
     return new Promise(function(resolve, reject) {
+
+        const WHERE = 0
+        const INCLUDE = 1
 
         let findWhere = {
         
@@ -17,21 +21,29 @@ exports.searchBooks = function(req) {
             offset: req.query.offset,
             where: { },
             include: [
-                Classification
-            ] 
+                {
+                    model: Classification,
+                    required: false
+                },
+                {
+                    model: Author,
+                }
+            ]
+
+
         }
         if (req.query.searchString !== "") {
     
             findWhere.where = {
                 [Op.or]: [
                     {ISBN: {
-                        [Op.like]: req.query.searchString, 
+                            [Op.like]: req.query.searchString, 
                         }
                     },
                     {title: {
-                        [Op.like]: req.query.searchString, 
+                            [Op.like]: req.query.searchString, 
                         }
-                    }
+                    },
                 ]
             }
         }
