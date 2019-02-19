@@ -8,9 +8,6 @@ const Author = require("../models/author_model").Author
 exports.searchBooks = function(req) {
     return new Promise(function(resolve, reject) {
 
-        const WHERE = 0
-        const INCLUDE = 1
-
         let findWhere = {
         
             order: [
@@ -19,6 +16,7 @@ exports.searchBooks = function(req) {
             
             limit: req.query.limit,
             offset: req.query.offset,
+            
             where: { },
             include: [
                 {
@@ -28,9 +26,8 @@ exports.searchBooks = function(req) {
                 {
                     model: Author,
                 }
-            ]
-
-
+            ],
+            
         }
         if (req.query.searchString !== "") {
     

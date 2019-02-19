@@ -51,7 +51,8 @@ router.get("/", function(req, res) {
             pages: pagesArray,
             books: books,
             searchString: req.query.searchString,
-            table: req.baseUrl
+            table: req.baseUrl,
+            placeholder: "Search for a title or an ISBN"
         }
         res.render("books/books_list.hbs", model)
     }).catch(function(error) {

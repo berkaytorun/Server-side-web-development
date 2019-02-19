@@ -16,7 +16,8 @@ router.get("/", function(req, res) {
             pages: pagesArray,
             authors: authors,
             searchString: req.query.searchString,
-            table: req.baseUrl
+            table: req.baseUrl,
+            placeholder:"search authorneame"
         }
         res.render("authors/authors_list.hbs", model)
     }).catch(function(error) {
@@ -72,7 +73,10 @@ router.get("/:Id", function (req, res) {
     req.query.Id = req.params.Id
     bll.getAuthorInfo(req)
     .then(function(authorInfo) {
-        res.render("authors/author_view.hbs", authorInfo)
+        const model = {
+            authors: authorInfo
+        }
+        res.render("authors/author_view.hbs", model)
     }).catch(function(error) {
         res.render("error.hbs", error)
     })
