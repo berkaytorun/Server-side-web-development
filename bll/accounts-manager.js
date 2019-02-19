@@ -3,27 +3,34 @@ const bcrypt = require("./functionality/bcrypt")
 
 const dal = require("../dal/repositories/accounts-repository")
 
-exports.create = function(account) {
+exports.create = function(account, session) {
     return new Promise(function(resolve, reject) {
+        
+        
+
         bcrypt.encrypt(account.password)
         .then(function(hashedPassword) {
             account.password = hashedPassword
             return dal.create(account)
         }).then(function(account) {
+
             resolve(account)
         }).catch(function(error) {
             reject(error)
         })
     })
 }
-exports.login = function(account) {
+exports.login = function(account, session) {
     return new Promise(function(resolve, reject) {
 
         return dal.login(account)
         .then(function(dbAccount) {
-            return bcrypt.compare(account.password, dbAccount.password)
-        }).then(function(success) {
-            
+
+            return bcrypt.compare(account.password, dbAccount)
+        }).then(function(account) {
+
+            session.accountId = account.Id
+            session.authorityLevel = account.authorityLevel
         }).then(function(result) {
             resolve(result)
         }).catch(function(error) {

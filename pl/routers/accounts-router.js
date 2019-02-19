@@ -24,7 +24,10 @@ router.post("/create", function(req, res) {
     
     bll.create(account)
     .then(function(account) {
-        res.render("accounts/account_view.hbs", account)
+        const model = {
+            account: account
+        }
+        res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors
@@ -41,7 +44,7 @@ router.post("/login", function (req, res) {
         userName: req.body.userName,
         password: req.body.password
     }
-    bll.login(account)
+    bll.login(account, req.session)
     .then(function(accounts) {
         model = {
             accounts: accounts

@@ -67,17 +67,14 @@ exports.getAuthorInfo = function(req) {
         Author.findOne({
             where: {
                 Id: req.query.Id,
+            },
+            include: {
+                model: Book,
+                required: false
             }
         }).then((author)=> {
             if (author) {
-                            
-                let theAuthor = {
-                    Id: author.Id,
-                    firstName: author.firstName,
-                    lastName: author.lastName,
-                    birthYear: author.birthYear
-                }
-                resolve(theAuthor)
+                resolve(author)
             }
             else {
                 const error = {

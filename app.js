@@ -1,8 +1,19 @@
 const express = require("express")
 const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
+var session = require('express-session')
 
 const app = express()
+
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+    store: "",
+    secret: 'keyboard cat',
+    resave: false,
+    rolling:true,
+    saveUninitialized: true,
+    cookie: {maxAge: 1000 * 60 * 15}
+}))
 
 app.use(express.static("public"))
 
@@ -18,6 +29,11 @@ app.engine("hbs", hbs({
 }))
 
 app.set("views", __dirname + "/pl/views/")
+
+
+// Access the session as req.session
+app.get('/', function(req, res, next) {
+})
 
 // Setup req object
 app.use(function(req, res, next) {
@@ -50,8 +66,11 @@ setTimeout(function() {
     app.use("/authors", routerAuthors)
     
     app.get("/home", function (req, res) {
-        res.render("home.hbs")
-    })
+        const model = {
+            accountId: req.session.accountId
+        }
+        res.render("home.hbs",model)
+    })  
 
     app.get("/about", function (req, res) {
         new Promise(function (resolve, reject) {
