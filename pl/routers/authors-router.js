@@ -4,7 +4,7 @@ const router = express.Router();
 
 const bll = require("../../bll/authors-manager")
 
-const generatePageNumbers = require("../functionality/help_functions").generatePageNumbers
+const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/", function(req, res) {
     bll.searchAuthors(req)
@@ -17,7 +17,8 @@ router.get("/", function(req, res) {
             authors: authors,
             searchString: req.query.searchString,
             table: req.baseUrl,
-            placeholder:"search authorneame"
+            placeholder:"search authorneame",
+            session: req.session
         }
         res.render("authors/authors_list.hbs", model)
     }).catch(function(error) {
@@ -36,7 +37,8 @@ router.post("/create", function(req, res) {
         res.render("authors/author_view.hbs", author)
     }).catch(function(errors) {
         const model = {
-            errors: errors
+            errors: errors,
+            session: req.session
         }
         res.render("error.hbs", model)
     })
@@ -74,7 +76,8 @@ router.get("/:Id", function (req, res) {
     bll.getAuthorInfo(req)
     .then(function(authorInfo) {
         const model = {
-            authors: authorInfo
+            authors: authorInfo,
+            session: req.session
         }
         res.render("authors/author_view.hbs", model)
     }).catch(function(error) {

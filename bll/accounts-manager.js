@@ -3,9 +3,12 @@ const bcrypt = require("./functionality/bcrypt")
 
 const dal = require("../dal/repositories/accounts-repository")
 
+const authority = require("./functionality/authority")
+
 exports.create = function(session, account) {
     return new Promise(function(resolve, reject) {
         const allowedLevels = [
+            "Moderator",
             "Admin",
             "Super"
         ]
@@ -25,7 +28,10 @@ exports.create = function(session, account) {
         })
     })
 }
-exports.login = function(account, session) {
+
+
+
+exports.login = function(session, account) {
     return new Promise(function(resolve, reject) {
 
         return dal.login(account)
@@ -35,6 +41,14 @@ exports.login = function(account, session) {
 
             session.accountId = account.Id
             session.authorityLevel = account.authorityLevel
+
+            session.loggedIn = true
+            session.userName = account.userName
+
+            session.canDeleteBooks = authority.canDeleteBooks(session.authorityLevel)
+            session.canDeleteAuthors = authority.canDeleteAuthors(session.authorityLevel)
+            session.canDeleteUsers = authority.canDeleteUsers(session.authorityLevel)
+
             
             resolve(account)
 
@@ -44,17 +58,18 @@ exports.login = function(account, session) {
     })
 }
 
-exports.findAll = function(options) {
+exports.findAll = function(session) {
     return new Promise(function(resolve, reject) {
 
         const allowedLevels = [
+            "Admin",
             "Super"
         ]
         if (allowedLevels.includes(session.authorityLevel) == false) {
-            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+            //throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
-        return dal.findAll(options)
+        return dal.findAll()
         .then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
@@ -63,6 +78,16 @@ exports.findAll = function(options) {
     })
 }
 
+exports.logout = function(session) {
+    return new Promise(function(resolve, reject) {
+        session.destroy(function(err) {
+            if (err) {
+                reject(err)
+            }
+            resolve()
+        })
+    })
+}
 
 exports.findOne = function(session, query) {
     return new Promise(function(resolve, reject) {

@@ -15,9 +15,11 @@
             <div>Authority: {{this.authorityLevel}}</div>
         </a>
     </div>
-    <form action="./delete/{{Id}}"  method="post">
-        <input type="submit" value="Delete"/>
-    </form>
+    {{#if ../session.canDeleteUsers}}
+        <form action="./delete/{{Id}}"  method="post">
+            <input type="submit" value="Delete"/>
+        </form>
+    {{/if}}
     
 {{/each}}
 

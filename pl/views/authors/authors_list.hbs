@@ -25,9 +25,11 @@
             <div>Pages: {{this.pages}}</div>
         {{/each}}
     {{/if}}
-    <form action="authors/delete/{{Id}}"  method="post">
-        <input type="submit" value="Delete"/>
-    </form>
+    {{#if ../session.canDeleteAuthors}}
+        <form action="authors/delete/{{Id}}"  method="post">
+            <input type="submit" value="Delete"/>
+        </form>
+    {{/if}}
     
 {{/each}}
 

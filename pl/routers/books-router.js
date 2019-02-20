@@ -4,7 +4,7 @@ const router = express.Router();
 
 const bll = require("../../bll/books-manager")
 
-const generatePageNumbers = require("../functionality/help_functions").generatePageNumbers
+const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/create", function(req, res) {
     res.render("books/book_create.hbs")
@@ -17,7 +17,8 @@ router.post("/create", function(req, res) {
         res.render("books/book_view.hbs", book)
     }).catch(function(errors) {
         const model = {
-            errors: errors
+            errors: errors,
+            session: req.session
         }
         res.render("error.hbs", model)
     })
@@ -52,7 +53,8 @@ router.get("/", function(req, res) {
             books: books,
             searchString: req.query.searchString,
             table: req.baseUrl,
-            placeholder: "Search for a title or an ISBN"
+            placeholder: "Search for a title or an ISBN",
+            session: req.session
         }
         res.render("books/books_list.hbs", model)
     }).catch(function(error) {
@@ -71,7 +73,8 @@ router.get("/edit/:ISBN", function(req, res) {
     bll.getBookInfo(req)
     .then(function(book) {
         const model = {
-            book: book
+            book: book,
+            session: req.session
         }
         res.render("books/book_edit.hbs", model)
     }).catch(function(error) {
@@ -101,7 +104,8 @@ router.get("/:ISBN", function (req, res) {
     bll.getBookInfo(req)
     .then(function(book) {
         const model = {
-            book: book
+            book: book,
+            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }).catch(function(error) {

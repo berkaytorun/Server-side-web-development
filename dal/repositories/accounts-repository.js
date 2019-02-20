@@ -55,10 +55,10 @@ exports.login = function(account) {
     })
 }
 
-exports.findAll = function(options) {
+exports.findAll = function() {
     
     return new Promise(function(resolve, reject) {
-        Account.findAll(options)
+        Account.findAll()
         .then((accounts) => {
             if (accounts) {
                 resolve(accounts)

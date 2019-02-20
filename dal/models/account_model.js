@@ -18,7 +18,7 @@ exports.Account = db.define("account", {
         autoIncrement: true
     },
     userName: {
-        type: Sequelize.CHAR(accValid.name.max),
+        type: Sequelize.CHAR(accValid.userName.max),
         allowNull: false,
         unique: {
             args: true,
@@ -26,10 +26,10 @@ exports.Account = db.define("account", {
         },
         validate: {
             len: {
-                args: [accValid.name.min, accValid.name.max],
+                args: [accValid.userName.min, accValid.userName.max],
                 msg: "Username needs to be between " +
-                    accValid.name.min + " and " +
-                    accValid.name.max + " characters long."
+                    accValid.userName.min + " and " +
+                    accValid.userName.max + " characters long."
             }
         }
     },
@@ -46,26 +46,26 @@ exports.Account = db.define("account", {
         }
     },
     firstName: {
-        type: Sequelize.CHAR(accValid.passw.max),
+        type: Sequelize.CHAR(accValid.firstName.max),
         allowNull: false,
         validate: {
             len: {
-                args: [accValid.passw.min, accValid.passw.max],
-                msg: "Password needs to be between " +
-                    accValid.passw.min + " and " +
-                    accValid.passw.max + " characters long."
+                args: [accValid.firstName.min, accValid.firstName.max],
+                msg: "First name needs to be between " +
+                    accValid.firstName.min + " and " +
+                    accValid.firstName.max + " characters long."
             }
         }
     },
     lastName: {
-        type: Sequelize.CHAR(accValid.passw.max),
+        type: Sequelize.CHAR(accValid.lastName.max),
         allowNull: false,
         validate: {
             len: {
-                args: [accValid.passw.min, accValid.passw.max],
-                msg: "Password needs to be between " +
-                    accValid.passw.min + " and " +
-                    accValid.passw.max + " characters long."
+                args: [accValid.lastName.min, accValid.lastName.max],
+                msg: "Last name needs to be between " +
+                    accValid.lastName.min + " and " +
+                    accValid.lastName.max + " characters long."
             }
         }
     },
