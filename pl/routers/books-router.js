@@ -12,22 +12,31 @@ router.get("/create", function(req, res) {
 
 router.post("/create", function(req, res) {
     
-    bll.createBook(req)
+    const book = {
+        ISBN: req.body.ISBN,
+        title: req.body.title,
+        publicationInfo:req.body.publicationInfo,
+        publicationYear:req.body.publicationYear,
+        pages:req.body.pages,
+    }
+    
+    bll.create(req.session, book)
     .then(function(book) {
-        res.render("books/book_view.hbs", book)
-    }).catch(function(errors) {
         const model = {
-            errors: errors,
+            book: book,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("books/book_view.hbs", model)
+    }).catch(function(errors) {
+        res.render("error.hbs", errors)
     })
 })
 
 router.post("/delete/:ISBN", function(req, res) {
     
-    req.query.ISBN = req.params.ISBN
-    bll.bookDelete(req)
+    const book = {ISBN: req.params.ISBN}
+
+    bll.delete(req.session, book)
     .then(function() {
         const message = {
             errors: [

@@ -29,7 +29,8 @@ const bookValid = {
         max: 255
     },
     publicationYear: {
-        fixedSize: 10
+        min: 0,
+        max: 10
     },
     publicationInfo: {
         min: 0,

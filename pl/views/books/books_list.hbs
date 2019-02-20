@@ -1,10 +1,12 @@
 {{> pagination}}
 {{> search}}
-<!-- Possibly add admin controll here start-->
+
+{{#if session.loggedIn}}
     <form action="/books/create" method="GET">
         <button type="submit">Create Book</button>
     </form>
-<!-- Possibly add admin controll here /end -->
+{{/if}}
+
 {{#each books}}
     <div id="book_info">
         <a href="/books/{{ISBN}}">
