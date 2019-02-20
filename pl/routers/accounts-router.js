@@ -122,6 +122,7 @@ router.post("/edit/:Id", function(req, res) {
 
     bll.update(req.session, account)
     .then(function(accountInfo) {
+        
         bll.findOne(req)
         .then(function(accountInfo) {
             const model = {

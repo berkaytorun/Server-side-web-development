@@ -44,6 +44,7 @@ exports.login = function(session, account) {
             session.canDeleteBooks = authority.canDeleteBooks(session)
             session.canDeleteAuthors = authority.canDeleteAuthors(session)
             session.canDeleteAccounts = authority.canDeleteAccounts(session)
+            session.canUpdateBooks = authority.canUpdateBooks(session)
             
             resolve(account)
 

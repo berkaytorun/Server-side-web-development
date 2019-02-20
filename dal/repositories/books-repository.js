@@ -67,12 +67,12 @@ exports.searchBooks = function(req) {
     })
 }
     
-exports.getBookInfo = function(req) {
+exports.getBookInfo = function(book) {
     return new Promise(function(resolve, reject) {
 
         Book.findOne({
             where: {
-                ISBN: req.query.ISBN,
+                ISBN: book.ISBN,
             },
             include: [
                 Classification
@@ -126,17 +126,10 @@ exports.delete = function(book) {
     })
 }
 
-exports.update = function(req) {
+exports.update = function(book, oldISBN) {
     return new Promise(function(resolve, reject) {
-        Book.update({
-            title: req.body.title,
-            pages:req.body.pages,
-            publicationInfo:req.body.publicationInfo,
-            publicationYear:req.body.publicationYear,
-            
-        },
-        {where: {ISBN: req.body.ISBN}}
-        ).then((affectedBooks) => {
+        Book.update(book, {where: {ISBN: oldISBN},})
+        .then(function(affectedBooks) {
             if (affectedBooks > 0) {
                 return resolve(affectedBooks)
             }

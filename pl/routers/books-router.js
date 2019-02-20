@@ -78,8 +78,10 @@ router.get("/search", function(req, res) {
 
 
 router.get("/edit/:ISBN", function(req, res) {
-    req.query.ISBN = req.params.ISBN
-    bll.getBookInfo(req)
+    const book = {
+        ISBN: req.params.ISBN
+    }
+    bll.getBookInfo(book)
     .then(function(book) {
         const model = {
             book: book,
@@ -92,11 +94,19 @@ router.get("/edit/:ISBN", function(req, res) {
 })
 
 router.post("/edit/:ISBN", function(req, res) {
-    req.query.ISBN = req.params.ISBN
-    bll.editBookInfo(req)
+    const book = {
+        title: req.body.title,
+        pages:req.body.pages,
+        publicationInfo:req.body.publicationInfo,
+        publicationYear:req.body.publicationYear,
+    }
+    const oldISBN = req.params.ISBN
+    bll.update(req.session, book, oldISBN)
     .then(function(bookInfo) {
-
-        bll.getBookInfo(req)
+        const book = {
+            ISBN: req.query.ISBN
+        }
+        bll.getBookInfo(book)
         .then(function(bookInfo) {
             res.render("books/book_view.hbs", bookInfo)
         }).catch(function(error) {
@@ -109,8 +119,10 @@ router.post("/edit/:ISBN", function(req, res) {
 
 // Search for a specific book via ISBN
 router.get("/:ISBN", function (req, res) {
-    req.query.ISBN = req.params.ISBN
-    bll.getBookInfo(req)
+    const book = {
+        ISBN: req.params.ISBN
+    }
+    bll.getBookInfo(book)
     .then(function(book) {
         const model = {
             book: book,

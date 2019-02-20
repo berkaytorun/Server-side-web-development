@@ -3,14 +3,14 @@ const dal = require("../dal/repositories/books-repository")
 
 const authority = require("./functionality/authority")
 
-exports.update = function(req) {
+exports.update = function(session, book, oldISBN) {
     return new Promise(function(resolve, reject) {
 
         if (!authority.canUpdateBooks(session)) {
             throw {errors: [{message: "You do not have permissions for that."}]}
         }
 
-        return dal.update(req)
+        return dal.update(book, oldISBN)
         .then(function(books) {
             resolve(books)
         }).catch(function(error) {
@@ -47,9 +47,9 @@ exports.delete = function(session, book) {
     })
 }
 
-exports.getBookInfo = function(req) {
+exports.getBookInfo = function(book) {
     return new Promise(function(resolve, reject) {
-        return dal.getBookInfo(req)
+        return dal.getBookInfo(book)
         .then(function(bookInfo) {
             resolve(bookInfo)
         }).catch(function(error) {
