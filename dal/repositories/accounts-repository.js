@@ -55,10 +55,8 @@ exports.login = function(account) {
     })
 }
 
-exports.searchFor = function(options) {
-    options = {
-
-    }
+exports.findAll = function(options) {
+    
     return new Promise(function(resolve, reject) {
         Account.findAll(options)
         .then((accounts) => {
@@ -84,12 +82,12 @@ exports.searchFor = function(options) {
 
 
    
-exports.getAccountInfo = function(req) {
+exports.findOne = function(query) {
     return new Promise(function(resolve, reject) {
 
-        Account.findOne({
+        Account.findByPk({
             where: {
-                Id: req.query.Id,
+                Id: query.Id,
             }
         }).then((account)=> {
             if (account) {
@@ -122,18 +120,10 @@ exports.getAccountInfo = function(req) {
 
 
 
-exports.editAccountInfo = function(req) {
+exports.update = function(account) {
     return new Promise(function(resolve, reject) {
-        Account.update({
-            userName:   req.body.userName,
-            firstName:  req.body.firstName,
-            lastName:   req.body.lastName,
-            birthYear:  req.body.birthYear,
-            authorityLevel:req.body.authorityLevel,
-            
-        },
-        {where: {Id: req.body.Id}}
-        ).then((affectedAccounts) => {
+        Account.update(account, { where: {Id: account.Id} })
+        .then((affectedAccounts) => {
             if (affectedAccounts > 0) {
                 return resolve(affectedAccounts)
             }
@@ -153,7 +143,7 @@ exports.editAccountInfo = function(req) {
 }
 
 
-exports.accountDelete = function(req) {
+exports.delete = function(req) {
     return new Promise(function(resolve, reject) {
 
         Account.destroy({

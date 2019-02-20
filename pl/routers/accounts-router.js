@@ -4,7 +4,13 @@ const router = express.Router();
 
 const bll = require("../../bll/accounts-manager")
 
+
 router.get("/create", function(req, res) {
+    if (req.session.accountId === undefined) {
+        const model = {errors: [{ message: "You need to be logged in to do that." }]}
+        res.render("error.hbs", model)
+        return
+    }
     const model = {
         levels: require("../../dal/models/account_model").levels
     }
@@ -12,18 +18,24 @@ router.get("/create", function(req, res) {
 })
 
 router.post("/create", function(req, res) {
-    const account = {
-        userName: req.body.userName,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        authorityLevel: req.body.authorityLevel,
-        Id:req.body.Id
-        
-    }
-    
-    bll.create(account)
-    .then(function(account) {
+
+    new Promise(function(resolve, reject) {
+        if (req.session.accountId === undefined) {
+            throw [{ message: "You need to be logged in to do that." }]
+        }
+        resolve()
+    }).then(function() {
+        const account = {
+            userName: req.body.userName,
+            password: req.body.password,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            authorityLevel: req.body.authorityLevel
+        }
+
+        return bll.create(req.session, account)
+
+    }).then(function(account) {
         const model = {
             account: account
         }
@@ -39,17 +51,18 @@ router.post("/create", function(req, res) {
 router.get("/login", function (req, res) {
     res.render("accounts/login.hbs")
 })
+
 router.post("/login", function (req, res) {
     const account = {
         userName: req.body.userName,
         password: req.body.password
     }
     bll.login(account, req.session)
-    .then(function(accounts) {
+    .then(function(account) {
         model = {
-            accounts: accounts
+            account: account
         }
-        res.render("accounts/accounts_list.hbs", model)
+        res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors
@@ -59,10 +72,8 @@ router.post("/login", function (req, res) {
 })
 
 router.get("/getall", function(req, res) {
-    const account = {}
-    const options = {}
     
-    bll.searchFor(account, options)
+    bll.findAll(options)
     .then(function(accounts) {
         model = {
             accounts: accounts
@@ -78,9 +89,11 @@ router.get("/getall", function(req, res) {
 
 
 router.get("/edit/:Id", function(req, res) {
-    req.query.Id = req.params.Id
+    const query = {
+        Id: req.params.Id
+    }
     
-    bll.getAccountInfo(req)
+    bll.findOne(req.session, query)
     .then(function(accountInfo) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
@@ -93,10 +106,19 @@ router.get("/edit/:Id", function(req, res) {
 })
 
 router.post("/edit/:Id", function(req, res) {
-    req.query.Id = req.params.Id
-    bll.editAccountInfo(req)
+
+    const account = {
+        Id: req.params.Id,
+        userName:   req.body.userName,
+        firstName:  req.body.firstName,
+        lastName:   req.body.lastName,
+        birthYear:  req.body.birthYear,
+        authorityLevel:req.body.authorityLevel,
+    }
+
+    bll.update(req.session, account)
     .then(function(accountInfo) {
-        bll.getAccountInfo(req)
+        bll.findOne(req)
         .then(function(accountInfo) {
             const model = {
                 levels: require("../../dal/models/account_model").levels,
@@ -113,7 +135,7 @@ router.post("/edit/:Id", function(req, res) {
 
 router.get("/:Id", function(req, res) {
     req.query.Id = req.params.Id
-    bll.getAccountInfo(req)
+    bll.findOne(req)
     .then(function(accountInfo) {
         res.render("accounts/account_view.hbs", accountInfo)
     }).catch(function(error) {
@@ -123,8 +145,8 @@ router.get("/:Id", function(req, res) {
 
 
 router.post("/delete/:Id", function(req, res) {
-    req.query.Id = req.params.Id
-    bll.accountDelete(req)
+    const account = { Id = req.params.Id }
+    bll.delete(req.session, account)
     .then(function() {
         const message = {
             errors: [
