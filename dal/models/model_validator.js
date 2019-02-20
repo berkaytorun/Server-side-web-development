@@ -1,12 +1,20 @@
 "use strict";
 
 const accValid = {
-    name: {
-        min: 3,
+    userName: {
+        min: 1,
         max: 25
     },
+    firstName: {
+        min: 1,
+        max: 25
+    },
+    lastName: {
+        min: 1,
+        max: 200
+    },
     passw: {
-        min: 3,
+        min: 1,
         max: 200
     }
 }
@@ -21,7 +29,8 @@ const bookValid = {
         max: 255
     },
     publicationYear: {
-        fixedSize: 10
+        min: 0,
+        max: 10
     },
     publicationInfo: {
         min: 0,

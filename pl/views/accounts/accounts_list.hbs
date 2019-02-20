@@ -1,8 +1,10 @@
 {{> pagination}}
 
-<form action="./create" method="GET">
-<input type="submit" value="Create">
-</form>
+{{#if session.loggedIn}}
+    <form action="./create" method="GET">
+        <input type="submit" value="Create">
+    </form>
+{{/if}}
 
 {{#each accounts}}
     <div id="book_info">
@@ -15,9 +17,11 @@
             <div>Authority: {{this.authorityLevel}}</div>
         </a>
     </div>
-    <form action="./delete/{{Id}}"  method="post">
-        <input type="submit" value="Delete"/>
-    </form>
+    {{#if ../session.canDeleteAccounts}}
+        <form action="./delete/{{Id}}"  method="post">
+            <input type="submit" value="Delete"/>
+        </form>
+    {{/if}}
     
 {{/each}}
 

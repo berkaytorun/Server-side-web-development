@@ -67,12 +67,12 @@ exports.searchBooks = function(req) {
     })
 }
     
-exports.getBookInfo = function(req) {
+exports.getBookInfo = function(book) {
     return new Promise(function(resolve, reject) {
 
         Book.findOne({
             where: {
-                ISBN: req.query.ISBN,
+                ISBN: book.ISBN,
             },
             include: [
                 Classification
@@ -98,12 +98,12 @@ exports.getBookInfo = function(req) {
     })
 }
 
-exports.bookDelete = function(req) {
+exports.delete = function(book) {
     return new Promise(function(resolve, reject) {
 
         Book.destroy({
             where: {
-                ISBN: req.query.ISBN,
+                ISBN: book.ISBN,
             }
         }).then((book)=> {
             if (book) {
@@ -126,17 +126,10 @@ exports.bookDelete = function(req) {
     })
 }
 
-exports.editBookInfo = function(req) {
+exports.update = function(book, oldISBN) {
     return new Promise(function(resolve, reject) {
-        Book.update({
-            title: req.body.title,
-            pages:req.body.pages,
-            publicationInfo:req.body.publicationInfo,
-            publicationYear:req.body.publicationYear,
-            
-        },
-        {where: {ISBN: req.body.ISBN}}
-        ).then((affectedBooks) => {
+        Book.update(book, {where: {ISBN: oldISBN},})
+        .then(function(affectedBooks) {
             if (affectedBooks > 0) {
                 return resolve(affectedBooks)
             }
@@ -156,15 +149,9 @@ exports.editBookInfo = function(req) {
 }
 
 
-exports.createBook = function(req) {
+exports.create = function(book) {
     return new Promise(function(resolve, reject) {
-        Book.create({
-            ISBN: req.body.ISBN,
-            title: req.body.title,
-            pages:req.body.pages,
-            publicationInfo:req.body.publicationInfo,
-            publicationYear:req.body.publicationYear,
-        }).then((book) => {
+        Book.create(book).then((book) => {
             if (book) {
                 const newBook = {
                     ISBN: book.ISBN,
@@ -180,7 +167,7 @@ exports.createBook = function(req) {
             if (error.errors == null || error.errors.length == 0) {
                 setTimeout(function() { throw error; });
             }
-            return reject(error.errors)
+            return reject(error)
         })
     })
 }

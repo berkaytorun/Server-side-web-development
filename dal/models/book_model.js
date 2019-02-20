@@ -25,26 +25,21 @@ exports.Book = db.define('book', {
         }
     },
     publicationYear: {
-        type: Sequelize.INTEGER,
-        /* remove this on release
+        type: Sequelize.CHAR(bookValid.publicationYear.max),
         validate: {
-            isNumeric: {
-                args: true,
-                msg: "Publication-year can only have numeric values."
-            },
             len: {
-                args: [bookValid.publicationYear.fixedSize, bookValid.publicationYear.fixedSize],
-                msg: "Publication-year needs to be " +
-                    bookValid.publicationYear.fixedSize + " digits long."
+                args: [bookValid.publicationYear.min, bookValid.publicationYear.max],
+                msg: "Publication-year needs to be between " +
+                    bookValid.publicationYear.min + " and " + 
+                    bookValid.publicationYear.max + " digits long."
             }
         }
-        */
     },
     publicationInfo: {
-        type: Sequelize.CHAR(bookValid.title.max),
+        type: Sequelize.CHAR(bookValid.publicationInfo.max),
         validate: {
             len: {
-                args: [bookValid.title.min, bookValid.title.max],
+                args: [bookValid.publicationInfo.min, bookValid.publicationInfo.max],
                 msg: "Publication-info field needs to be between " +
                     bookValid.publicationInfo.min + " and " +
                     bookValid.publicationInfo.max + " characters long."
@@ -53,14 +48,6 @@ exports.Book = db.define('book', {
     },
     pages: {
         type: Sequelize.INTEGER,
-        validate: {
-            len: {
-                args: [bookValid.title.min, bookValid.title.max],
-                msg: "Pages field needs to be between " +
-                    bookValid.pages.min + " and " +
-                    bookValid.pages.max + " digits long."
-            }
-        }
     },
     signId: {
         type: Sequelize.CHAR(11),

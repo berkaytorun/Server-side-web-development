@@ -3,13 +3,12 @@ const bcrypt = require("./functionality/bcrypt")
 
 const dal = require("../dal/repositories/accounts-repository")
 
+const authority = require("./functionality/authority")
+
 exports.create = function(session, account) {
     return new Promise(function(resolve, reject) {
-        const allowedLevels = [
-            "Admin",
-            "Super"
-        ]
-        if (allowedLevels.includes(session.authorityLevel) == false) {
+        
+        if (!authority.canCreateAccounts(session)) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -25,7 +24,10 @@ exports.create = function(session, account) {
         })
     })
 }
-exports.login = function(account, session) {
+
+
+
+exports.login = function(session, account) {
     return new Promise(function(resolve, reject) {
 
         return dal.login(account)
@@ -35,6 +37,14 @@ exports.login = function(account, session) {
 
             session.accountId = account.Id
             session.authorityLevel = account.authorityLevel
+
+            session.loggedIn = true
+            session.userName = account.userName
+
+            session.canDeleteBooks = authority.canDeleteBooks(session)
+            session.canDeleteAuthors = authority.canDeleteAuthors(session)
+            session.canDeleteAccounts = authority.canDeleteAccounts(session)
+            session.canUpdateBooks = authority.canUpdateBooks(session)
             
             resolve(account)
 
@@ -44,17 +54,14 @@ exports.login = function(account, session) {
     })
 }
 
-exports.findAll = function(options) {
+exports.findAll = function(session) {
     return new Promise(function(resolve, reject) {
 
-        const allowedLevels = [
-            "Super"
-        ]
-        if (allowedLevels.includes(session.authorityLevel) == false) {
+        if (!authority.canReadAccounts(session)) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
-        return dal.findAll(options)
+        return dal.findAll()
         .then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
@@ -63,14 +70,21 @@ exports.findAll = function(options) {
     })
 }
 
+exports.logout = function(session) {
+    return new Promise(function(resolve, reject) {
+        session.destroy(function(err) {
+            if (err) {
+                reject(err)
+            }
+            resolve()
+        })
+    })
+}
 
 exports.findOne = function(session, query) {
     return new Promise(function(resolve, reject) {
-
-        const allowedLevels = [
-            "Super"
-        ]
-        if (allowedLevels.includes(session.authorityLevel) == false) {
+        
+        if (!authority.canReadAccounts(session)) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
@@ -86,11 +100,8 @@ exports.findOne = function(session, query) {
 
 exports.update = function(session, account) {
     return new Promise(function(resolve, reject) {
-
-        const allowedLevels = [
-            "Super"
-        ]
-        if (allowedLevels.includes(session.authorityLevel) == false) {
+        
+        if (!authority.canUpdateAccounts(session)) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
@@ -106,11 +117,8 @@ exports.update = function(session, account) {
 
 exports.delete = function(req) {
     return new Promise(function(resolve, reject) {
-
-        const allowedLevels = [
-            "Super"
-        ]
-        if (allowedLevels.includes(session.authorityLevel) == false) {
+        
+        if (!authority.canDeleteAccounts(session)) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 

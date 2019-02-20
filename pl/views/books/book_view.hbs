@@ -10,6 +10,8 @@
         <div>PublicationInfo: {{book.publicationInfo}}</div>
         <div>Pages: {{book.pages}}</div>
     </div>
-<input type="submit" value="Edit">
+    {{#if session.canUpdateBooks}}
+        <input type="submit" value="Edit">
+    {{/if}}
 </form>
 
