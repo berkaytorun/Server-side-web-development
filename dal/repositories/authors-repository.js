@@ -10,8 +10,8 @@ exports.searchAuthors = function(req) {
 
         let findWhere = {
         
-            //order: [['firstName', 'ASC']],
             distinct: true,
+            order: [['firstName', 'ASC']],
             limit: req.query.limit,
             offset: req.query.offset,
             where: { },
@@ -25,11 +25,11 @@ exports.searchAuthors = function(req) {
     
             findWhere.where = {
                 [Op.or]: [
-                    {Id: {
+                    {firstName: {
                         [Op.like]: req.query.searchString, 
                         }
                     },
-                    {firstName: {
+                    {lastName: {
                         [Op.like]: req.query.searchString, 
                         }
                     }
