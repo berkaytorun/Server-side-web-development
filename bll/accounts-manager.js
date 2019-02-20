@@ -3,10 +3,15 @@ const bcrypt = require("./functionality/bcrypt")
 
 const dal = require("../dal/repositories/accounts-repository")
 
-exports.create = function(account, session) {
+exports.create = function(session, account) {
     return new Promise(function(resolve, reject) {
-        
-        
+        const allowedLevels = [
+            "Admin",
+            "Super"
+        ]
+        if (allowedLevels.includes(session.authorityLevel) == false) {
+            throw [{ message: "You do not have the permissions to do that." }]
+        }
 
         bcrypt.encrypt(account.password)
         .then(function(hashedPassword) {
@@ -25,24 +30,31 @@ exports.login = function(account, session) {
 
         return dal.login(account)
         .then(function(dbAccount) {
-
             return bcrypt.compare(account.password, dbAccount)
         }).then(function(account) {
 
             session.accountId = account.Id
             session.authorityLevel = account.authorityLevel
-        }).then(function(result) {
-            resolve(result)
+            
+            resolve(account)
+
         }).catch(function(error) {
             reject(error)
         })
     })
 }
 
-exports.searchFor = function(account, options) {
+exports.findAll = function(options) {
     return new Promise(function(resolve, reject) {
 
-        return dal.searchFor(options)
+        const allowedLevels = [
+            "Super"
+        ]
+        if (allowedLevels.includes(session.authorityLevel) == false) {
+            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+        }
+
+        return dal.findAll(options)
         .then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
@@ -52,9 +64,17 @@ exports.searchFor = function(account, options) {
 }
 
 
-exports.getAccountInfo = function(req) {
+exports.findOne = function(session, query) {
     return new Promise(function(resolve, reject) {
-        return dal.getAccountInfo(req)
+
+        const allowedLevels = [
+            "Super"
+        ]
+        if (allowedLevels.includes(session.authorityLevel) == false) {
+            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+        }
+
+        return dal.findOne(query)
         .then(function(accountInfo) {
             resolve(accountInfo)
         }).catch(function(error) {
@@ -64,10 +84,17 @@ exports.getAccountInfo = function(req) {
 }
 
 
-exports.editAccountInfo = function(req) {
+exports.update = function(session, account) {
     return new Promise(function(resolve, reject) {
 
-        return dal.editAccountInfo(req)
+        const allowedLevels = [
+            "Super"
+        ]
+        if (allowedLevels.includes(session.authorityLevel) == false) {
+            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+        }
+
+        return dal.update(account)
         .then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
@@ -77,9 +104,17 @@ exports.editAccountInfo = function(req) {
 }
 
 
-exports.accountDelete = function(req) {
+exports.delete = function(req) {
     return new Promise(function(resolve, reject) {
-        return dal.accountDelete(req)
+
+        const allowedLevels = [
+            "Super"
+        ]
+        if (allowedLevels.includes(session.authorityLevel) == false) {
+            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+        }
+
+        return dal.delete(req)
         .then(function() {
             resolve()
         }).catch(function(error) {

@@ -5,6 +5,11 @@ var session = require('express-session')
 
 const app = express()
 
+const MS = 1000
+const SEC = 15
+const MIN = 15
+const HOUR = 0
+
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
     store: "",
@@ -12,7 +17,11 @@ app.use(session({
     resave: false,
     rolling:true,
     saveUninitialized: true,
-    cookie: {maxAge: 1000 * 60 * 15}
+    cookie: {maxAge: 
+        (MS * SEC) + 
+        (MS * 60 * MIN) +
+        (MS * 60 * 60 * HOUR)
+    }
 }))
 
 app.use(express.static("public"))
