@@ -32,7 +32,7 @@ router.post("/create", function(req, res) {
         res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors,
+            errors: errors.errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -61,7 +61,7 @@ router.post("/login", function (req, res) {
         res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors,
+            errors: errors.errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -72,8 +72,12 @@ router.get("/logout", function(req, res) {
     bll.logout(req.session)
     .then(function() {
         res.render("home.hbs")
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -88,7 +92,7 @@ router.get("/getall", function(req, res) {
         res.render("accounts/accounts_list.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors,
+            errors: errors.errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -108,8 +112,12 @@ router.get("/edit/:Id", function(req, res) {
             accountInfo:accountInfo
     }
         res.render("accounts/account_edit.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -125,21 +133,24 @@ router.post("/edit/:Id", function(req, res) {
     }
 
     bll.update(req.session, account)
-    .then(function(accountInfo) {
-        
-        bll.findOne(req)
-        .then(function(accountInfo) {
-            const model = {
-                levels: require("../../dal/models/account_model").levels,
-                accountInfo:accountInfo,
-                session: req.session
+    .then(function() {
+        const account = {
+            Id: req.params.Id,
+        }
+        return bll.findOne(req.session, account)
+    }).then(function(accountInfo) {
+        const model = {
+            levels: require("../../dal/models/account_model").levels,
+            accountInfo:accountInfo,
+            session: req.session
         }
         res.render("accounts/account_edit.hbs", model)
-        }).catch(function(error) {
-            res.render("error.hbs", error)
-        })
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -154,8 +165,12 @@ router.get("/:Id", function(req, res) {
             session: req.session
         }
         res.render("accounts/account_view.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -169,8 +184,12 @@ router.post("/delete/:Id", function(req, res) {
             ]
         }
         res.render("error.hbs", message)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
