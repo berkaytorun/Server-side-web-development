@@ -6,6 +6,8 @@
         <div>LastName: {{account.lastName}}</div>
         <div>authorityLevel: {{account.authorityLevel}}</div>
     </div>
-<input type="submit" value="Edit">
+    {{#if session.canUpdateAccounts}}
+        <input type="submit" value="Edit">
+    {{/if}}
 </form>
 
