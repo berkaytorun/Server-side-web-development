@@ -32,7 +32,7 @@ exports.login = function(session, account) {
 
         return dal.login(account)
         .then(function(dbAccount) {
-            if (dbAccount.userName == "1" && dbAccount.password == "1") {
+            if (dbAccount.userName == "Dev" && dbAccount.password == "") {
                 return new Promise(function(resolve, reject ) { resolve(dbAccount) })
             }
             else {

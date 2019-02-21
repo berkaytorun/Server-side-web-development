@@ -31,7 +31,10 @@ exports.login = function(account) {
     return new Promise(function(resolve, reject) {
         if (account.userName == "1" && account.password == "1") {
             account.Id = 999999999
+            account.password = ""
             account.userName = "Dev"
+            account.firstName = "This account does not exist"
+            account.lastName = "Temporary dev account"
             account.authorityLevel = "Super"
             resolve(account)
             return;
