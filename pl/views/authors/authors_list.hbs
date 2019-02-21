@@ -17,14 +17,6 @@
             <div>birthYear: {{this.birthYear}}</div>
         </a>
     </div>
-    {{#if this.books}}
-        {{#each this.books}}
-            <div>ISBN: {{this.ISBN}}</div>
-            <div>Title: {{this.title}}</div>
-            <div>publicationYear: {{this.publicationYear}}</div>
-            <div>Pages: {{this.pages}}</div>
-        {{/each}}
-    {{/if}}
     {{#if ../session.canDeleteAuthors}}
         <form action="authors/delete/{{Id}}"  method="post">
             <input type="submit" value="Delete"/>

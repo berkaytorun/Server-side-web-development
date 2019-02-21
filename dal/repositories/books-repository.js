@@ -74,9 +74,15 @@ exports.getBookInfo = function(book) {
             where: {
                 ISBN: book.ISBN,
             },
-            include: [
+            include: {
+                    model: Author,
+                    required: false
+                
+            }
+            [
                 Classification
             ]
+            
         }).then((book)=> {
             if (book) {
                 resolve(book)

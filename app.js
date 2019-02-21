@@ -89,9 +89,10 @@ setTimeout(function() {
             }
         }).then(function () {
             const model = {
+                accountId: req.session.accountId,
                 session: req.session
             }
-            res.render("about.hbs", model)
+            res.render("about.hbs",model)
         }).catch(result => {
             res.status(res.status).json(res)
         })

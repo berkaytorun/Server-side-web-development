@@ -10,8 +10,19 @@
         <div>PublicationInfo: {{book.publicationInfo}}</div>
         <div>Pages: {{book.pages}}</div>
     </div>
+    
     {{#if session.canUpdateBooks}}
         <input type="submit" value="Edit">
     {{/if}}
 </form>
+
+    {{#if book.books}}
+        {{#each author.books}}
+        <form action="/books/{{this.ISBN}}"method="GET">
+        <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
+        <input type="submit" value="Go"></form>
+        {{/each}}
+    {{/if}}
+
+
 
