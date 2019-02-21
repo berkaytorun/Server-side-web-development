@@ -28,7 +28,11 @@ router.post("/create", function(req, res) {
         }
         res.render("books/book_view.hbs", model)
     }).catch(function(errors) {
-        res.render("error.hbs", errors)
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -44,8 +48,12 @@ router.post("/delete/:ISBN", function(req, res) {
             ]
         }
         res.render("error.hbs", message)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -66,8 +74,12 @@ router.get("/", function(req, res) {
             session: req.session
         }
         res.render("books/books_list.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -88,8 +100,12 @@ router.get("/edit/:ISBN", function(req, res) {
             session: req.session
         }
         res.render("books/book_edit.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -102,18 +118,19 @@ router.post("/edit/:ISBN", function(req, res) {
     }
     const oldISBN = req.params.ISBN
     bll.update(req.session, book, oldISBN)
-    .then(function(bookInfo) {
+    .then(function() {
         const book = {
             ISBN: req.query.ISBN
         }
-        bll.getBookInfo(book)
-        .then(function(bookInfo) {
-            res.render("books/book_view.hbs", bookInfo)
-        }).catch(function(error) {
-            res.render("error.hbs", error)
-        })
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+        return bll.getBookInfo(book)
+    }).then(function(bookInfo) {
+        res.render("books/book_view.hbs", bookInfo)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -129,8 +146,12 @@ router.get("/:ISBN", function (req, res) {
             session: req.session
         }
         res.render("books/book_view.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 

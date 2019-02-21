@@ -21,8 +21,12 @@ router.get("/", function(req, res) {
             session: req.session
         }
         res.render("authors/authors_list.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -50,7 +54,7 @@ router.post("/create", function(req, res) {
         res.render("authors/author_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors,
+            errors: errors.errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -69,8 +73,12 @@ router.get("/edit/:Id", function(req, res) {
             session: req.session
         }
         res.render("authors/author_edit.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -93,8 +101,12 @@ router.post("/edit/:Id", function(req, res) {
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -110,8 +122,12 @@ router.get("/:Id", function (req, res) {
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
@@ -129,8 +145,12 @@ router.post("/delete/:Id", function(req, res) {
             ]
         }
         res.render("error.hbs", message)
-    }).catch(function(error) {
-        res.render("error.hbs", error)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors.errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
     })
 })
 
