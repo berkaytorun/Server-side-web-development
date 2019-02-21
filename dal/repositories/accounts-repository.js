@@ -75,18 +75,53 @@ exports.login = function(account) {
     })
 }
 
-exports.findAll = function() {
-    
+exports.findAll = function(options) {
     return new Promise(function(resolve, reject) {
-        Account.findAll()
+    
+        let findWhere = {
+            
+            order: [
+                ['firstName', 'ASC']
+            ],
+            
+            limit: options.limit,
+            offset: options.offset,
+            
+            where: { },
+        }
+        if (options.searchString !== "") {
+
+            findWhere.where = {
+                [Op.or]: [
+                    {userName: {
+                            [Op.like]: options.searchString, 
+                        }
+                    },
+                    {firstName: {
+                            [Op.like]: options.searchString, 
+                        }
+                    },
+                    {lastName: {
+                            [Op.like]: options.searchString, 
+                        }
+                    },
+                    {authorityLevel: {
+                            [Op.like]: options.searchString, 
+                        }
+                    },
+                ]
+            }
+        }
+        Account.findAndCountAll(findWhere)
         .then((accounts) => {
-            if (accounts) {
-                resolve(accounts)
+            if (accounts.rows.length > 0) {
+                accounts.rows.count = accounts.count
+                resolve(accounts.rows)
             }
             else {
                 const error = {
                     errors: [
-                        {message: "Could not add account."}
+                        {message: "No matches found."}
                     ]
                 }
                 reject(error)

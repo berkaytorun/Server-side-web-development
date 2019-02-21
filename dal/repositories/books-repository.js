@@ -50,7 +50,7 @@ exports.searchBooks = function(options) {
             if (books.rows.length > 0) {
                 books.rows.count = books.count
                 resolve(books.rows)
-            } 
+            }
             else {
                 const error = {
                     errors: [
