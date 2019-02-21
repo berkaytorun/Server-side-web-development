@@ -10,6 +10,7 @@ exports.searchBooks = function(options) {
 
         let findWhere = {
         
+            distinct: true,
             order: [
                 ['title', 'ASC']
             ],
@@ -74,13 +75,15 @@ exports.getBookInfo = function(book) {
             where: {
                 ISBN: book.ISBN,
             },
-            include: {
+            include:[ 
+                { 
                     model: Author,
                     required: false
-                
-            }
-            [
-                Classification
+                },
+                {
+                    model: Classification,
+                    required: false
+                }
             ]
             
         }).then((book)=> {
