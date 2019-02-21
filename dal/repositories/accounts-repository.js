@@ -20,7 +20,12 @@ exports.create = function(account) {
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -58,7 +63,12 @@ exports.login = function(account) {
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -83,7 +93,12 @@ exports.findAll = function() {
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -117,7 +132,12 @@ exports.findOne = function(account) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -141,7 +161,12 @@ exports.update = function(account) {
             reject(error)
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -170,7 +195,12 @@ exports.delete = function(req) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })

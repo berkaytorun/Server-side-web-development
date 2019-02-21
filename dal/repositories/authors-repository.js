@@ -53,7 +53,12 @@ exports.search = function(options) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -86,7 +91,12 @@ exports.findOne = function(author) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -112,7 +122,12 @@ exports.delete = function(author) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -129,7 +144,12 @@ exports.create = function(author) {
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -157,7 +177,12 @@ exports.update = function(author) {
             reject(error)
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
