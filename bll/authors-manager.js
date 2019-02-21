@@ -43,7 +43,7 @@ exports.update = function(session, author) {
     })
 }
 
-exports.delete = function(author) {
+exports.delete = function(session, author) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canDeleteAuthors) {

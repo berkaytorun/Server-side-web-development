@@ -8,7 +8,7 @@ const authority = require("./functionality/authority")
 exports.create = function(session, account) {
     return new Promise(function(resolve, reject) {
         
-        if (!authority.canCreateAccounts(session)) {
+        if (!session.canCreateAccounts) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -70,7 +70,7 @@ exports.login = function(session, account) {
 exports.findAll = function(session) {
     return new Promise(function(resolve, reject) {
 
-        if (!authority.canReadAccounts(session)) {
+        if (!session.canReadAccounts) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
@@ -97,7 +97,7 @@ exports.logout = function(session) {
 exports.findOne = function(session, query) {
     return new Promise(function(resolve, reject) {
         
-        if (!authority.canReadAccounts(session)) {
+        if (!session.canReadAccounts) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
@@ -114,7 +114,7 @@ exports.findOne = function(session, query) {
 exports.update = function(session, account) {
     return new Promise(function(resolve, reject) {
         
-        if (!authority.canUpdateAccounts(session)) {
+        if (!session.canUpdateAccounts) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
@@ -131,7 +131,7 @@ exports.update = function(session, account) {
 exports.delete = function(req) {
     return new Promise(function(resolve, reject) {
         
-        if (!authority.canDeleteAccounts(session)) {
+        if (!session.canDeleteAccounts) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 

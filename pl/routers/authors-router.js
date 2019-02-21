@@ -121,7 +121,7 @@ router.post("/delete/:Id", function(req, res) {
     const author = {
         Id: req.params.Id
     } 
-    bll.delete(author)
+    bll.delete(req.session, author)
     .then(function() {
         const message = {
             errors: [
