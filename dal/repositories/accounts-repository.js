@@ -92,14 +92,10 @@ exports.findAll = function() {
 
 
    
-exports.findOne = function(query) {
+exports.findOne = function(account) {
     return new Promise(function(resolve, reject) {
 
-        Account.findByPk({
-            where: {
-                Id: query.Id,
-            }
-        }).then((account)=> {
+        Account.findByPk(account.Id).then((account)=> {
             if (account) {
                             
                 let theAccount = {

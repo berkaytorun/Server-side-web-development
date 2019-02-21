@@ -25,8 +25,6 @@ exports.create = function(session, account) {
     })
 }
 
-
-
 exports.login = function(session, account) {
     return new Promise(function(resolve, reject) {
 
@@ -94,14 +92,14 @@ exports.logout = function(session) {
     })
 }
 
-exports.findOne = function(session, query) {
+exports.findOne = function(session, account) {
     return new Promise(function(resolve, reject) {
         
         if (!session.canReadAccounts) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
-        return dal.findOne(query)
+        return dal.findOne(account)
         .then(function(accountInfo) {
             resolve(accountInfo)
         }).catch(function(error) {
