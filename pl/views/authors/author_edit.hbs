@@ -1,11 +1,9 @@
-<form action="../edit/{{Id}}" method="POST">
+<form action="../edit/{{this.Id}}" method="POST">
     <div id="book_info">
-        Firstname <input type="text" name="firstName" value="{{firstName}}"><br>
-        Lastname  <input type="text" name="lastName" value="{{lastName}}"><br>
-        BirthYear <input type="text" name="birthYear" value="{{birthYear}}">
-        <input type="hidden" id="Id" name="Id" value="{{Id}}">
+        Firstname <input type="text" name="firstName" value="{{this.firstName}}"><br>
+        Lastname  <input type="text" name="lastName" value="{{this.lastName}}"><br>
+        BirthYear <input type="text" name="birthYear" value="{{this.birthYear}}">
+        <input type="hidden" id="Id" name="Id" value="{{this.Id}}">
     </div>
     <input type="submit" value="Submit">
 </form>
-
-<div>{{authors.books}}</div>
