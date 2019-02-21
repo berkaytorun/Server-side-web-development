@@ -134,7 +134,7 @@ router.post("/edit/:Id", function(req, res) {
                 accountInfo:accountInfo,
                 session: req.session
         }
-            res.render("accounts/account_edit.hbs", model)
+        res.render("accounts/account_edit.hbs", model)
         }).catch(function(error) {
             res.render("error.hbs", error)
         })
@@ -144,10 +144,16 @@ router.post("/edit/:Id", function(req, res) {
 })
 
 router.get("/:Id", function(req, res) {
-    req.query.Id = req.params.Id
-    bll.findOne(req)
+    const account = {
+        Id: req.params.Id
+    } 
+    bll.findOne(req.session, account)
     .then(function(accountInfo) {
-        res.render("accounts/account_view.hbs", accountInfo)
+        const model = {
+            account: accountInfo,
+            session: req.session
+        }
+        res.render("accounts/account_view.hbs", model)
     }).catch(function(error) {
         res.render("error.hbs", error)
     })
