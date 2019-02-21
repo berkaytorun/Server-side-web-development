@@ -52,6 +52,7 @@ router.post("/login", function (req, res) {
     .then(function(account) {
         model = {
             account: account,
+            session: req.session,
 
         }
         res.render("accounts/account_view.hbs", model)

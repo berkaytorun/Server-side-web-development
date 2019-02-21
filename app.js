@@ -76,7 +76,8 @@ setTimeout(function() {
     
     app.get("/home", function (req, res) {
         const model = {
-            accountId: req.session.accountId
+            accountId: req.session.accountId,
+            session: req.session
         }
         res.render("home.hbs",model)
     })  
@@ -90,8 +91,11 @@ setTimeout(function() {
                 reject()
             }
         }).then(function () {
-
-            res.render("about.hbs")
+            const model = {
+                accountId: req.session.accountId,
+                session: req.session
+            }
+            res.render("about.hbs",model)
         }).catch(result => {
             res.status(res.status).json(res)
         })

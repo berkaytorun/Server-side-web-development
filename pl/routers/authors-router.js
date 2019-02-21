@@ -76,7 +76,7 @@ router.get("/:Id", function (req, res) {
     bll.getAuthorInfo(req)
     .then(function(authorInfo) {
         const model = {
-            authors: authorInfo,
+            author: authorInfo,
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
