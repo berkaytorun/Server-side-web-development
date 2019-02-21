@@ -6,7 +6,7 @@ const authority = require("./functionality/authority")
 exports.update = function(session, book, oldISBN) {
     return new Promise(function(resolve, reject) {
 
-        if (!authority.canUpdateBooks(session)) {
+        if (!session.canUpdateBooks) {
             throw {errors: [{message: "You do not have permissions for that."}]}
         }
 
@@ -34,7 +34,7 @@ exports.searchBooks = function(options) {
 exports.delete = function(session, book) {
     return new Promise(function(resolve, reject) {
 
-        if (!authority.canDeleteBooks(session)) {
+        if (!session.canDeleteBooks) {
             throw { errors: [{message: "You do not have permissions for that."}]}
         }
 
@@ -61,7 +61,7 @@ exports.getBookInfo = function(book) {
 exports.create = function(session, book) {
     return new Promise(function(resolve, reject) {
 
-        if (!authority.canCreateBooks(session)) {
+        if (!session.canCreateBooks) {
             throw {errors: [{message: "You do not have permission to do that."}]}
         }
 
