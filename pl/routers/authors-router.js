@@ -27,14 +27,27 @@ router.get("/", function(req, res) {
 })
 
 router.get("/create", function(req, res) {
-    res.render("authors/author_create.hbs")
+    const model = {
+        session: req.session
+    }
+    res.render("authors/author_create.hbs", model)
 })
 
 router.post("/create", function(req, res) {
     
-    bll.createAuthor(req)
+    const author = {
+        firstName: req.body.firstName,
+        lastName:req.body.lastName,
+        birthYear:req.body.birthYear,
+    }
+
+    bll.create(req.session, author)
     .then(function(author) {
-        res.render("authors/author_view.hbs", author)
+        const model = {
+            author: author,
+            session: req.session
+        }
+        res.render("authors/author_view.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors,
@@ -46,25 +59,40 @@ router.post("/create", function(req, res) {
 
 
 router.get("/edit/:Id", function(req, res) {
-    req.query.Id = req.params.Id
-    bll.getAuthorInfo(req)
+    const author = {
+        Id: req.params.Id
+    }
+    bll.findOne(author)
     .then(function(authorInfo) {
-        res.render("authors/author_edit.hbs", authorInfo)
+        const model = {
+            author: author,
+            session: req.session
+        }
+        res.render("authors/author_edit.hbs", model)
     }).catch(function(error) {
         res.render("error.hbs", error)
     })
 })
 
 router.post("/edit/:Id", function(req, res) {
-    req.query.Id = req.params.Id
-    bll.editAuthorInfo(req)
-    .then(function(authorInfo) {
-        bll.getAuthorInfo(req)
-        .then(function(authorInfo) {
-            res.render("authors/author_edit.hbs", authorInfo)
-        }).catch(function(error) {
-            res.render("error.hbs", error)
-        })
+    const author = {
+        Id: req.params.Id,
+        firstName:  req.body.firstName,
+        lastName:   req.body.lastName,
+        birthYear:  req.body.birthYear,
+    }
+    bll.update(req.session, author)
+    .then(function() {
+        const author = {
+            Id: req.params.Id,
+        }
+        return bll.findOne(author)
+    }).then(function(authorInfo) {
+        const model = {
+            author: authorInfo,
+            session: req.session
+        }
+        res.render("authors/author_view.hbs", model)
     }).catch(function(error) {
         res.render("error.hbs", error)
     })
@@ -72,8 +100,10 @@ router.post("/edit/:Id", function(req, res) {
 
 // Search for a specific Author via ID
 router.get("/:Id", function (req, res) {
-    req.query.Id = req.params.Id
-    bll.getAuthorInfo(req)
+    const author = {
+        Id: req.params.Id
+    }
+    bll.findOne(author)
     .then(function(authorInfo) {
         const model = {
             author: authorInfo,
@@ -88,8 +118,10 @@ router.get("/:Id", function (req, res) {
 
 router.post("/delete/:Id", function(req, res) {
     
-    req.query.Id = req.params.Id
-    bll.authorDelete(req)
+    const author = {
+        Id: req.params.Id
+    } 
+    bll.delete(author)
     .then(function() {
         const message = {
             errors: [

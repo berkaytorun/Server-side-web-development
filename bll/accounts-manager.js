@@ -46,13 +46,18 @@ exports.login = function(session, account) {
             session.loggedIn = true
             session.userName = account.userName
 
+            session.canCreateBooks = authority.canCreateBooks(session)
             session.canUpdateBooks = authority.canUpdateBooks(session)
             session.canDeleteBooks = authority.canDeleteBooks(session)
 
+            session.canCreateAuthors = authority.canCreateAuthors(session)
+            session.canUpdateAuthors = authority.canUpdateAuthors(session)
             session.canDeleteAuthors = authority.canDeleteAuthors(session)
 
-            session.canDeleteAccounts = authority.canDeleteAccounts(session)
             session.canCreateAccounts = authority.canCreateAccounts(session)
+            session.canReadAccounts = authority.canReadAccounts(session)
+            session.canUpdateAccounts = authority.canUpdateAccounts(session)
+            session.canDeleteAccounts = authority.canDeleteAccounts(session)
             
             resolve(account)
 
