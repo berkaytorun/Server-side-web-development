@@ -7,7 +7,8 @@
 
 header{
 	text-align: center;
-	font-size: 300%;
+    font-size: 300%;
+    position: relative;
 }
 
 nav{
@@ -97,3 +98,13 @@ pagination ul li:hover {
     background-color: #0aa;
 }
 
+#loggedIn{
+    font-size: 11px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+.login{
+    margin: 0 1px 0 auto ;
+    float: right;
+}

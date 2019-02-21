@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Hello!</title>
 </head>
@@ -16,25 +17,29 @@
     <div id="entirepage">
         <header>
             <h1>Library Book Tool</h1>
+            {{#if session.loggedIn}}
+            <div id="loggedIn">Logged in as: {{session.userName}}
+            </div>
+            {{/if}}
         </header>
 
         <nav>
             <ul>
                 <li><a href="/home">Home</a></li>
                 <li><a href="/about">About</a></li>
-                {{#unless  session.loggedIn}}
-                <li><a href="/accounts/login">Login</a></li>
-                {{/unless }}
+                
                 {{#if session.loggedIn}}
-                    <li><a href="/accounts/getall">View all accouts</a></li>
+                <li><a href="/accounts/getall">View all accouts</a></li>
                 {{/if}}
                 <li><a href="/books">Book</a></li>
                 <li><a href="/authors">Authors</a></li>
+                {{#unless  session.loggedIn}}
+                <li class="login"><a href="/accounts/login">Login</a></li>
+                {{/unless }}
                 {{#if session.loggedIn}}
-                    <li>
-                        <a href="/accounts/logout">Log out.</a>
-                        <span>{{session.userName}}</span>
-                    </li>
+                <li class="login">
+                    <a href="/accounts/logout">Log out.</a>
+                </li>
                 {{/if}}
             </ul>
         </nav>
