@@ -65,14 +65,14 @@ exports.login = function(session, account) {
     })
 }
 
-exports.findAll = function(session) {
+exports.findAll = function(session, options) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canReadAccounts) {
             throw {errors: [{ message: "You do not have the permissions to do that." }]}
         }
 
-        return dal.findAll()
+        return dal.findAll(options)
         .then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {

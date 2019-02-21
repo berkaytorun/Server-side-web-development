@@ -2,8 +2,9 @@
 const express = require('express')
 const router = express.Router();
 
-const bll = require("../../bll/accounts-manager")
+const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
+const bll = require("../../bll/accounts-manager")
 
 router.get("/create", function(req, res) {
     const model = {
@@ -81,12 +82,19 @@ router.get("/logout", function(req, res) {
     })
 })
 
-router.get("/getall", function(req, res) {
+router.get("/", function(req, res) {
     
-    bll.findAll(req.session)
+    bll.findAll(req.session, req.query)
     .then(function(accounts) {
-        model = {
+        const pages = (accounts.count) / req.query.limit
+        const pagesArray = generatePageNumbers(pages, req.query.currentPage)
+
+        const model = {
+            pages: pagesArray,
             accounts: accounts,
+            searchString: req.query.searchString,
+            table: req.baseUrl,
+            placeholder: "Search for a user name or filter by authority level",
             session: req.session
         }
         res.render("accounts/accounts_list.hbs", model)
