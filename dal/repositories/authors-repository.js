@@ -5,15 +5,15 @@ const Author = require("../models/author_model").Author
 const Book = require("../models/book_model").Book
 
 
-exports.searchAuthors = function(req) {
+exports.search = function(options) {
     return new Promise(function(resolve, reject) {
 
         let findWhere = {
         
             distinct: true,
             order: [['firstName', 'ASC']],
-            limit: req.query.limit,
-            offset: req.query.offset,
+            limit: options.limit,
+            offset: options.offset,
             where: { },
             include: [{
                 model: Book,
@@ -21,16 +21,16 @@ exports.searchAuthors = function(req) {
             }],
         }
         
-        if (req.query.searchString !== "") {
+        if (options.searchString !== "") {
     
             findWhere.where = {
                 [Op.or]: [
                     {firstName: {
-                        [Op.like]: req.query.searchString, 
+                        [Op.like]: options.searchString, 
                         }
                     },
                     {lastName: {
-                        [Op.like]: req.query.searchString, 
+                        [Op.like]: options.searchString, 
                         }
                     }
                 ]

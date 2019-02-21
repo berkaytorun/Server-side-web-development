@@ -19,10 +19,10 @@ exports.update = function(session, book, oldISBN) {
     })
 }
 
-exports.searchBooks = function(req) {
+exports.searchBooks = function(options) {
     return new Promise(function(resolve, reject) {
 
-        return dal.searchBooks(req)
+        return dal.searchBooks(options)
         .then(function(books) {
             resolve(books)
         }).catch(function(error) {

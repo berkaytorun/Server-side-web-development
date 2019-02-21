@@ -7,7 +7,7 @@ const bll = require("../../bll/authors-manager")
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/", function(req, res) {
-    bll.searchAuthors(req)
+    bll.search(req.query)
     .then(function(authors) {
         const pages = (authors.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)

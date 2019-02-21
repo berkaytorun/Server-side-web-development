@@ -5,7 +5,7 @@ const Book = require("../models/book_model").Book
 const Classification = require("../models/classification_model").Classification
 const Author = require("../models/author_model").Author
 
-exports.searchBooks = function(req) {
+exports.searchBooks = function(options) {
     return new Promise(function(resolve, reject) {
 
         let findWhere = {
@@ -14,8 +14,8 @@ exports.searchBooks = function(req) {
                 ['title', 'ASC']
             ],
             
-            limit: req.query.limit,
-            offset: req.query.offset,
+            limit: options.limit,
+            offset: options.offset,
             
             where: { },
             include: [
@@ -29,16 +29,16 @@ exports.searchBooks = function(req) {
             ],
             
         }
-        if (req.query.searchString !== "") {
+        if (options.searchString !== "") {
     
             findWhere.where = {
                 [Op.or]: [
                     {ISBN: {
-                            [Op.like]: req.query.searchString, 
+                            [Op.like]: options.searchString, 
                         }
                     },
                     {title: {
-                            [Op.like]: req.query.searchString, 
+                            [Op.like]: options.searchString, 
                         }
                     },
                 ]

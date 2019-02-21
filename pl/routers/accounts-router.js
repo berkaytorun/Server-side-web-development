@@ -40,7 +40,10 @@ router.post("/create", function(req, res) {
 })
 
 router.get("/login", function (req, res) {
-    res.render("accounts/login.hbs")
+    const model = {
+        session: req.session
+    }
+    res.render("accounts/login.hbs", model)
 })
 
 router.post("/login", function (req, res) {

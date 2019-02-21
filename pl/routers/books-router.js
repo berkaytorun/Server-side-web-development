@@ -52,7 +52,7 @@ router.post("/delete/:ISBN", function(req, res) {
 // search for many books that match a string and filters
 router.get("/", function(req, res) {
     
-    bll.searchBooks(req)
+    bll.searchBooks(req.query)
     .then(function(books) {
         const pages = (books.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)

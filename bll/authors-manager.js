@@ -15,10 +15,10 @@ exports.editAuthorInfo = function(req) {
     })
 }
 
-exports.searchAuthors = function(req) {
+exports.search = function(options) {
     return new Promise(function(resolve, reject) {
 
-        return dal.searchAuthors(req)
+        return dal.search(options)
         .then(function(authors) {
             resolve(authors)
         }).catch(function(error) {

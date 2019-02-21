@@ -48,15 +48,12 @@ app.get('/', function(req, res, next) {
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
 
-    if (!req.query.searchString) {
-        req.query.searchString = ""
-    }
-    if (!req.query.limit) {
-        req.query.limit = 20
-    }
-    if (!req.query.currentPage) {
-        req.query.currentPage = 1
-    }
+    if (!req.query.searchString) { req.query.searchString = "" }
+
+    if (!req.query.limit) { req.query.limit = 20 }
+
+    if (!req.query.currentPage) { req.query.currentPage = 1 }
+
     req.query.offset = (req.query.currentPage - 1) * req.query.limit
 
     return next()
@@ -76,7 +73,8 @@ setTimeout(function() {
     
     app.get("/home", function (req, res) {
         const model = {
-            accountId: req.session.accountId
+            accountId: req.session.accountId,
+            session: req.session
         }
         res.render("home.hbs",model)
     })  
@@ -90,8 +88,10 @@ setTimeout(function() {
                 reject()
             }
         }).then(function () {
-
-            res.render("about.hbs")
+            const model = {
+                session: req.session
+            }
+            res.render("about.hbs", model)
         }).catch(result => {
             res.status(res.status).json(res)
         })
