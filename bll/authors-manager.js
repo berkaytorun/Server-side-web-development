@@ -1,12 +1,11 @@
 
 const dal = require("../dal/repositories/authors-repository")
 
+const authority = require("./functionality/authority")
 
-
-exports.editAuthorInfo = function(req) {
+exports.findOne = function(author) {
     return new Promise(function(resolve, reject) {
-
-        return dal.editAuthorInfo(req)
+        return dal.findOne(author)
         .then(function(authors) {
             resolve(authors)
         }).catch(function(error) {
@@ -28,9 +27,14 @@ exports.search = function(options) {
 }
 
 
-exports.getAuthorInfo = function(req) {
+exports.update = function(session, author) {
     return new Promise(function(resolve, reject) {
-        return dal.getAuthorInfo(req)
+
+        if (!session.canUpdateAuthors) {
+            throw {errors: [{message: "You do not have permission to do that."}]}
+        }
+
+        return dal.update(author)
         .then(function(authorInfo) {
             resolve(authorInfo)
         }).catch(function(error) {
@@ -39,9 +43,14 @@ exports.getAuthorInfo = function(req) {
     })
 }
 
-exports.authorDelete = function(req) {
+exports.delete = function(author) {
     return new Promise(function(resolve, reject) {
-        return dal.authorDelete(req)
+
+        if (!session.canDeleteAuthors) {
+            throw {errors: [{message: "You do not have permission to do that."}]}
+        }
+
+        return dal.delete(author)
         .then(function() {
             resolve()
         }).catch(function(error) {
@@ -50,9 +59,14 @@ exports.authorDelete = function(req) {
     })
 }
 
-exports.createAuthor = function(req) {
+exports.create = function(session, author) {
     return new Promise(function(resolve, reject) {
-        return dal.createAuthor(req)
+
+        if (!session.canCreateAuthors) {
+            throw {errors: [{message: "You do not have permission to do that."}]}
+        }
+
+        return dal.create(author)
         .then(function(newAuthor) {
             resolve(newAuthor)
         }).catch(function(error) {

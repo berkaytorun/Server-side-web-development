@@ -61,12 +61,12 @@ exports.search = function(options) {
 }
 
    
-exports.getAuthorInfo = function(req) {
+exports.findOne = function(author) {
     return new Promise(function(resolve, reject) {
 
         Author.findOne({
             where: {
-                Id: req.query.Id,
+                Id: author.Id,
             },
             include: {
                 model: Book,
@@ -94,14 +94,11 @@ exports.getAuthorInfo = function(req) {
 }
 
 
-exports.authorDelete = function(req) {
+exports.delete = function(author) {
     return new Promise(function(resolve, reject) {
 
-        Author.destroy({
-            where: {
-                Id: req.query.Id,
-            }
-        }).then((author)=> {
+        Author.destroy({ where: { Id: author.Id } })
+        .then((author)=> {
             if (author) {
                 resolve()
             }
@@ -123,21 +120,12 @@ exports.authorDelete = function(req) {
 }
 
 
-exports.createAuthor = function(req) {
+exports.create = function(author) {
     return new Promise(function(resolve, reject) {
-        Author.create({
-            firstName: req.body.firstName,
-            lastName:req.body.lastName,
-            birthYear:req.body.birthYear,
-        }).then((author) => {
+        Author.create(author)
+        .then((author) => {
             if (author) {
-                const newAuthor = {
-                    Id: author.Id,
-                    firstName: author.firstName,
-                    lastName:author.lastName,
-                    birthYear:author.birthYear,
-                }
-                return resolve(newAuthor)
+                return resolve(author)
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
@@ -149,16 +137,14 @@ exports.createAuthor = function(req) {
 }
 
 
-exports.editAuthorInfo = function(req) {
+exports.update = function(author) {
     return new Promise(function(resolve, reject) {
         Author.update({
-
-            firstName:  req.body.firstName,
-            lastName:   req.body.lastName,
-            birthYear:  req.body.birthYear,
-            
+            firstName:  author.firstName,
+            lastName:   author.lastName,
+            birthYear:  author.birthYear,
         },
-        {where: {Id: req.body.Id}}
+        {where: {Id: author.Id}}
         ).then((affectedAuthors) => {
             if (affectedAuthors > 0) {
                 return resolve(affectedAuthors)

@@ -1,20 +1,19 @@
-<form action="./edit/{{author.Id}}" method="GET">
-    <div id="book_info">
-        <div>Id: {{author.Id}}</div>
-        <div>FirstName: {{author.firstName}}</div>
-        <div>LastName: {{author.lastName}}</div>
-        <div>BirthYear: {{author.birthYear}}</div>
-    </div> 
-    {{#if session.canUpdateBooks}}
-        <input type="submit" value="Edit">
-    {{/if}}
-</form>
-    {{#if author.books}}
-        {{#each author.books}}
-        <form action="/books/{{this.ISBN}}"method="GET">
+
+<div id="book_info">
+    <div>Id: {{author.Id}}</div>
+    <div>FirstName: {{author.firstName}}</div>
+    <div>LastName: {{author.lastName}}</div>
+    <div>BirthYear: {{author.birthYear}}</div>
+</div> 
+{{#if session.canUpdateAuthors}}
+    <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
+{{/if}}
+
+{{#if author.books}}
+    {{#each author.books}}
         <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
-        <input type="submit" value="Go"></form>
-        {{/each}}
-    {{/if}}
+        <a href="/books/{{this.ISBN}}"><input type="submit" value="Go"></a>
+    {{/each}}
+{{/if}}
 
 
