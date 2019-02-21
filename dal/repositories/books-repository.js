@@ -61,7 +61,12 @@ exports.searchBooks = function(options) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -100,7 +105,12 @@ exports.getBookInfo = function(book) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -128,7 +138,12 @@ exports.delete = function(book) {
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -150,7 +165,12 @@ exports.update = function(book, oldISBN) {
             reject(error)
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
             return reject(error.errors)
         })
@@ -174,9 +194,14 @@ exports.create = function(book) {
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
-                setTimeout(function() { throw error; });
+                if (error.message) {
+                    return {errors: [error.message]}
+                }
+                else {
+                    setTimeout(function() { throw error; });
+                }
             }
-            return reject(error)
+            return reject(error.errors)
         })
     })
 }
