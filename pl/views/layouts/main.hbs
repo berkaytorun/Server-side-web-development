@@ -29,17 +29,17 @@
                 <li><a href="/about">About</a></li>
                 
                 {{#if session.loggedIn}}
-                <li><a href="/accounts/getall">View all accouts</a></li>
+                    <li><a href="/accounts/getall">View all accouts</a></li>
                 {{/if}}
-                <li><a href="/books">Book</a></li>
-                <li><a href="/authors">Authors</a></li>
+                    <li><a href="/books">Book</a></li>
+                    <li><a href="/authors">Authors</a></li>
                 {{#unless  session.loggedIn}}
-                <li class="login"><a href="/accounts/login">Login</a></li>
+                    <li class="login"><a href="/accounts/login">Login</a></li>
                 {{/unless }}
                 {{#if session.loggedIn}}
-                <li class="login">
-                    <a href="/accounts/logout">Log out.</a>
-                </li>
+                    <li class="login">
+                        <a href="/accounts/logout">Log out.</a>
+                    </li>
                 {{/if}}
             </ul>
         </nav>

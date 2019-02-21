@@ -1,6 +1,6 @@
 {{> pagination}}
 
-{{#if session.loggedIn}}
+{{#if session.canCreateAccounts}}
     <form action="./create" method="GET">
         <input type="submit" value="Create">
     </form>
