@@ -89,16 +89,10 @@ setTimeout(function() {
             }
         }).then(function () {
             const model = {
-<<<<<<< HEAD
-                session: req.session
-            }
-            res.render("about.hbs", model)
-=======
                 accountId: req.session.accountId,
                 session: req.session
             }
             res.render("about.hbs",model)
->>>>>>> sessions
         }).catch(result => {
             res.status(res.status).json(res)
         })
