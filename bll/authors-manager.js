@@ -31,7 +31,7 @@ exports.update = function(session, author) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canUpdateAuthors) {
-            throw {errors: [{message: "You do not have permission to do that."}]}
+            throw [{message: "You do not have permission to do that."}]
         }
 
         return dal.update(author)
@@ -47,7 +47,7 @@ exports.delete = function(session, author) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canDeleteAuthors) {
-            throw {errors: [{message: "You do not have permission to do that."}]}
+            throw[{message: "You do not have permission to do that."}]
         }
 
         return dal.delete(author)
@@ -63,7 +63,7 @@ exports.create = function(session, author) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canCreateAuthors) {
-            throw {errors: [{message: "You do not have permission to do that."}]}
+            throw[{message: "You do not have permission to do that."}]
         }
 
         return dal.create(author)

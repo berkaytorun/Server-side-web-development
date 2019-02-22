@@ -19,7 +19,6 @@ exports.Account = db.define("account", {
     },
     userName: {
         type: Sequelize.CHAR(accValid.userName.max),
-        allowNull: false,
         unique: {
             args: true,
             msg: "That user name already exists."
@@ -47,7 +46,6 @@ exports.Account = db.define("account", {
     },
     firstName: {
         type: Sequelize.CHAR(accValid.firstName.max),
-        allowNull: false,
         validate: {
             len: {
                 args: [accValid.firstName.min, accValid.firstName.max],
@@ -59,7 +57,6 @@ exports.Account = db.define("account", {
     },
     lastName: {
         type: Sequelize.CHAR(accValid.lastName.max),
-        allowNull: false,
         validate: {
             len: {
                 args: [accValid.lastName.min, accValid.lastName.max],
@@ -71,7 +68,6 @@ exports.Account = db.define("account", {
     },
     authorityLevel: {
         type: Sequelize.TEXT,
-        allowNull: false, 
         validate: {
           customValidation(value) {
             if (levels.includes(value)) {

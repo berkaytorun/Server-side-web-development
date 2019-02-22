@@ -7,7 +7,7 @@ exports.update = function(session, book, oldISBN) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canUpdateBooks) {
-            throw {errors: [{message: "You do not have permissions for that."}]}
+            throw [{message: "You do not have permissions for that."}]
         }
 
         return dal.update(book, oldISBN)
@@ -35,7 +35,7 @@ exports.delete = function(session, book) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canDeleteBooks) {
-            throw { errors: [{message: "You do not have permissions for that."}]}
+            throw [{message: "You do not have permissions for that."}]
         }
 
         return dal.delete(book)
@@ -62,7 +62,7 @@ exports.create = function(session, book) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canCreateBooks) {
-            throw {errors: [{message: "You do not have permission to do that."}]}
+            throw [{message: "You do not have permission to do that."}]
         }
 
         return dal.create(book)

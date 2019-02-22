@@ -56,6 +56,7 @@ exports.login = function(session, account) {
             session.canReadAccounts = authority.canReadAccounts(session)
             session.canUpdateAccounts = authority.canUpdateAccounts(session)
             session.canDeleteAccounts = authority.canDeleteAccounts(session)
+            session.canUpdateAccountsPassword = authority.canUpdateAccountsPassword(session)
             
             resolve(account)
 
@@ -69,7 +70,7 @@ exports.findAll = function(session, options) {
     return new Promise(function(resolve, reject) {
 
         if (!session.canReadAccounts) {
-            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+            throw [{ message: "You do not have the permissions to do that." }]
         }
 
         return dal.findAll(options)
@@ -96,7 +97,7 @@ exports.findOne = function(session, account) {
     return new Promise(function(resolve, reject) {
         
         if (!session.canReadAccounts) {
-            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+            throw [{ message: "You do not have the permissions to do that." }]
         }
 
         return dal.findOne(account)
@@ -111,13 +112,24 @@ exports.findOne = function(session, account) {
 
 exports.update = function(session, account) {
     return new Promise(function(resolve, reject) {
+
+        if (!session.canUpdateAccounts && 
+                (account.userName ||
+                account.firstName ||
+                account.lastName ||
+                account.authorityLevel)) {
+            throw [{ message: "You do not have the permissions to do that." }]
+        }
         
-        if (!session.canUpdateAccounts) {
-            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+        if (!session.canUpdateAccountsPassword) {
+            throw [{ message: "You do not have the permissions to do that." }]
         }
 
-        return dal.update(account)
-        .then(function(accounts) {
+        bcrypt.encrypt(account.password)
+        .then(function(hashedPassword) {
+            account.password = hashedPassword
+            return dal.update(account)
+        }).then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
             reject(error)
@@ -125,15 +137,14 @@ exports.update = function(session, account) {
     })
 }
 
-
-exports.delete = function(req) {
+exports.delete = function(session, account) {
     return new Promise(function(resolve, reject) {
         
         if (!session.canDeleteAccounts) {
-            throw {errors: [{ message: "You do not have the permissions to do that." }]}
+            throw [{ message: "You do not have the permissions to do that." }]
         }
 
-        return dal.delete(req)
+        return dal.delete(account)
         .then(function() {
             resolve()
         }).catch(function(error) {

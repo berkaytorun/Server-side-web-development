@@ -1,15 +1,13 @@
 {{> pagination}}
 {{> search}}
 
-{{#if session.canCreateAccounts}}
-    <form action="./create" method="GET">
-        <input type="submit" value="Create">
-    </form>
+{{#if session.canCreateAccounts}}blaj blaj
+    <a href="/accounts/create"> <input type="submit" value="Create"> </a>
 {{/if}}
 
 {{#each accounts}}
     <div id="book_info">
-        <a href="{{this.Id}}">
+        <a href="/accounts/{{this.Id}}">
 
             <div>Id: {{this.Id}}</div>
             <div>User Name: {{this.userName}}</div>
@@ -19,7 +17,7 @@
         </a>
     </div>
     {{#if ../session.canDeleteAccounts}}
-        <form action="./delete/{{Id}}"  method="post">
+        <form action="/accounts/delete/{{Id}}"  method="post">
             <input type="submit" value="Delete"/>
         </form>
     {{/if}}

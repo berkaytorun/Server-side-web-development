@@ -44,17 +44,15 @@ exports.search = function(options) {
                 resolve(authors.rows)
             } 
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "No matches found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -82,17 +80,15 @@ exports.findOne = function(author) {
                 resolve(author)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "No matches found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -113,17 +109,15 @@ exports.delete = function(author) {
                 resolve()
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "No matches found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -142,10 +136,16 @@ exports.create = function(author) {
             if (author) {
                 return resolve(author)
             }
+            else {
+                const errors = [
+                    {message: "Could not create author."}
+                ]
+                reject(errors)
+            }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -169,16 +169,16 @@ exports.update = function(author) {
             if (affectedAuthors > 0) {
                 return resolve(affectedAuthors)
             }
-            const error = {
-                errors: [
-                    {message: "No matches found."}
+            else {
+                const errors = [
+                    {message: "No matches found"}
                 ]
+                reject(errors)
             }
-            reject(error)
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });

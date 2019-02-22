@@ -29,7 +29,7 @@ router.post("/create", function(req, res) {
         res.render("books/book_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -50,7 +50,7 @@ router.post("/delete/:ISBN", function(req, res) {
         res.render("error.hbs", message)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -76,7 +76,7 @@ router.get("/", function(req, res) {
         res.render("books/books_list.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -102,7 +102,7 @@ router.get("/edit/:ISBN", function(req, res) {
         res.render("books/book_edit.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -127,7 +127,7 @@ router.post("/edit/:ISBN", function(req, res) {
         res.render("books/book_view.hbs", bookInfo)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -148,7 +148,7 @@ router.get("/:ISBN", function (req, res) {
         res.render("books/book_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)

@@ -1,17 +1,22 @@
-<form action="../edit/{{accountInfo.Id}}" method="POST">
+<form action="/accounts/edit/{{accountInfo.Id}}" method="POST">
     <div id="book_info">
-        Username <input type="text" name="userName" value="{{accountInfo.userName}}"><br>
-        Firstname <input type="text" name="firstName" value="{{accountInfo.firstName}}"><br>
-        Lastname <input type="text" name="lastName" value="{{accountInfo.lastName}}"><br>
-        AuthorityLevel: 
-    {{#if levels}}
-        <select name="authorityLevel">
-            {{#each levels}}
-                <option value="{{this}}">{{this}}</option>
-            {{/each}}
-        <select>
-        <br>
-    {{/if}}
+        {{#if session.canUpdateAccounts}}
+            Username <input type="text" name="userName" value="{{accountInfo.userName}}"><br>
+        {{/if}}
+        Password: <input type="text" name="password" placeholder="**************"><br>
+        {{#if session.canUpdateAccounts}}
+            Firstname <input type="text" name="firstName" value="{{accountInfo.firstName}}"><br>
+            Lastname <input type="text" name="lastName" value="{{accountInfo.lastName}}"><br>
+            AuthorityLevel: 
+            {{#if levels}}
+                <select name="authorityLevel">
+                    {{#each levels}}
+                        <option value="{{this}}">{{this}}</option>
+                    {{/each}}
+                <select>
+                <br>
+            {{/if}}
+        {{/if}}
         <input type="hidden" id="Id" name="Id" value="{{accountInfo.Id}}">
     </div>
     <input type="submit" value="Submit">
