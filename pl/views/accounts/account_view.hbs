@@ -1,4 +1,4 @@
-<form action="./edit/{{account.Id}}" method="GET">
+<form action="/accounts/edit/{{account.Id}}" method="GET">
     <div id="book_info">
         <div>Id: {{account.Id}}</div>
         <div>Username: {{account.userName}}</div>
@@ -6,7 +6,7 @@
         <div>LastName: {{account.lastName}}</div>
         <div>authorityLevel: {{account.authorityLevel}}</div>
     </div>
-    {{#if session.canUpdateAccounts}}
+    {{#if session.canUpdateAccountsPassword}}
         <input type="submit" value="Edit">
     {{/if}}
 </form>

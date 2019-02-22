@@ -11,17 +11,15 @@ exports.create = function(account) {
                 resolve(account)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "Could not add account."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "Could not add account."}
+                ]
+                reject(errors)
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -54,17 +52,15 @@ exports.login = function(account) {
                 resolve(account)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "Could not add account."}
-                    ]
-                }
+                const error = [
+                    {message: "Could not add account."}
+                ]
                 reject(error)
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -119,17 +115,15 @@ exports.findAll = function(options) {
                 resolve(accounts.rows)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
+                const error = [
+                    {message: "Could not add account."}
+                ]
                 reject(error)
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -158,17 +152,15 @@ exports.findOne = function(account) {
                 resolve(theAccount)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
+                const error = [
+                    {message: "Could not add account."}
+                ]
                 reject(error)
             }
         }).catch((error)=> {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -178,26 +170,24 @@ exports.findOne = function(account) {
         })
     })
 }
-
-
 
 exports.update = function(account) {
     return new Promise(function(resolve, reject) {
         Account.update(account, { where: {Id: account.Id} })
         .then((affectedAccounts) => {
             if (affectedAccounts > 0) {
-                return resolve(affectedAccounts)
+                resolve(affectedAccounts)
             }
-            const error = {
-                errors: [
-                    {message: "No matches found."}
+            else {
+                const errors = [
+                    {message: "No matches found"}
                 ]
+                reject(errors)
             }
-            reject(error)
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -209,29 +199,27 @@ exports.update = function(account) {
 }
 
 
-exports.delete = function(req) {
+exports.delete = function(account) {
     return new Promise(function(resolve, reject) {
 
         Account.destroy({
             where: {
-                Id: req.query.Id,
+                Id: account.Id,
             }
         }).then((account)=> {
             if (account) {
                 resolve()
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "Account was not found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });

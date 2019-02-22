@@ -52,17 +52,15 @@ exports.searchBooks = function(options) {
                 resolve(books.rows)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "No matches found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -96,17 +94,15 @@ exports.getBookInfo = function(book) {
                 resolve(book)
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "No matches found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -129,17 +125,15 @@ exports.delete = function(book) {
                 resolve()
             }
             else {
-                const error = {
-                    errors: [
-                        {message: "No matches found."}
-                    ]
-                }
-                reject(error)
+                const errors = [
+                    {message: "No matches found"}
+                ]
+                reject(errors)
             }
-        }).catch((error)=> {
+        }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -157,16 +151,16 @@ exports.update = function(book, oldISBN) {
             if (affectedBooks > 0) {
                 return resolve(affectedBooks)
             }
-            const error = {
-                errors: [
-                    {message: "No matches found."}
+            else {
+                const errors = [
+                    {message: "No matches found"}
                 ]
+                reject(errors)
             }
-            reject(error)
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });
@@ -192,10 +186,16 @@ exports.create = function(book) {
                 }
                 return resolve(newBook)
             }
+            else {
+                const errors = [
+                    {message: "Could not create book"}
+                ]
+                reject(errors)
+            }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    return {errors: [error.message]}
+                    reject([error.message])
                 }
                 else {
                     setTimeout(function() { throw error; });

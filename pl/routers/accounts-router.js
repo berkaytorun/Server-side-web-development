@@ -33,7 +33,7 @@ router.post("/create", function(req, res) {
         res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -62,7 +62,7 @@ router.post("/login", function (req, res) {
         res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -75,7 +75,7 @@ router.get("/logout", function(req, res) {
         res.render("home.hbs")
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -100,7 +100,7 @@ router.get("/", function(req, res) {
         res.render("accounts/accounts_list.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -117,12 +117,13 @@ router.get("/edit/:Id", function(req, res) {
     .then(function(accountInfo) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
-            accountInfo:accountInfo
-    }
+            accountInfo:accountInfo,
+            session: req.session
+        }
         res.render("accounts/account_edit.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -134,6 +135,7 @@ router.post("/edit/:Id", function(req, res) {
     const account = {
         Id: req.params.Id,
         userName:   req.body.userName,
+        password:   req.body.password,
         firstName:  req.body.firstName,
         lastName:   req.body.lastName,
         birthYear:  req.body.birthYear,
@@ -149,13 +151,13 @@ router.post("/edit/:Id", function(req, res) {
     }).then(function(accountInfo) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
-            accountInfo:accountInfo,
+            account: accountInfo,
             session: req.session
         }
-        res.render("accounts/account_edit.hbs", model)
+        res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -175,7 +177,7 @@ router.get("/:Id", function(req, res) {
         res.render("accounts/account_view.hbs", model)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
@@ -194,7 +196,7 @@ router.post("/delete/:Id", function(req, res) {
         res.render("error.hbs", message)
     }).catch(function(errors) {
         const model = {
-            errors: errors.errors,
+            errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
