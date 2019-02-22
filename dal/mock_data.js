@@ -1668,10 +1668,16 @@ for (let i = 0, len = bookAuthors.length; i < len; i++) {
 		authorId: bookAuthors[i][1],
 	})
 }
+let authorities = [
+	{ authorityId: 1, authorityName: "Moderator"},
+	{ authorityId: 2, authorityName: "Admin"},
+	{ authorityId: 3, authorityName: "Super"},
+]
 
 let mockData = {
 	classifications: classification,
 	authors: author,
+	authorities: authorities,
 	books: book,
 	bookAuthors: bookAuthor
 }

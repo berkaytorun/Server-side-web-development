@@ -10,6 +10,8 @@ const SEC = 15
 const MIN = 15
 const HOUR = 0
 
+
+
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
     store: "",
@@ -33,6 +35,7 @@ app.use(bodyParser.urlencoded({
 app.engine("hbs", hbs({
     defaultLayout: "main",
     extname: ".hbs",
+    helpers: require(__dirname + "/pl/functionality/handlebar_helper"),
     layoutsDir: __dirname + "/pl/views/layouts",
     partialsDir:__dirname + "/pl/views/partials"
 }))

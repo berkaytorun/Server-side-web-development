@@ -11,12 +11,17 @@ exports.searchBooks = function(options) {
         const toInclude = { 
             include: [
                 {model: Author},
+                //{model: Classification}
                 {model: Classification}
             ] 
         }
         if (options.classification != "") {
-            toInclude.include[1].where = {
-                signum: {[Op.like]: options.classification}
+            toInclude.include[1] = {
+                model: Classification,
+                required: true,
+                where: {
+                    signum: {[Op.like]: options.classification}
+                }
             }
         }
 

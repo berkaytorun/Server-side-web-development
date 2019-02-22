@@ -38,7 +38,7 @@ exports.login = function(account) {
             account.userName = "Dev"
             account.firstName = "This account does not exist"
             account.lastName = "Temporary dev account"
-            account.authorityLevel = "Super"
+            account.authorityId = 3
             resolve(account)
             return;
         }
@@ -110,13 +110,16 @@ exports.findAll = function(options) {
         }
         Account.findAndCountAll(findWhere)
         .then((accounts) => {
+            accounts.rows.count = accounts.count
+            resolve(accounts.rows)
+            return
             if (accounts.rows.length > 0) {
                 accounts.rows.count = accounts.count
                 resolve(accounts.rows)
             }
             else {
                 const error = [
-                    {message: "Could not add account."}
+                    {message: "Could not find any account."}
                 ]
                 reject(error)
             }

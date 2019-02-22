@@ -39,12 +39,12 @@ exports.login = function(session, account) {
         }).then(function(account) {
 
             session.accountId = account.Id
-            session.authorityLevel = account.authorityLevel
+            session.authorityId = account.authorityId
 
             session.loggedIn = true
             session.userName = account.userName
 
-            session.canCreateBooks = authority.canCreateBooks(session)
+            /* session.canCreateBooks = authority.canCreateBooks(session) 
             session.canUpdateBooks = authority.canUpdateBooks(session)
             session.canDeleteBooks = authority.canDeleteBooks(session)
 
@@ -57,7 +57,7 @@ exports.login = function(session, account) {
             session.canUpdateAccounts = authority.canUpdateAccounts(session)
             session.canDeleteAccounts = authority.canDeleteAccounts(session)
             session.canUpdateAccountsPassword = authority.canUpdateAccountsPassword(session)
-            
+            */
             resolve(account)
 
         }).catch(function(error) {
@@ -66,10 +66,11 @@ exports.login = function(session, account) {
     })
 }
 
-exports.findAll = function(session, options) {
+exports.findAll = function(authorityId, options) {
     return new Promise(function(resolve, reject) {
 
-        if (!session.canReadAccounts) {
+        const MODERATOR = 1
+        if (!(authorityId >= MODERATOR)) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
