@@ -54,6 +54,8 @@ app.use(function(req, res, next) {
 
     if (!req.query.currentPage) { req.query.currentPage = 1 }
 
+    if (!req.query.classification) { req.query.classification = "" }
+
     req.query.offset = (req.query.currentPage - 1) * req.query.limit
 
     return next()

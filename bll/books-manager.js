@@ -1,7 +1,6 @@
 const express = require('express')
 const dal = require("../dal/repositories/books-repository")
-
-const authority = require("./functionality/authority")
+const dalClassifications = require("../dal/repositories/classification-repository")
 
 exports.update = function(session, book, oldISBN) {
     return new Promise(function(resolve, reject) {
@@ -20,11 +19,15 @@ exports.update = function(session, book, oldISBN) {
 }
 
 exports.searchBooks = function(options) {
+    const wrapper = []
     return new Promise(function(resolve, reject) {
-
         return dal.searchBooks(options)
         .then(function(books) {
-            resolve(books)
+            wrapper.push(books)
+            return dalClassifications.findAll()
+        }).then(function(classifications) {
+            wrapper.push(classifications)
+            resolve(wrapper)
         }).catch(function(error) {
             reject(error)
         })

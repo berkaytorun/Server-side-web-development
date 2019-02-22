@@ -9,6 +9,7 @@ const BookAuthor = require("./models/book_author_model").BookAuthor
 exports.initRelations = function() {
 
     Book.belongsTo(Classification, {foreignKey: 'signId'})
+    Classification.hasMany(Book, {foreignKey: 'signId', sourceKey: 'signId'})
     
     Author.belongsToMany(Book, { through: BookAuthor} )
     Book.belongsToMany(Author, { through: BookAuthor} )

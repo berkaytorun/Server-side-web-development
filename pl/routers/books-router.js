@@ -61,13 +61,26 @@ router.post("/delete/:ISBN", function(req, res) {
 router.get("/", function(req, res) {
     
     bll.searchBooks(req.query)
-    .then(function(books) {
+    .then(function(wrapper) {
+        const books = wrapper[0]
+        const classifications = wrapper[1]
+
+        if (req.query.classification) {
+            for (let i = 0; i < classifications.length; i++) {
+                if (classifications[i].signum == req.query.classification) {
+                    classifications[i].isSelected = true
+                }
+            }
+        }
+
         const pages = (books.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
         
         const model = {
             pages: pagesArray,
             books: books,
+            classifications: classifications,
+            currentClassification: req.query.classification,
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
@@ -82,12 +95,6 @@ router.get("/", function(req, res) {
         res.render("error.hbs", model)
     })
 })
-
-
-router.get("/search", function(req, res) {
-    res.render("books/books_search.hbs")
-})
-
 
 router.get("/edit/:ISBN", function(req, res) {
     const book = {
