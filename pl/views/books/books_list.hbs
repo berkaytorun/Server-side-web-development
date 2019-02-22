@@ -1,31 +1,6 @@
 {{> pagination}}
 {{> search}}
 
-{{#if classifications}}
-    <form action="/books/" method="GET">
-        Classification:
-        <select name="classification">
-            <option value="">Pick one: </option>
-            {{#each classifications}}
-                {{#if this.isSelected}}
-                    {{#if this.books}}
-                        <option value="{{this.signum}}" selected="selected"> {{this.signum}} </option>
-                    {{else}}
-                        <option value="{{this.signum}}" selected="selected" class="classificationEmpty" style="background-color:Tomato;"> {{this.signum}} </option>
-                    {{/if}}
-                {{else}}
-                    {{#if this.books}}
-                        <option value="{{this.signum}}"> {{this.signum}} </option>
-                    {{else}}
-                        <option value="{{this.signum}}" class="classificationEmpty" color="reds" style="background-color:Tomato;"> {{this.signum}} </option>
-                    {{/if}}
-                {{/if}}
-            {{/each}}
-        </select>
-        <button>Filter</button>
-    </form>
-{{/if}}
-
 {{#if session.loggedIn}}
     <form action="/books/create" method="GET">
         <button type="submit">Create Book</button>

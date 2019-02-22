@@ -1,9 +1,9 @@
 {{> pagination}}
 {{> search}}
 
-{{#if session.canCreateAccounts}}blaj blaj
+{{#isSuper session.authorityId }}
     <a href="/accounts/create"> <input type="submit" value="Create"> </a>
-{{/if}}
+{{/isSuper}}
 
 {{#each accounts}}
     <div id="book_info">
@@ -16,11 +16,11 @@
             <div>Authority: {{this.authorityLevel}}</div>
         </a>
     </div>
-    {{#if ../session.canDeleteAccounts}}
+    {{#isSuper ../session.authorityId}}
         <form action="/accounts/delete/{{Id}}"  method="post">
             <input type="submit" value="Delete"/>
         </form>
-    {{/if}}
+    {{/isSuper}}
     
 {{/each}}
 

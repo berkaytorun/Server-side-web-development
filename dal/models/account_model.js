@@ -4,6 +4,7 @@ const levels = [
     "Admin",
     "Super"
 ]
+
 exports.levels = levels
 
 const accValid = require('../models/model_validator').accValid
@@ -66,15 +67,7 @@ exports.Account = db.define("account", {
             }
         }
     },
-    authorityLevel: {
-        type: Sequelize.TEXT,
-        validate: {
-          customValidation(value) {
-            if (levels.includes(value)) {
-                return; // accepted
-            }
-            throw new Error(value + " is not a recognized authority level.")
-          }
-        }
+    authorityId: {
+        type: Sequelize.INTEGER
     }
 })
