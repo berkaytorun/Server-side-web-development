@@ -8,31 +8,23 @@ const Author = require("../models/author_model").Author
 exports.searchBooks = function(options) {
     return new Promise(function(resolve, reject) {
 
-        let findWhere = {
-        
-            distinct: true,
-            order: [
-                ['title', 'ASC']
-            ],
-            
-            limit: options.limit,
-            offset: options.offset,
-            
-            where: { },
+        const toInclude = { 
             include: [
-                {
-                    model: Classification,
-                    required: false
-                },
-                {
-                    model: Author,
-                }
-            ],
-            
+                {model: Author},
+                {model: Classification}
+            ] 
+        }
+        if (options.classification != "") {
+            toInclude.include[1].where = {
+                signum: {[Op.like]: options.classification}
+            }
+        }
+
+        const toSearch = {
+            where: { }
         }
         if (options.searchString !== "") {
-    
-            findWhere.where = {
+            toSearch.where = {
                 [Op.or]: [
                     {ISBN: {
                             [Op.like]: options.searchString, 
@@ -45,6 +37,21 @@ exports.searchBooks = function(options) {
                 ]
             }
         }
+
+        let findWhere = {
+        
+            distinct: true,
+            order: [
+                ['title', 'ASC']
+            ],
+            
+            limit: options.limit,
+            offset: options.offset,
+            
+            where: toSearch.where,
+            include: toInclude.include
+        }
+
         Book.findAndCountAll(findWhere)
         .then((books)=> {
             if (books.rows.length > 0) {
