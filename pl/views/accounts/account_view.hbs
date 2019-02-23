@@ -4,10 +4,10 @@
         <div>Username: {{account.userName}}</div>
         <div>FirstName: {{account.firstName}}</div>
         <div>LastName: {{account.lastName}}</div>
-        <div>authorityLevel: {{account.authorityLevel}}</div>
+        <div>authorityLevel: {{account.authorityId}}</div>
     </div>
-    {{#if session.canUpdateAccountsPassword}}
+    {{#isAdmin session.authorityId}}
         <input type="submit" value="Edit">
-    {{/if}}
+    {{/isAdmin}}
 </form>
 

@@ -5,10 +5,11 @@ const dal = require("../dal/repositories/accounts-repository")
 
 const authority = require("./functionality/authority")
 
-exports.create = function(session, account) {
+exports.create = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
         
-        if (!session.canCreateAccounts) {
+        const SUPER = 3
+        if (!(authorityId >= SUPER)) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -44,20 +45,6 @@ exports.login = function(session, account) {
             session.loggedIn = true
             session.userName = account.userName
 
-            /* session.canCreateBooks = authority.canCreateBooks(session) 
-            session.canUpdateBooks = authority.canUpdateBooks(session)
-            session.canDeleteBooks = authority.canDeleteBooks(session)
-
-            session.canCreateAuthors = authority.canCreateAuthors(session)
-            session.canUpdateAuthors = authority.canUpdateAuthors(session)
-            session.canDeleteAuthors = authority.canDeleteAuthors(session)
-
-            session.canCreateAccounts = authority.canCreateAccounts(session)
-            session.canReadAccounts = authority.canReadAccounts(session)
-            session.canUpdateAccounts = authority.canUpdateAccounts(session)
-            session.canDeleteAccounts = authority.canDeleteAccounts(session)
-            session.canUpdateAccountsPassword = authority.canUpdateAccountsPassword(session)
-            */
             resolve(account)
 
         }).catch(function(error) {
@@ -69,8 +56,7 @@ exports.login = function(session, account) {
 exports.findAll = function(authorityId, options) {
     return new Promise(function(resolve, reject) {
 
-        const MODERATOR = 1
-        if (!(authorityId >= MODERATOR)) {
+        if (authorityId == undefined) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -86,6 +72,7 @@ exports.findAll = function(authorityId, options) {
 exports.logout = function(session) {
     return new Promise(function(resolve, reject) {
         session.destroy(function(err) {
+            // Destroy this session
             if (err) {
                 reject(err)
             }
@@ -94,10 +81,10 @@ exports.logout = function(session) {
     })
 }
 
-exports.findOne = function(session, account) {
+exports.findOne = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
         
-        if (!session.canReadAccounts) {
+        if (authorityId == undefined) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -111,18 +98,19 @@ exports.findOne = function(session, account) {
 }
 
 
-exports.update = function(session, account) {
+exports.update = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
 
-        if (!session.canUpdateAccounts && 
+        const ADMIN = 2
+        const SUPER = 3
+        if (authorityId == ADMIN &&
                 (account.userName ||
                 account.firstName ||
                 account.lastName ||
                 account.authorityLevel)) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
-        
-        if (!session.canUpdateAccountsPassword) {
+        else if (!(authorityId >= SUPER)) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -138,10 +126,10 @@ exports.update = function(session, account) {
     })
 }
 
-exports.delete = function(session, account) {
+exports.delete = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
         
-        if (!session.canDeleteAccounts) {
+        if (authorityId < SUPER) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 

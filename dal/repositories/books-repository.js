@@ -5,7 +5,7 @@ const Book = require("../models/book_model").Book
 const Classification = require("../models/classification_model").Classification
 const Author = require("../models/author_model").Author
 
-exports.searchBooks = function(options) {
+exports.findAll = function(options) {
     return new Promise(function(resolve, reject) {
 
         const toInclude = { 
@@ -83,7 +83,7 @@ exports.searchBooks = function(options) {
     })
 }
     
-exports.getBookInfo = function(book) {
+exports.findOne = function(book) {
     return new Promise(function(resolve, reject) {
 
         Book.findOne({
