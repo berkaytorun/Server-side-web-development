@@ -1,27 +1,11 @@
-const express = require('express')
-const dal = require("../dal/repositories/books-repository")
+
+const bookManager = require("../dal/repositories/books-repository")
 const dalClassifications = require("../dal/repositories/classification-repository")
 
-exports.update = function(session, book, oldISBN) {
-    return new Promise(function(resolve, reject) {
-
-        if (!session.canUpdateBooks) {
-            throw [{message: "You do not have permissions for that."}]
-        }
-
-        return dal.update(book, oldISBN)
-        .then(function(books) {
-            resolve(books)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
-}
-
-exports.searchBooks = function(options) {
+exports.findAll = function(options) {
     const wrapper = []
     return new Promise(function(resolve, reject) {
-        return dal.searchBooks(options)
+        return bookManager.findAll(options)
         .then(function(books) {
             wrapper.push(books)
             return dalClassifications.findAll()
@@ -34,41 +18,14 @@ exports.searchBooks = function(options) {
     })
 }
 
-exports.delete = function(session, book) {
+exports.create = function(authorityId, book) {
     return new Promise(function(resolve, reject) {
 
-        if (!session.canDeleteBooks) {
-            throw [{message: "You do not have permissions for that."}]
-        }
-
-        return dal.delete(book)
-        .then(function() {
-            resolve()
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
-}
-
-exports.getBookInfo = function(book) {
-    return new Promise(function(resolve, reject) {
-        return dal.getBookInfo(book)
-        .then(function(bookInfo) {
-            resolve(bookInfo)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
-}
-
-exports.create = function(session, book) {
-    return new Promise(function(resolve, reject) {
-
-        if (!session.canCreateBooks) {
+        if (!authorityId) {
             throw [{message: "You do not have permission to do that."}]
         }
 
-        return dal.create(book)
+        return bookManager.create(book)
         .then(function(newBook) {
             resolve(newBook)
         }).catch(function(error) {
@@ -77,4 +34,46 @@ exports.create = function(session, book) {
     })
 }
 
+exports.findOne = function(book) {
+    return new Promise(function(resolve, reject) {
+        return bookManager.findOne(book)
+        .then(function(bookInfo) {
+            resolve(bookInfo)
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
 
+exports.update = function(authorityId, book, oldISBN) {
+    return new Promise(function(resolve, reject) {
+
+        const ADMIN = 2
+        if (authorityId < ADMIN) {
+            throw [{message: "You do not have permissions for that."}]
+        }
+
+        return bookManager.update(book, oldISBN)
+        .then(function(books) {
+            resolve(books)
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}
+
+exports.delete = function(authorityId, book) {
+    return new Promise(function(resolve, reject) {
+
+        if (authorityId == undefined) {
+            throw [{message: "You do not have permissions for that."}]
+        }
+
+        return bookManager.delete(book)
+        .then(function() {
+            resolve()
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}

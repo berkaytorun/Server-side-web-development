@@ -55,7 +55,7 @@ router.post("/login", function (req, res) {
     bll.login(req.session, account)
     .then(function(account) {
         
-        model = {
+        const model = {
             account: account,
             session: req.session,
         }
@@ -84,7 +84,7 @@ router.get("/logout", function(req, res) {
 
 router.get("/", function(req, res) {
     
-    bll.findAll(req.session.authorityId, req.query)
+    bll.findAll(req.session, req.query)
     .then(function(accounts) {
         const pages = (accounts.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)

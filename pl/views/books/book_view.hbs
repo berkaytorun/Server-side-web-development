@@ -1,3 +1,4 @@
+
 <form action="/books/edit/{{book.ISBN}}" method="GET">
     <div id="book_info">
         <div>ISBN: {{book.ISBN}}</div>
@@ -11,18 +12,7 @@
         <div>Pages: {{book.pages}}</div>
     </div>
     
-    {{#if session.canUpdateBooks}}
+    {{#isAdmin session.authorityId}}
         <input type="submit" value="Edit">
-    {{/if}}
+    {{/isAdmin}}
 </form>
-
-    {{#if book.books}}
-        {{#each author.books}}
-        <form action="/books/{{this.ISBN}}"method="GET">
-        <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
-        <input type="submit" value="Go"></form>
-        {{/each}}
-    {{/if}}
-
-
-

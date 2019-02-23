@@ -5,7 +5,7 @@ const Author = require("../models/author_model").Author
 const Book = require("../models/book_model").Book
 
 
-exports.search = function(options) {
+exports.findAll = function(options) {
     return new Promise(function(resolve, reject) {
 
         let findWhere = {

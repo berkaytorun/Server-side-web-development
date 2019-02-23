@@ -1,9 +1,12 @@
-<form action="../edit/{{author.Id}}" method="POST">
-    <div id="book_info">
-        Firstname <input type="text" name="firstName" value="{{this.firstName}}"><br>
-        Lastname  <input type="text" name="lastName" value="{{this.lastName}}"><br>
-        BirthYear <input type="text" name="birthYear" value="{{this.birthYear}}">
-        <input type="hidden" id="Id" name="Id" value="{{this.Id}}">
-    </div>
-    <input type="submit" value="Submit">
-</form>
+
+{{#if session.loggedIn}}
+    <form action="../edit/{{author.Id}}" method="POST">
+        <div id="book_info">
+            Firstname <input type="text" name="firstName" value="{{this.firstName}}"><br>
+            Lastname  <input type="text" name="lastName" value="{{this.lastName}}"><br>
+            BirthYear <input type="text" name="birthYear" value="{{this.birthYear}}">
+            <input type="hidden" id="Id" name="Id" value="{{this.Id}}">
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+{{/if}}

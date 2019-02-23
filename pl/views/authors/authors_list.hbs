@@ -17,11 +17,11 @@
             <div>birthYear: {{this.birthYear}}</div>
         </a>
     </div>
-    {{#if ../session.canDeleteAuthors}}
+    {{#isAdmin ../session.authorityId}}
         <form action="authors/delete/{{Id}}"  method="post">
             <input type="submit" value="Delete"/>
         </form>
-    {{/if}}
+    {{/isAdmin}}
     
 {{/each}}
 

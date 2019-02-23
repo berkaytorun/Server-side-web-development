@@ -7,7 +7,8 @@ const bll = require("../../bll/authors-manager")
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/", function(req, res) {
-    bll.search(req.query)
+
+    bll.findAll(req.query)
     .then(function(authors) {
         const pages = (authors.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
@@ -45,7 +46,7 @@ router.post("/create", function(req, res) {
         birthYear:req.body.birthYear,
     }
 
-    bll.create(req.session, author)
+    bll.create(req.session.authorityId, author)
     .then(function(author) {
         const model = {
             author: author,
@@ -89,7 +90,7 @@ router.post("/edit/:Id", function(req, res) {
         lastName:   req.body.lastName,
         birthYear:  req.body.birthYear,
     }
-    bll.update(req.session, author)
+    bll.update(req.session.authorityId, author)
     .then(function() {
         const author = {
             Id: req.params.Id,
@@ -137,7 +138,7 @@ router.post("/delete/:Id", function(req, res) {
     const author = {
         Id: req.params.Id
     } 
-    bll.delete(req.session, author)
+    bll.delete(req.session.authorityId, author)
     .then(function() {
         const message = {
             errors: [

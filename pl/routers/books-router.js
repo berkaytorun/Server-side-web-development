@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router();
 
-const bll = require("../../bll/books-manager")
+const bookManager = require("../../bll/books-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
@@ -20,7 +20,7 @@ router.post("/create", function(req, res) {
         pages:req.body.pages,
     }
     
-    bll.create(req.session, book)
+    bookManager.create(req.session.authorityId, book)
     .then(function(book) {
         const model = {
             book: book,
@@ -40,7 +40,7 @@ router.post("/delete/:ISBN", function(req, res) {
     
     const book = {ISBN: req.params.ISBN}
 
-    bll.delete(req.session, book)
+    bookManager.delete(req.session.authorityId, book)
     .then(function() {
         const message = {
             errors: [
@@ -60,7 +60,7 @@ router.post("/delete/:ISBN", function(req, res) {
 // search for many books that match a string and filters
 router.get("/", function(req, res) {
     
-    bll.searchBooks(req.query)
+    bookManager.findAll(req.query)
     .then(function(wrapper) {
         const books = wrapper[0]
         const classifications = wrapper[1]
@@ -100,7 +100,7 @@ router.get("/edit/:ISBN", function(req, res) {
     const book = {
         ISBN: req.params.ISBN
     }
-    bll.getBookInfo(book)
+    bookManager.findOne(book)
     .then(function(book) {
         const model = {
             book: book,
@@ -118,20 +118,24 @@ router.get("/edit/:ISBN", function(req, res) {
 
 router.post("/edit/:ISBN", function(req, res) {
     const book = {
+        ISBN: req.body.ISBN,
         title: req.body.title,
         pages:req.body.pages,
         publicationInfo:req.body.publicationInfo,
         publicationYear:req.body.publicationYear,
     }
     const oldISBN = req.params.ISBN
-    bll.update(req.session, book, oldISBN)
+    bookManager.update(req.session.authorityId, book, oldISBN)
     .then(function() {
         const book = {
-            ISBN: req.query.ISBN
+            ISBN: req.body.ISBN
         }
-        return bll.getBookInfo(book)
+        return bookManager.findOne(book)
     }).then(function(bookInfo) {
-        res.render("books/book_view.hbs", bookInfo)
+        const model = {
+            book: bookInfo
+        }
+        res.render("books/book_view.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors,
@@ -146,7 +150,7 @@ router.get("/:ISBN", function (req, res) {
     const book = {
         ISBN: req.params.ISBN
     }
-    bll.getBookInfo(book)
+    bookManager.findOne(book)
     .then(function(book) {
         const model = {
             book: book,
