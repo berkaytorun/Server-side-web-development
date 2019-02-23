@@ -21,10 +21,10 @@ router.post("/create", function(req, res) {
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        authorityLevel: req.body.authorityLevel
+        authorityId: req.body.authorityLevel
     }
 
-    bll.create(req.session, account)
+    bll.create(req.session.authorityId, account)
     .then(function(account) {
         const model = {
             account: account,
@@ -52,9 +52,15 @@ router.post("/login", function (req, res) {
         userName: req.body.userName,
         password: req.body.password
     }
-    bll.login(req.session, account)
+    bll.login(account)
     .then(function(account) {
         
+        req.session.accountId = account.Id
+        req.session.authorityId = account.authorityId
+
+        req.session.loggedIn = true
+        req.session.userName = account.userName
+
         const model = {
             account: account,
             session: req.session,
@@ -84,7 +90,7 @@ router.get("/logout", function(req, res) {
 
 router.get("/", function(req, res) {
     
-    bll.findAll(req.session, req.query)
+    bll.findAll(req.session.authorityId, req.query)
     .then(function(accounts) {
         const pages = (accounts.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
@@ -113,7 +119,7 @@ router.get("/edit/:Id", function(req, res) {
         Id: req.params.Id
     }
     
-    bll.findOne(req.session, query)
+    bll.findOne(req.session.authorityId, query)
     .then(function(accountInfo) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
@@ -139,15 +145,15 @@ router.post("/edit/:Id", function(req, res) {
         firstName:  req.body.firstName,
         lastName:   req.body.lastName,
         birthYear:  req.body.birthYear,
-        authorityLevel:req.body.authorityLevel,
+        authorityLevel: req.body.authorityLevel,
     }
 
-    bll.update(req.session, account)
+    bll.update(req.session.authorityId, account)
     .then(function() {
         const account = {
             Id: req.params.Id,
         }
-        return bll.findOne(req.session, account)
+        return bll.findOne(req.session.authorityId, account)
     }).then(function(accountInfo) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
@@ -168,7 +174,7 @@ router.get("/:Id", function(req, res) {
     const account = {
         Id: req.params.Id
     } 
-    bll.findOne(req.session, account)
+    bll.findOne(req.session.authorityId, account)
     .then(function(accountInfo) {
         const model = {
             account: accountInfo,
@@ -186,7 +192,7 @@ router.get("/:Id", function(req, res) {
 
 router.post("/delete/:Id", function(req, res) {
     const account = { Id: req.params.Id }
-    bll.delete(req.session, account)
+    bll.delete(req.session.authorityId, account)
     .then(function() {
         const message = {
             errors: [

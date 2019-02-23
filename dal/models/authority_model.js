@@ -3,7 +3,7 @@ const Sequelize = require("../sequelize_settings").Sequelize
 const db = require("../sequelize_settings").db
 
 exports.Authority = db.define("authority", {
-    authorityId: {
+    Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         validate: {
@@ -15,7 +15,7 @@ exports.Authority = db.define("authority", {
             }
         }
     },
-    authorityName: {
+    name: {
         type: Sequelize.TEXT,
     }
 })

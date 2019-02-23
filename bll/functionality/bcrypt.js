@@ -4,6 +4,10 @@ const errorHandler = require("../../error_handler")
 
 exports.encrypt = function(stringToHash) {
     return new Promise(function(resolve, reject) {
+        if (stringToHash == "") {
+            // password not changed
+            resolve(stringToHash)
+        }
         bcrypt.genSalt(10, function(error, salt) {
             bcrypt.hash(stringToHash, salt, function(error, hashedString) {
                 if (error) {

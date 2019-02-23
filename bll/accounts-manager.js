@@ -3,13 +3,11 @@ const bcrypt = require("./functionality/bcrypt")
 
 const dal = require("../dal/repositories/accounts-repository")
 
-const authority = require("./functionality/authority")
-
 exports.create = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
         
         const SUPER = 3
-        if (!(authorityId >= SUPER)) {
+        if (authorityId < SUPER) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -26,27 +24,20 @@ exports.create = function(authorityId, account) {
     })
 }
 
-exports.login = function(session, account) {
+exports.login = function(account) {
     return new Promise(function(resolve, reject) {
 
         return dal.login(account)
         .then(function(dbAccount) {
             if (dbAccount.userName == "Dev" && dbAccount.password == "") {
+                // for dev purpose.. remove this if / else upon release!
                 return new Promise(function(resolve, reject ) { resolve(dbAccount) })
             }
             else {
                 return bcrypt.compare(account.password, dbAccount)
             }
         }).then(function(account) {
-
-            session.accountId = account.Id
-            session.authorityId = account.authorityId
-
-            session.loggedIn = true
-            session.userName = account.userName
-
             resolve(account)
-
         }).catch(function(error) {
             reject(error)
         })
@@ -110,13 +101,18 @@ exports.update = function(authorityId, account) {
                 account.authorityLevel)) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
-        else if (!(authorityId >= SUPER)) {
+        else if (authorityId < SUPER) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
         bcrypt.encrypt(account.password)
         .then(function(hashedPassword) {
-            account.password = hashedPassword
+            if (hashedPassword == "") {
+                delete account.password
+            }
+            else {
+                account.password = hashedPassword
+            }
             return dal.update(account)
         }).then(function(accounts) {
             resolve(accounts)
