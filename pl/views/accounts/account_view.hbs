@@ -1,13 +1,17 @@
 <form action="/accounts/edit/{{account.Id}}" method="GET">
     <div id="book_info">
         <div>Id: {{account.Id}}</div>
-        <div>Username: {{account.userName}}</div>
-        <div>FirstName: {{account.firstName}}</div>
-        <div>LastName: {{account.lastName}}</div>
-        <div>authorityLevel: {{account.authorityId}}</div>
+        <div>User name: {{account.userName}}</div>
+        <div>First Name: {{account.firstName}}</div>
+        <div>Last Name: {{account.lastName}}</div>
+        {{#if account.authority}}
+            <div>Authority Level: {{account.authority.name}}</div>
+        {{/if}}
     </div>
     {{#isAdmin session.authorityId}}
-        <input type="submit" value="Edit">
+        {{#isNotSuper account.authority.Id}}
+            <input type="submit" value="Edit">
+        {{/isNotSuper}}
     {{/isAdmin}}
 </form>
 

@@ -2,10 +2,13 @@
 const Op = require('sequelize').Op
 
 const Account = require("../models/account_model").Account
+const Authority = require("../models/authority_model").Authority
+
+const authorityLevels = require("../models/account_model").levels
 
 exports.create = function(account) {
     return new Promise(function(resolve, reject) {
-        Account.create(account)
+        Account.create(account, { include: [Authority] })
         .then((account) => {
             if (account) {
                 resolve(account)
@@ -74,8 +77,7 @@ exports.login = function(account) {
 exports.findAll = function(options) {
     return new Promise(function(resolve, reject) {
     
-        let findWhere = {
-            
+        const findWhere = {
             order: [
                 ['firstName', 'ASC']
             ],
@@ -84,9 +86,11 @@ exports.findAll = function(options) {
             offset: options.offset,
             
             where: { },
+            include: [{model: Authority}]
         }
+        
         if (options.searchString !== "") {
-
+            
             findWhere.where = {
                 [Op.or]: [
                     {userName: {
@@ -100,19 +104,13 @@ exports.findAll = function(options) {
                     {lastName: {
                             [Op.like]: options.searchString, 
                         }
-                    },
-                    {authorityLevel: {
-                            [Op.like]: options.searchString, 
-                        }
-                    },
+                    }
                 ]
             }
         }
+        
         Account.findAndCountAll(findWhere)
         .then((accounts) => {
-            accounts.rows.count = accounts.count
-            resolve(accounts.rows)
-            return
             if (accounts.rows.length > 0) {
                 accounts.rows.count = accounts.count
                 resolve(accounts.rows)
@@ -137,22 +135,13 @@ exports.findAll = function(options) {
     })
 }
 
-
-   
 exports.findOne = function(account) {
     return new Promise(function(resolve, reject) {
 
-        Account.findByPk(account.Id).then((account)=> {
+        Account.findByPk(account.Id,{ include: [Authority] })
+        .then((account)=> {
             if (account) {
-                            
-                let theAccount = {
-                    Id: account.Id,
-                    userName: account.userName,
-                    firstName: account.firstName,
-                    lastName: account.lastName,
-                    authorityLevel: account.authorityLevel
-                }
-                resolve(theAccount)
+                resolve(account)
             }
             else {
                 const error = [

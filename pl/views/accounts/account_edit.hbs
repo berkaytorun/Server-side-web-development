@@ -1,9 +1,12 @@
+
 <form action="/accounts/edit/{{accountInfo.Id}}" method="POST">
     <div id="book_info">
         {{#isSuper session.authorityId}}
             Username <input type="text" name="userName" value="{{accountInfo.userName}}"><br>
         {{/isSuper}}
-        Password: <input type="text" name="password" placeholder="**************"><br>
+        {{#isAdmin session.authorityId}}
+            Password: <input type="text" name="password" placeholder="**************"><br>
+        {{/isAdmin}}
         {{#isSuper session.authorityId}}
             Firstname <input type="text" name="firstName" value="{{accountInfo.firstName}}"><br>
             Lastname <input type="text" name="lastName" value="{{accountInfo.lastName}}"><br>
@@ -11,7 +14,7 @@
             {{#if levels}}
                 <select name="authorityLevel">
                     {{#each levels}}
-                        <option value="{{this}}">{{this}}</option>
+                        <option value="{{this.key}}">{{this.value}}</option>
                     {{/each}}
                 <select>
                 <br>

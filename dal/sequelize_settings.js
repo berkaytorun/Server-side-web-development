@@ -17,7 +17,7 @@ exports.Sequelize = Sequelize
 exports.db = db
 
 let resetDatabase = false
-let delayTimer = 0;
+let delayTimer = 0
 
 require("./database").initRelations()
 if (resetDatabase == false) { return delayTimer }

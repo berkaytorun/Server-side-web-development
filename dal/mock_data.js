@@ -1669,9 +1669,9 @@ for (let i = 0, len = bookAuthors.length; i < len; i++) {
 	})
 }
 let authorities = [
-	{ authorityId: 1, authorityName: "Moderator"},
-	{ authorityId: 2, authorityName: "Admin"},
-	{ authorityId: 3, authorityName: "Super"},
+	{ Id: 1, name: "Moderator"},
+	{ Id: 2, name: "Admin"},
+	{ Id: 3, name: "Super"},
 ]
 
 let mockData = {

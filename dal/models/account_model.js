@@ -1,8 +1,8 @@
 
 const levels = [
-    "Moderator",
-    "Admin",
-    "Super"
+    {key: 1, value: "Moderator"},
+    {key: 2, value: "Admin"},
+    {key: 3, value: "Super"}
 ]
 
 exports.levels = levels

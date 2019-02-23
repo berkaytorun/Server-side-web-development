@@ -1,23 +1,30 @@
 
 module.exports = {
-    isSuper: function(v1, options){
-        if(v1 >= 3){
+    isSuper: function(authorityId, options){
+        if(authorityId >= 3){
+            return options.fn(this)
+        }
+        else{
+            return options.inverse(this)
+        }
+    },isNotSuper: function(authorityId, options){
+        if(authorityId < 3){
             return options.fn(this)
         }
         else{
             return options.inverse(this)
         }
     },
-    isAdmin: function(v1, options){
-        if(v1 >= 2){
+    isAdmin: function(authorityId, options){
+        if(authorityId >= 2){
             return options.fn(this)
         }
         else{
             return options.inverse(this)
         }
     },
-    isMod: function(v1, options){
-        if(v1 >= 1){
+    isModerator: function(authorityId, options){
+        if(authorityId >= 1){
             return options.fn(this)
         }
         else{

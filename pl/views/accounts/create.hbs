@@ -11,7 +11,7 @@
     {{#if levels}}
         <select name="authorityLevel">
             {{#each levels}}
-                <option value="{{this}}">{{this}}</option>
+                <option value="{{this.key}}">{{this.value}}</option>
             {{/each}}
         <select>
         <br>

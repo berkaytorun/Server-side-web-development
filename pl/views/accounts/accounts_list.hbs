@@ -13,7 +13,7 @@
             <div>User Name: {{this.userName}}</div>
             <div>First Name: {{this.firstName}}</div>
             <div>Last Name: {{this.lastName}}</div>
-            <div>Authority: {{this.authorityLevel}}</div>
+            <div>Authority: {{this.authority.name}}</div>
         </a>
     </div>
     {{#isSuper ../session.authorityId}}
