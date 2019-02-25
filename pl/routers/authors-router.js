@@ -2,13 +2,13 @@
 const express = require('express')
 const router = express.Router();
 
-const bll = require("../../bll/authors-manager")
+const authorManager = require("../../bll/authors-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/", function(req, res) {
 
-    bll.findAll(req.query)
+    authorManager.findAll(req.query)
     .then(function(authors) {
         const pages = (authors.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
@@ -46,7 +46,7 @@ router.post("/create", function(req, res) {
         birthYear:req.body.birthYear,
     }
 
-    bll.create(req.session.authorityId, author)
+    authorManager.create(req.session.authorityId, author)
     .then(function(author) {
         const model = {
             author: author,
@@ -67,7 +67,7 @@ router.get("/edit/:Id", function(req, res) {
     const author = {
         Id: req.params.Id
     }
-    bll.findOne(author)
+    authorManager.findOne(author)
     .then(function(authorInfo) {
         const model = {
             author: author,
@@ -90,12 +90,12 @@ router.post("/edit/:Id", function(req, res) {
         lastName:   req.body.lastName,
         birthYear:  req.body.birthYear,
     }
-    bll.update(req.session.authorityId, author)
+    authorManager.update(req.session.authorityId, author)
     .then(function() {
         const author = {
             Id: req.params.Id,
         }
-        return bll.findOne(author)
+        return authorManager.findOne(author)
     }).then(function(authorInfo) {
         const model = {
             author: authorInfo,
@@ -116,7 +116,7 @@ router.get("/:Id", function (req, res) {
     const author = {
         Id: req.params.Id
     }
-    bll.findOne(author)
+    authorManager.findOne(author)
     .then(function(authorInfo) {
         const model = {
             author: authorInfo,
@@ -138,7 +138,7 @@ router.post("/delete/:Id", function(req, res) {
     const author = {
         Id: req.params.Id
     } 
-    bll.delete(req.session.authorityId, author)
+    authorManager.delete(req.session.authorityId, author)
     .then(function() {
         const message = {
             errors: [

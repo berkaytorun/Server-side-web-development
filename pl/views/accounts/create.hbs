@@ -7,9 +7,9 @@
     <input type="text" name="firstName" placeholder="Enter name" ><br>
     Last name<br>
     <input type="text" name="lastName" placeholder="Enter lastName" ><br>
-    AuthorityLevel: 
+    AuthorityId: 
     {{#if levels}}
-        <select name="authorityLevel">
+        <select name="AuthorityId">
             {{#each levels}}
                 <option value="{{this.key}}">{{this.value}}</option>
             {{/each}}

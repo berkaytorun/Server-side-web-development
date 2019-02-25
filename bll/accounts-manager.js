@@ -1,7 +1,7 @@
 
 const bcrypt = require("./functionality/bcrypt")
 
-const dal = require("../dal/repositories/accounts-repository")
+const accountRepository = require("../dal/repositories/accounts-repository")
 
 exports.create = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
@@ -14,7 +14,7 @@ exports.create = function(authorityId, account) {
         bcrypt.encrypt(account.password)
         .then(function(hashedPassword) {
             account.password = hashedPassword
-            return dal.create(account)
+            return accountRepository.create(account)
         }).then(function(account) {
 
             resolve(account)
@@ -27,7 +27,7 @@ exports.create = function(authorityId, account) {
 exports.login = function(account) {
     return new Promise(function(resolve, reject) {
 
-        return dal.login(account)
+        return accountRepository.login(account)
         .then(function(dbAccount) {
             if (dbAccount.userName == "Dev" && dbAccount.password == "") {
                 // for dev purpose.. remove this if / else upon release!
@@ -51,7 +51,7 @@ exports.findAll = function(authorityId, options) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
-        return dal.findAll(options)
+        return accountRepository.findAll(options)
         .then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
@@ -79,7 +79,7 @@ exports.findOne = function(authorityId, account) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
-        return dal.findOne(account)
+        return accountRepository.findOne(account)
         .then(function(accountInfo) {
             resolve(accountInfo)
         }).catch(function(error) {
@@ -94,14 +94,13 @@ exports.update = function(authorityId, account) {
 
         const ADMIN = 2
         const SUPER = 3
-        if (authorityId == ADMIN &&
-                (account.userName ||
-                account.firstName ||
-                account.lastName ||
-                account.authorityLevel)) {
+        if (authorityId == undefined || (authorityId < SUPER &&
+            (account.userName || account.firstName || account.lastName || account.authorityId)
+            )
+                ) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
-        else if (authorityId < SUPER) {
+        else if (authorityId < ADMIN) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -113,7 +112,7 @@ exports.update = function(authorityId, account) {
             else {
                 account.password = hashedPassword
             }
-            return dal.update(account)
+            return accountRepository.update(account)
         }).then(function(accounts) {
             resolve(accounts)
         }).catch(function(error) {
@@ -129,7 +128,7 @@ exports.delete = function(authorityId, account) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
-        return dal.delete(account)
+        return accountRepository.delete(account)
         .then(function() {
             resolve()
         }).catch(function(error) {

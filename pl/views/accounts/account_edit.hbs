@@ -10,9 +10,9 @@
         {{#isSuper session.authorityId}}
             Firstname <input type="text" name="firstName" value="{{accountInfo.firstName}}"><br>
             Lastname <input type="text" name="lastName" value="{{accountInfo.lastName}}"><br>
-            AuthorityLevel: 
+            AuthorityId: 
             {{#if levels}}
-                <select name="authorityLevel">
+                <select name="authorityId">
                     {{#each levels}}
                         <option value="{{this.key}}">{{this.value}}</option>
                     {{/each}}

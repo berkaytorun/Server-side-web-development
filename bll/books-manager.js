@@ -1,14 +1,14 @@
 
-const bookManager = require("../dal/repositories/books-repository")
-const dalClassifications = require("../dal/repositories/classification-repository")
+const bookRepository = require("../dal/repositories/books-repository")
+const classificationsReository = require("../dal/repositories/classification-repository")
 
 exports.findAll = function(options) {
     const wrapper = []
     return new Promise(function(resolve, reject) {
-        return bookManager.findAll(options)
+        return bookRepository.findAll(options)
         .then(function(books) {
             wrapper.push(books)
-            return dalClassifications.findAll()
+            return classificationsReository.findAll()
         }).then(function(classifications) {
             wrapper.push(classifications)
             resolve(wrapper)
@@ -25,7 +25,7 @@ exports.create = function(authorityId, book) {
             throw [{message: "You do not have permission to do that."}]
         }
 
-        return bookManager.create(book)
+        return bookRepository.create(book)
         .then(function(newBook) {
             resolve(newBook)
         }).catch(function(error) {
@@ -36,7 +36,7 @@ exports.create = function(authorityId, book) {
 
 exports.findOne = function(book) {
     return new Promise(function(resolve, reject) {
-        return bookManager.findOne(book)
+        return bookRepository.findOne(book)
         .then(function(bookInfo) {
             resolve(bookInfo)
         }).catch(function(error) {
@@ -53,7 +53,7 @@ exports.update = function(authorityId, book, oldISBN) {
             throw [{message: "You do not have permissions for that."}]
         }
 
-        return bookManager.update(book, oldISBN)
+        return bookRepository.update(book, oldISBN)
         .then(function(books) {
             resolve(books)
         }).catch(function(error) {
@@ -69,7 +69,7 @@ exports.delete = function(authorityId, book) {
             throw [{message: "You do not have permissions for that."}]
         }
 
-        return bookManager.delete(book)
+        return bookRepository.delete(book)
         .then(function() {
             resolve()
         }).catch(function(error) {

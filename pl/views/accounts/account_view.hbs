@@ -8,6 +8,9 @@
             <div>Authority Level: {{account.authority.name}}</div>
         {{/if}}
     </div>
+    {{#isSuper session.authorityId}}
+        <input type="submit" value="Edit">
+    {{/isSuper}}
     {{#isAdmin session.authorityId}}
         {{#isNotSuper account.authority.Id}}
             <input type="submit" value="Edit">

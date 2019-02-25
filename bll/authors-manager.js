@@ -1,10 +1,10 @@
 
-const authorManager = require("../dal/repositories/authors-repository")
+const authorRepository = require("../dal/repositories/authors-repository")
 
 exports.findAll = function(options) {
     return new Promise(function(resolve, reject) {
 
-        return authorManager.findAll(options)
+        return authorRepository.findAll(options)
         .then(function(authors) {
             resolve(authors)
         }).catch(function(error) {
@@ -20,7 +20,7 @@ exports.create = function(authorityId, author) {
             throw[{message: "You do not have permission to do that."}]
         }
 
-        return authorManager.create(author)
+        return authorRepository.create(author)
         .then(function(newAuthor) {
             resolve(newAuthor)
         }).catch(function(error) {
@@ -31,7 +31,7 @@ exports.create = function(authorityId, author) {
 
 exports.findOne = function(author) {
     return new Promise(function(resolve, reject) {
-        return authorManager.findOne(author)
+        return authorRepository.findOne(author)
         .then(function(authors) {
             resolve(authors)
         }).catch(function(error) {
@@ -48,7 +48,7 @@ exports.update = function(authorityId, author) {
             throw [{message: "You do not have permission to do that."}]
         }
 
-        return authorManager.update(author)
+        return authorRepository.update(author)
         .then(function(authorInfo) {
             resolve(authorInfo)
         }).catch(function(error) {
@@ -65,7 +65,7 @@ exports.delete = function(authorityId, author) {
             throw[{message: "You do not have permission to do that."}]
         }
 
-        return authorManager.delete(author)
+        return authorRepository.delete(author)
         .then(function() {
             resolve()
         }).catch(function(error) {
