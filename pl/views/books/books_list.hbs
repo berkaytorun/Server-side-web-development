@@ -8,6 +8,7 @@
 {{/if}}
 
 {{#each books}}
+<div id="wrapper">
     <div id="book_info">
         <a href="/books/{{ISBN}}">
             <div>ISBN: {{ISBN}}</div>
@@ -16,11 +17,22 @@
             <div>Pages: {{pages}}</div>
         </a>
     </div>
-    {{#isAdmin ../session.authorityId}}
-        <form action="/books/delete/{{ISBN}}" id="deleteForm" method="post">
-            <input type="submit" value="Delete"/>
-        </form>
-    {{/isAdmin}}
+    
+    {{#hasAdminRights ../session.authorityId}}
+    <div id="rightContent">
+        <div id="deleteButton">
+            <form action="/books/delete/{{ISBN}}" id="deleteForm" method="post">
+                <button type="submit" > <i class="fas fa-trash-alt"></i></button>
+            </form>
+        </div>
+        <div id="editButton">
+            <form action="/books/edit/{{book.ISBN}}" method="GET"></form>
+                <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
+            </form>
+        </div>
+    </div>
+    {{/hasAdminRights}}
+</div>
 {{/each}}
 
 {{> pagination}}
