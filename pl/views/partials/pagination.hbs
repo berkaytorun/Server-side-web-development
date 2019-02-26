@@ -11,6 +11,16 @@
                     <a href="{{table}}?currentPage={{pages.firstPage}}&classification={{../currentClassification}}">First Page</a>
                 </li>
             {{/if}}
+        {{else}}
+          {{#if searchString}}
+                <li class="pageNumber" id="pageFirst" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.firstPage}}&searchString={{searchString}}&classification={{../currentClassification}}">First Page</a>
+                </li>
+            {{else}}
+                <li class="pageNumber" id="pageFirst" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.firstPage}}&classification={{../currentClassification}}">First Page</a>
+                </li>
+            {{/if}}
         {{/if}}
 
         {{#each pages.pageList}}
@@ -39,7 +49,7 @@
         {{/each}}
             
         {{#if pages.lastPage}}
-                {{#if searchString}}
+            {{#if searchString}}
                 <li class="pageNumber" id="pageLast">
                     <a href="{{table}}?currentPage={{pages.lastPage}}&searchString={{searchString}}&classification={{../currentClassification}}">Last Page</a>
                 </li>
@@ -48,6 +58,17 @@
                     <a href="{{table}}?currentPage={{pages.lastPage}}&classification={{../currentClassification}}">Last Page</a>
                 </li>
             {{/if}}
+        {{else}} 
+            {{#if searchString}}
+                <li class="pageNumber" id="pageLast" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.lastPage}}&searchString={{searchString}}&classification={{../currentClassification}}">Last Page</a>
+                </li>
+            {{else}}
+                <li class="pageNumber" id="pageLast" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.lastPage}}&classification={{../currentClassification}}">Last Page</a>
+                </li>
+            {{/if}}
+
         {{/if}}
     </ul>
 </pagination>

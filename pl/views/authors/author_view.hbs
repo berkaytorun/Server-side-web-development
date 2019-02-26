@@ -5,9 +5,9 @@
     <div>LastName: {{author.lastName}}</div>
     <div>BirthYear: {{author.birthYear}}</div>
 </div> 
-{{#isAdmin session.authorityId}}
+{{#hasAdminRights session.authorityId}}
     <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
-{{/isAdmin}}
+{{/hasAdminRights}}
 
 {{#if author.books}}
     {{#each author.books}}

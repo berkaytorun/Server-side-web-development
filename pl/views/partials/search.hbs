@@ -12,13 +12,13 @@
                             {{#if this.books}}
                                 <option value="{{this.signum}}" selected="selected"> {{this.signum}} </option>
                             {{else}}
-                                <option value="{{this.signum}}" selected="selected" class="classificationEmpty" style="background-color:Tomato;"> {{this.signum}} </option>
+                                <option value="{{this.signum}}" selected="selected" class="classificationEmpty" style="background-color:Tomato;" disabled> {{this.signum}} </option>
                             {{/if}}
                         {{else}}
                             {{#if this.books}}
                                 <option value="{{this.signum}}"> {{this.signum}} </option>
                             {{else}}
-                                <option value="{{this.signum}}" class="classificationEmpty" color="reds" style="background-color:Tomato;"> {{this.signum}} </option>
+                                <option value="{{this.signum}}" class="classificationEmpty" color="reds" style="background-color:Tomato;" disabled> {{this.signum}} </option>
                             {{/if}}
                         {{/if}}
                     {{/each}}

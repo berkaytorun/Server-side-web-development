@@ -8,6 +8,7 @@
 {{/if}}
 
 {{#each authors}}
+<div id="wrapper">
     <div id="book_info">
         <a href="/authors/{{this.Id}}">
 
@@ -17,12 +18,22 @@
             <div>birthYear: {{this.birthYear}}</div>
         </a>
     </div>
-    {{#isAdmin ../session.authorityId}}
-        <form action="authors/delete/{{Id}}"  method="post">
-            <input type="submit" value="Delete"/>
-        </form>
-    {{/isAdmin}}
+    {{#hasAdminRights ../session.authorityId}}
+    <div id="rightContent">
+        <div id="deleteButton">
+            <form action="/authors/delete/{{this.Id}}" id="deleteForm" method="post">
+                <button type="submit" > <i class="fas fa-trash-alt"></i></button>
+            </form>
+        </div>
+        <div id="editButton">
+            <form action="/authors/edit/{{this.Id}}" method="GET">
+                <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
+            </form>
+        </div>
+    </div>
+    {{/hasAdminRights}}
     
+</div>
 {{/each}}
 
 {{> pagination}}

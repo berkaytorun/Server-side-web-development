@@ -18,7 +18,7 @@ router.get("/", function(req, res) {
             authors: authors,
             searchString: req.query.searchString,
             table: req.baseUrl,
-            placeholder:"search authorneame",
+            placeholder:"Search for a Name of Author",
             session: req.session
         }
         res.render("authors/authors_list.hbs", model)

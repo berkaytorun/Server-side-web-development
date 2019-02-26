@@ -102,6 +102,7 @@ p{
 
 .pagination {
     margin: 0px;
+    padding-bottom: 3px;
 }
 pagination ul li a:link,a:visited{
     text-decoration: none;
