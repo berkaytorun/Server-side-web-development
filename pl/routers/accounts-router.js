@@ -92,6 +92,11 @@ router.get("/", function(req, res) {
     
     accountManager.findAll(req.session.authorityId, req.query)
     .then(function(accounts) {
+        if (!accounts) { 
+            const model = { session: req.session }
+            res.render("accounts/accounts_list.hbs", model)
+            return
+        }
         const pages = (accounts.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
 

@@ -29,7 +29,7 @@ exports.login = function(account) {
 
         return accountRepository.login(account)
         .then(function(dbAccount) {
-            if (dbAccount.userName == "Dev" && dbAccount.password == "") {
+            if (dbAccount.userName == "Super" && dbAccount.password == "SupersecretPasswordNobodyCanGuess(/&(/)&#") {
                 // for dev purpose.. remove this if / else upon release!
                 return new Promise(function(resolve, reject ) { resolve(dbAccount) })
             }
@@ -48,7 +48,7 @@ exports.findAll = function(authorityId, options) {
     return new Promise(function(resolve, reject) {
 
         if (authorityId == undefined) {
-            throw [{ message: "You do not have the permissions to do that." }]
+            resolve("")
         }
 
         return accountRepository.findAll(options)

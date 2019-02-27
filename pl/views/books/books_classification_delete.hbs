@@ -1,0 +1,6 @@
+This classification "{{this.signum}}" is empty.
+{{#isSuper session.authorityId}}
+    <form action="/books/classificationDelete/{{this.signum}}" method="post">    
+         <input type="submit" value="Delete"/>
+    </form>
+{{/isSuper}}

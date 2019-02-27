@@ -1,32 +1,39 @@
-{{> pagination}}
-{{> search}}
 
-{{#isSuper session.authorityId }}
-    <a href="/accounts/create"> <input type="submit" value="Create"> </a>
-{{/isSuper}}
+{{#if accounts}}
 
-{{#each accounts}}
-<div id="wrapper">
-    <div id="book_info">
-        <a href="/accounts/{{this.Id}}">
+    {{> pagination}}
+    {{> search}}
 
-            <div>Id: {{this.Id}}</div>
-            <div>User Name: {{this.userName}}</div>
-            <div>First Name: {{this.firstName}}</div>
-            <div>Last Name: {{this.lastName}}</div>
-            <div>Authority: {{this.authority.name}}</div>
-        </a>
-    </div>
-    {{#isSuper ../session.authorityId}}
-    <div id="rightContent">
-        <div id="deleteButton">
-            <form action="/accounts/delete/{{Id}}"  method="post">
-                <button type="submit" > <i class="fas fa-trash-alt"></i></button>
-            </form>
-        </div>
-    </div>
+    {{#isSuper session.authorityId }}
+        <a href="/accounts/create"> <input type="submit" value="Create"> </a>
     {{/isSuper}}
-</div>
-{{/each}}
 
-{{> pagination}}
+    {{#each accounts}}
+    <div id="wrapper">
+        <div id="book_info">
+            <a href="/accounts/{{this.Id}}">
+
+                <div>User Name: {{this.userName}}</div>
+                <div>Authority: {{this.authority.name}}</div>
+            </a>
+        </div>
+        {{#isSuper ../session.authorityId}}
+        <div id="rightContent">
+            <div id="deleteButton">
+                <form action="/accounts/delete/{{Id}}"  method="post">
+                    <button type="submit" > <i class="fas fa-trash-alt"></i></button>
+                </form>
+            </div>
+        </div>
+        {{/isSuper}}
+    </div>
+    {{/each}}
+
+    {{> pagination}}
+
+{{else}}
+    There are no accounts: <br>
+    {{#isSuper session.authorityId }}
+        <a href="/accounts/create"> <input type="submit" value="Create"> </a>
+    {{/isSuper}}
+{{/if}}

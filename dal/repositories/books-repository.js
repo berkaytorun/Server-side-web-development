@@ -3,6 +3,8 @@ const Op = require('sequelize').Op
 
 const Book = require("../models/book_model").Book
 const Classification = require("../models/classification_model").Classification
+const classificationsReository = require("../repositories/classification-repository")
+
 const Author = require("../models/author_model").Author
 
 exports.findAll = function(options) {
@@ -11,7 +13,6 @@ exports.findAll = function(options) {
         const toInclude = { 
             include: [
                 {model: Author},
-                //{model: Classification}
                 {model: Classification}
             ] 
         }
@@ -64,10 +65,28 @@ exports.findAll = function(options) {
                 resolve(books.rows)
             }
             else {
-                const errors = [
-                    {message: "No matches found"}
-                ]
-                reject(errors)
+                let errors = []
+                if (options.classification != "") {
+                    classificationsReository.findOne({signum: options.classification})
+                    .then(function(classification) {
+                        if (options.searchString != "") {
+                            errors.push({message: "There are no books matching in the classification."})
+                        }
+                        else {
+                            errors.push({message: "Classification empty"})
+                        }
+                        reject(errors)
+                    }).catch(function(error) {
+                        // classification does not exist
+                        errors.push({message: "Classification does not exist."})
+                        reject(errors)
+                    })
+
+                }
+                else {
+                    errors.push({message: "3"})
+                    reject(errors)
+                }
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {

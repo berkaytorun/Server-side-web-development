@@ -1,5 +1,5 @@
 
-{{#if session.loggedIn}}
+{{#hasAdminRights session.authorityId}}
     <form action="../edit/{{author.Id}}" method="POST">
         <div id="book_info">
             Firstname<br>
@@ -7,9 +7,9 @@
             Lastname<br>
               <input type="text" name="lastName" value="{{this.lastName}}"><br>
             BirthYear<br>
-             <input type="text" name="birthYear" value="{{this.birthYear}}">
+            <input type="text" name="birthYear" value="{{this.birthYear}}">
             <input type="hidden" id="Id" name="Id" value="{{this.Id}}">
         </div>
         <input type="submit" value="Submit">
     </form>
-{{/if}}
+{{/hasAdminRights}}
