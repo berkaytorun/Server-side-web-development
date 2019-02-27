@@ -7,7 +7,7 @@ exports.create = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
         
         const SUPER = 3
-        if (authorityId < SUPER) {
+        if (authorityId == undefined || authorityId < SUPER) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 
@@ -94,7 +94,7 @@ exports.update = function(authorityId, account) {
 
         const ADMIN = 2
         const SUPER = 3
-        if (authorityId == undefined || (authorityId < SUPER &&
+        if (authorityId == undefined || (authorityId == ADMIN &&
             (account.userName || account.firstName || account.lastName || account.authorityId)
             )
                 ) {
@@ -124,7 +124,8 @@ exports.update = function(authorityId, account) {
 exports.delete = function(authorityId, account) {
     return new Promise(function(resolve, reject) {
         
-        if (authorityId < SUPER) {
+        const SUPER = 3
+        if (authorityId == undefined || authorityId < SUPER) {
             throw [{ message: "You do not have the permissions to do that." }]
         }
 

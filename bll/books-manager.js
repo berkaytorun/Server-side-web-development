@@ -21,7 +21,7 @@ exports.findAll = function(options) {
 exports.create = function(authorityId, book) {
     return new Promise(function(resolve, reject) {
 
-        if (authorityId == undefined) {
+        if (authorityId == undefined || authorityId < ADMIN) {
             throw [{message: "You do not have permission to do that."}]
         }
 
@@ -33,6 +33,8 @@ exports.create = function(authorityId, book) {
         })
     })
 }
+
+
 
 exports.findOne = function(book) {
     return new Promise(function(resolve, reject) {
@@ -48,8 +50,10 @@ exports.findOne = function(book) {
 exports.update = function(authorityId, book, oldISBN) {
     return new Promise(function(resolve, reject) {
 
+        
+
         const ADMIN = 2
-        if (authorityId < ADMIN) {
+        if (authorityId == undefined || authorityId < ADMIN) {
             throw [{message: "You do not have permissions for that."}]
         }
 
@@ -65,7 +69,8 @@ exports.update = function(authorityId, book, oldISBN) {
 exports.delete = function(authorityId, book) {
     return new Promise(function(resolve, reject) {
 
-        if (authorityId == undefined) {
+        const ADMIN = 2
+        if (authorityId == undefined || authorityId < ADMIN) {
             throw [{message: "You do not have permissions for that."}]
         }
 

@@ -4,9 +4,9 @@
         {{#isSuper session.authorityId}}
             Username <input type="text" name="userName" value="{{accountInfo.userName}}"><br>
         {{/isSuper}}
-        {{#isAdmin session.authorityId}}
+        {{#hasAdminRights session.authorityId}}
             Password: <input type="text" name="password" placeholder="**************"><br>
-        {{/isAdmin}}
+        {{/hasAdminRights}}
         {{#isSuper session.authorityId}}
             Firstname <input type="text" name="firstName" value="{{accountInfo.firstName}}"><br>
             Lastname <input type="text" name="lastName" value="{{accountInfo.lastName}}"><br>
