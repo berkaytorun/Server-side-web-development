@@ -44,7 +44,7 @@ exports.update = function(authorityId, author) {
     return new Promise(function(resolve, reject) {
 
         const ADMIN = 2
-        if (authorityId < ADMIN) {
+        if (authorityId == undefined || authorityId < ADMIN) {
             throw [{message: "You do not have permission to do that."}]
         }
 
@@ -61,7 +61,7 @@ exports.delete = function(authorityId, author) {
     return new Promise(function(resolve, reject) {
 
         const SUPER = 3
-        if (authorityId < SUPER) {
+        if (authorityId == undefined || authorityId < SUPER) {
             throw[{message: "You do not have permission to do that."}]
         }
 

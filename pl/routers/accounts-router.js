@@ -144,7 +144,6 @@ router.post("/edit/:Id", function(req, res) {
         password:   req.body.password,
         firstName:  req.body.firstName,
         lastName:   req.body.lastName,
-        birthYear:  req.body.birthYear,
         authorityId: req.body.authorityId,
     }
 
@@ -194,12 +193,13 @@ router.post("/delete/:Id", function(req, res) {
     const account = { Id: req.params.Id }
     accountManager.delete(req.session.authorityId, account)
     .then(function() {
-        const message = {
+        const model = {
             errors: [
                 {message: "Account removed"}
-            ]
+            ],
+            session: req.session
         }
-        res.render("error.hbs", message)
+        res.render("error.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors,

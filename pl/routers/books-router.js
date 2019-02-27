@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router();
 
 const bookManager = require("../../bll/books-manager")
+const classificationsManager = require("../../bll/classifications-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
@@ -97,13 +98,23 @@ router.get("/", function(req, res) {
 })
 
 router.get("/edit/:ISBN", function(req, res) {
-    const book = {
+    let book = {
         ISBN: req.params.ISBN
     }
     bookManager.findOne(book)
-    .then(function(book) {
+    .then(function(bookInfo) {
+        book = bookInfo
+        return classificationsManager.findAll()
+    }).then(function(classifications) {
+        for (let i = 0; i < classifications.length; i++) {
+            if (classifications[i].signId == book.signId) {
+                classifications[i].isCurrent = true
+                break
+            }
+        }
         const model = {
             book: book,
+            classifications: classifications,
             session: req.session
         }
         res.render("books/book_edit.hbs", model)
@@ -117,12 +128,15 @@ router.get("/edit/:ISBN", function(req, res) {
 })
 
 router.post("/edit/:ISBN", function(req, res) {
-    const book = {
+    let book = {
         ISBN: req.body.ISBN,
         title: req.body.title,
         pages:req.body.pages,
         publicationInfo:req.body.publicationInfo,
         publicationYear:req.body.publicationYear,
+    }
+    if (req.body.classification != "") {
+        book.signId = req.body.classification
     }
     const oldISBN = req.params.ISBN
     bookManager.update(req.session.authorityId, book, oldISBN)
@@ -133,7 +147,8 @@ router.post("/edit/:ISBN", function(req, res) {
         return bookManager.findOne(book)
     }).then(function(bookInfo) {
         const model = {
-            book: bookInfo
+            book: bookInfo,
+            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }).catch(function(errors) {
