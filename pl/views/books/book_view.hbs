@@ -1,5 +1,5 @@
 
-<form action="/books/edit/{{book.ISBN}}" method="GET">
+<a href="/books/edit/{{book.ISBN}}" method="GET">
     <div id="book_info">
         <div>ISBN: {{book.ISBN}}</div>
         <div>Title: {{book.title}}</div>
@@ -11,8 +11,31 @@
         <div>PublicationInfo: {{book.publicationInfo}}</div>
         <div>Pages: {{book.pages}}</div>
     </div>
-    
-    {{#hasAdminRights session.authorityId}}
-        <input type="submit" value="Edit">
-    {{/hasAdminRights}}
-</form>
+</a>
+
+{{#if book.authors}}
+    <div>
+        <div>
+            Authors: 
+        </div>
+        <hr>
+        {{#each book.authors}}
+            <div>
+                First Name: {{this.firstName}}<br>
+                Last Name: {{this.lastName}}<br>
+            </div>
+            <a href="/authors/{{this.Id}}"><input type="submit" value="Go"></a>
+            
+            <form action="/books/unlinkAuthor" method="POST">
+                <input name="bookISBN" value="{{../book.ISBN}}" hidden="true">
+                <input name="authorId" value="{{this.Id}}" hidden="true">
+                <button>Remove author from book.</button>
+            </form>
+            <hr>
+        {{/each}}
+    </div>
+{{/if}}
+
+{{#hasAdminRights session.authorityId}}
+    <input type="submit" value="Edit">
+{{/hasAdminRights}}>

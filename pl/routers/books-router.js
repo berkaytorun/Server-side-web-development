@@ -3,7 +3,8 @@ const express = require('express')
 const router = express.Router();
 
 const bookManager = require("../../bll/books-manager")
-const classificationsManager = require("../../bll/classifications-manager")
+const classificationManager = require("../../bll/classifications-manager")
+const bookAuthorManager = require("../../bll/book-authors-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
@@ -108,7 +109,7 @@ router.post("/classificationDelete/:SIGNUM", function(req, res) {
         signum: req.params.SIGNUM
     }
     
-    classificationsManager.delete(req.session.authorityId, classification)
+    classificationManager.delete(req.session.authorityId, classification)
     .then(function() {
         const book = {
             ISBN: req.body.ISBN
@@ -136,7 +137,7 @@ router.get("/edit/:ISBN", function(req, res) {
     bookManager.findOne(book)
     .then(function(bookInfo) {
         book = bookInfo
-        return classificationsManager.findAll()
+        return classificationManager.findAll()
     }).then(function(classifications) {
         for (let i = 0; i < classifications.length; i++) {
             if (classifications[i].signId == book.signId) {
@@ -150,6 +151,31 @@ router.get("/edit/:ISBN", function(req, res) {
             session: req.session
         }
         res.render("books/book_edit.hbs", model)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
+    })
+})
+
+router.post("/unlinkAuthor", function(req, res) {
+
+    const bookAuthor = {
+        authorId: req.body.authorId,
+        bookISBN: req.body.bookISBN
+    }
+
+    return bookAuthorManager.delete(req.session, bookAuthor)
+    .then(function() {
+        return bookManager.findOne({ISBN: bookAuthor.bookISBN})
+    }).then(function(book) {
+        const model = {
+            book: book,
+            session: req.session
+        }
+        res.render("books/book_view.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors,
