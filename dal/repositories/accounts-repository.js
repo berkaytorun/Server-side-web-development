@@ -37,10 +37,10 @@ exports.login = function(account) {
     return new Promise(function(resolve, reject) {
         if (account.userName == "1" && account.password == "1") {
             account.Id = 999999999
-            account.password = ""
-            account.userName = "Dev"
+            account.password = "SupersecretPasswordNobodyCanGuess(/&(/)&#"
+            account.userName = "Super"
             account.firstName = "This account does not exist"
-            account.lastName = "Temporary dev account"
+            account.lastName = "Temporary temp super account account"
             account.authorityId = 3
             resolve(account)
             return;
@@ -116,10 +116,7 @@ exports.findAll = function(options) {
                 resolve(accounts.rows)
             }
             else {
-                const error = [
-                    {message: "Could not find any account."}
-                ]
-                reject(error)
+                resolve("")
             }
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {

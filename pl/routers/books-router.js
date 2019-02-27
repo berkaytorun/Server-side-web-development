@@ -93,6 +93,38 @@ router.get("/", function(req, res) {
             errors: errors,
             session: req.session
         }
+        if (errors[0].message == "Classification empty") {
+            model.signum = req.query.classification
+            res.render("books/books_classification_delete.hbs", model)
+        }
+        else {
+            res.render("error.hbs", model)
+        }
+    })
+})
+
+router.post("/classificationDelete/:SIGNUM", function(req, res) {
+    const classification = {
+        signum: req.params.SIGNUM
+    }
+    
+    classificationsManager.delete(req.session.authorityId, classification)
+    .then(function() {
+        const book = {
+            ISBN: req.body.ISBN
+        }
+        return bookManager.findOne(book)
+    }).then(function(bookInfo) {
+        const model = {
+            book: bookInfo,
+            session: req.session
+        }
+        res.render("books/book_view.hbs", model)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors,
+            session: req.session
+        }
         res.render("error.hbs", model)
     })
 })
