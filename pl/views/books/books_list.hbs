@@ -10,12 +10,29 @@
 {{#each books}}
 <div id="wrapper">
     <div id="book_info">
-        <a href="/books/{{ISBN}}">
-            <div>ISBN: {{ISBN}}</div>
-            <div>Title: {{title}}</div>
-            <div>publicationYear: {{publicationYear}}</div>
-            <div>Pages: {{pages}}</div>
+        <a href="/books/{{this.ISBN}}">
+            <div>ISBN: {{this.ISBN}}</div>
+            <div>Title: {{this.title}}</div>
+            <div>publicationYear: {{this.publicationYear}}</div>
+            <div>Pages: {{this.pages}}</div>
         </a>
+        {{#if this.authors}}
+            <div>
+                <div>
+                    Authors: 
+                </div>
+                <hr>
+                {{#each this.authors}}
+                    <a href="/authors/{{this.Id}}">
+                        <div>
+                            First Name: {{this.firstName}}<br>
+                            Last Name: {{this.lastName}}<br>
+                        </div>
+                    </a>
+                    <hr>
+                {{/each}}
+            </div>
+        {{/if}}
     </div>
     
     {{#hasAdminRights ../session.authorityId}}

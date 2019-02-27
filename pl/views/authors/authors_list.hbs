@@ -17,10 +17,14 @@
             <div>lastName: {{this.lastName}}</div>
             <div>birthYear: {{this.birthYear}}</div>
             {{#if this.books}}
-                {{#each this.books}}
-                    ISBN: {{this.ISBN}}<br>
-                    title: {{this.title}}<br>
-                {{/each}}
+                <div id="authorBooks">
+                    {{#each this.books}}
+                        <div class="authorBook">
+                            ISBN: {{this.ISBN}}<br>
+                            title: {{this.title}}<br>
+                        </div>
+                    {{/each}}
+                </div>
             {{/if}}
         </a>
     </div>

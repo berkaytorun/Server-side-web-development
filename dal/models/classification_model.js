@@ -8,7 +8,10 @@ exports.Classification = db.define('classification', {
     signId: {
         type: Sequelize.CHAR(11), // size 11
         primaryKey: true,
-        unique: true
+        unique: {
+            args: true,
+            msg: "That classification already exists."
+        }
     },
     signum: {
         type: Sequelize.CHAR(50), // size 50
