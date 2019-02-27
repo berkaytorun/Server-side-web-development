@@ -111,16 +111,35 @@ router.post("/classificationDelete/:SIGNUM", function(req, res) {
     
     classificationManager.delete(req.session.authorityId, classification)
     .then(function() {
-        const book = {
-            ISBN: req.body.ISBN
+        return bookManager.findAll(req.query)
+    }).then(function(wrapper) {
+
+        const books = wrapper[0]
+        const classifications = wrapper[1]
+
+        if (req.query.classification) {
+            for (let i = 0; i < classifications.length; i++) {
+                if (classifications[i].signum == req.query.classification) {
+                    classifications[i].isSelected = true
+                }
+            }
         }
-        return bookManager.findOne(book)
-    }).then(function(bookInfo) {
+        
+        const pages = (books.count) / req.query.limit
+        const pagesArray = generatePageNumbers(pages, req.query.currentPage)
+        
         const model = {
-            book: bookInfo,
+            pages: pagesArray,
+            books: books,
+            classifications: classifications,
+            currentClassification: req.query.classification,
+            searchString: req.query.searchString,
+            table: req.baseUrl,
+            placeholder: "Search for a title or an ISBN",
             session: req.session
         }
-        res.render("books/book_view.hbs", model)
+
+        res.render("books/books_list.hbs", model)
     }).catch(function(errors) {
         const model = {
             errors: errors,

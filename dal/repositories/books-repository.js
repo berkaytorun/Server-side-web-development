@@ -16,7 +16,7 @@ exports.findAll = function(options) {
                 {model: Classification}
             ] 
         }
-        if (options.classification != "") {
+        if (options && options.classification != "") {
             toInclude.include[1] = {
                 model: Classification,
                 required: true,
@@ -29,7 +29,7 @@ exports.findAll = function(options) {
         const toSearch = {
             where: { }
         }
-        if (options.searchString !== "") {
+        if (options && options.searchString !== "") {
             toSearch.where = {
                 [Op.or]: [
                     {ISBN: {
