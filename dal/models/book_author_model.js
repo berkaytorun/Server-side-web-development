@@ -1,6 +1,5 @@
 
 const db = require("../sequelize_settings").db
-const Sequelize = require("../sequelize_settings").Sequelize
 
 exports.BookAuthor = db.define('bookauthor', {
     /*

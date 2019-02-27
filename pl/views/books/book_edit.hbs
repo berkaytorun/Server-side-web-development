@@ -13,6 +13,24 @@
             <input type="text" name="publicationInfo" value="{{book.publicationInfo}}"><br>
             Pages<br>
             <input type="text" name="pages" value="{{book.pages}}">
+            
+            {{#if book.authors}}
+                <div>
+                    <div>
+                        Authors: 
+                    </div>
+                    <hr>
+                    {{#each book.authors}}
+                        <a href="/authors/{{this.Id}}">
+                            <div>
+                                First Name: {{this.firstName}}<br>
+                                Last Name: {{this.lastName}}<br>
+                            </div>
+                        </a>
+                        <hr>
+                    {{/each}}
+                </div>
+            {{/if}}
         </div>
         
         {{#hasAdminRights session.authorityId}}
