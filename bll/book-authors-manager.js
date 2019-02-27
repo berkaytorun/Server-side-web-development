@@ -17,3 +17,20 @@ exports.delete = function(authorityId, bookAuthor) {
         })
     })
 }
+
+exports.create = function(authorityId, bookAuthor) {
+    return new Promise(function(resolve, reject) {
+
+        const ADMIN = 2
+        if (authorityId == undefined || authorityId < ADMIN) {
+            throw [{message: "You do not have permissions for that."}]
+        }
+
+        return bookAuthorRepository.create(bookAuthor)
+        .then(function() {
+            resolve()
+        }).catch(function(error) {
+            reject(error)
+        })
+    })
+}

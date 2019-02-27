@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router();
 
 const authorManager = require("../../bll/authors-manager")
+const bookAuthorManager = require("../../bll/book-authors-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
@@ -48,6 +49,31 @@ router.post("/create", function(req, res) {
 
     authorManager.create(req.session.authorityId, author)
     .then(function(author) {
+        const model = {
+            author: author,
+            session: req.session
+        }
+        res.render("authors/author_view.hbs", model)
+    }).catch(function(errors) {
+        const model = {
+            errors: errors,
+            session: req.session
+        }
+        res.render("error.hbs", model)
+    })
+})
+
+router.post("/addBook", function(req, res) {
+    
+    const bookAuthor = {
+        bookISBN: req.body.bookISBN,
+        authorId: req.body.authorId,
+    }
+
+    bookAuthorManager.create(req.session.authorityId, bookAuthor)
+    .then(function() {
+        return authorManager.findOne({Id: bookAuthor.authorId})
+    }).then(function(author) {
         const model = {
             author: author,
             session: req.session
