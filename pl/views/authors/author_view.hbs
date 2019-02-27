@@ -1,27 +1,32 @@
+<div id="wrapper">
+    <div id="book_info" style="width: 45%;">
+        <div>FirstName: {{author.firstName}}</div>
+        <div>LastName: {{author.lastName}}</div>
+    
+        <div id="editButton">
+            {{#hasAdminRights session.authorityId}}
+            <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
+            {{/hasAdminRights}}
+        </div>
+    </div>
+    <div id="rightContent" style="width: 55%">
 
-<div id="book_info">
-    <div>FirstName: {{author.firstName}}</div>
-    <div>FirstName: {{author.lastName}}</div>
-</div> 
-{{#hasAdminRights session.authorityId}}
-    <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
-{{/hasAdminRights}}
+        {{#hasAdminRights session.authorityId}}
+            Add book:
+            <form action="/authors/addBook" method="POST">
+                Book ISBN: <input name="bookISBN">
+                <input name="authorId" value="{{author.Id}}" hidden="true">
+                <button><i class="fas fa-book-medical"></i></button>
+            </form>
+        {{/hasAdminRights}}
 
-
-{{#hasAdminRights session.authorityId}}
-    Add book:
-    <form action="/authors/addBook" method="POST">
-        Book ISBN: <input name="bookISBN">
-        <input name="authorId" value="{{author.Id}}" hidden="true">
-        <button>Add book.</button>
-    </form>
-{{/hasAdminRights}}
-
-{{#if author.books}}
-    {{#each author.books}}
-        <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
-        <a href="/books/{{this.ISBN}}"><input type="submit" value="Go"></a>
-    {{/each}}
-{{/if}}
-
-
+        {{#if author.books}}
+            {{#each author.books}}
+                <form action="../books/{{this.ISBN}}">
+                    <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
+                    <input type="submit" value="Go">
+                </form>
+            {{/each}}
+        {{/if}}
+    </div>
+</div>
