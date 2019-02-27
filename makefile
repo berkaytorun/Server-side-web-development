@@ -2,10 +2,15 @@ run:
 	node app.js
 
 install:
-	npm init --yes
-	npm install express
-	npm install express-handlebars
-	npm install body-parser
+	sudo npm init --yes
+	sudo npm install express
+	sudo npm install express-handlebars
+	sudo npm install body-parser
+	sudo npm install express-session
 
-	npm install --save sqlite3
-	npm install --save sequelize
+	sudo npm install --save sqlite3
+	sudo npm install --save mysql2
+	sudo npm install --save sequelize
+
+	sudo npm install bcryptjs
+	sudo npm audit fix

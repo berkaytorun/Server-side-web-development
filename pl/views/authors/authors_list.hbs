@@ -1,0 +1,37 @@
+{{> pagination}}
+{{> search}}
+
+{{#if session.loggedIn}}
+    <form action="/authors/create" method="GET">
+        <button type="submit">Create Author</button>
+    </form>
+{{/if}}
+
+{{#each authors}}
+<div id="wrapper">
+    <div id="book_info">
+        <a href="/authors/{{this.Id}}">
+            <div hidden="true">Id: {{this.Id}}</div>
+            <div>firstName: {{this.firstName}}</div>
+            <div>lastName: {{this.lastName}}</div>
+        </a>
+    </div>
+    {{#hasAdminRights ../session.authorityId}}
+    <div id="rightContent">
+        <div id="deleteButton">
+            <form action="/authors/delete/{{this.Id}}" id="deleteForm" method="post">
+                <button type="submit" > <i class="fas fa-trash-alt"></i></button>
+            </form>
+        </div>
+        <div id="editButton">
+            <form action="/authors/edit/{{this.Id}}" method="GET">
+                <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
+            </form>
+        </div>
+    </div>
+    {{/hasAdminRights}}
+    
+</div>
+{{/each}}
+
+{{> pagination}}

@@ -1,0 +1,74 @@
+
+<pagination>
+    <ul class="pagination justify-content-center">
+        {{#if pages.firstPage}}
+            {{#if searchString}}
+                <li class="pageNumber" id="pageFirst">
+                    <a href="{{table}}?currentPage={{pages.firstPage}}&searchString={{searchString}}&classification={{../currentClassification}}">First Page</a>
+                </li>
+            {{else}}
+                <li class="pageNumber" id="pageFirst">
+                    <a href="{{table}}?currentPage={{pages.firstPage}}&classification={{../currentClassification}}">First Page</a>
+                </li>
+            {{/if}}
+        {{else}}
+          {{#if searchString}}
+                <li class="pageNumber" id="pageFirst" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.firstPage}}&searchString={{searchString}}&classification={{../currentClassification}}">First Page</a>
+                </li>
+            {{else}}
+                <li class="pageNumber" id="pageFirst" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.firstPage}}&classification={{../currentClassification}}">First Page</a>
+                </li>
+            {{/if}}
+        {{/if}}
+
+        {{#each pages.pageList}}
+            {{#if this.isCurrent}}
+                {{#if ../searchString}}
+                    <li class="pageNumber" id="pageCurrent">
+                        <a href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}">{{this.value}}</a>
+                    </li>
+                {{else}}
+                    <li class="pageNumber" id="pageCurrent">
+                        <a href="{{../table}}?currentPage={{this.value}}&classification={{../currentClassification}}">{{this.value}}</a>
+                    </li>
+                {{/if}}
+            {{else}}
+                {{#if ../searchString}}
+                    <li class="pageNumber" >
+                        <a href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}">{{this.value}}</a>
+                    </li>
+                {{else}}
+                    <li class="pageNumber" >
+                        <a href="{{../table}}?currentPage={{this.value}}&classification={{../currentClassification}}">{{this.value}}</a>
+                    </li>
+                {{/if}}
+                
+            {{/if}}
+        {{/each}}
+            
+        {{#if pages.lastPage}}
+            {{#if searchString}}
+                <li class="pageNumber" id="pageLast">
+                    <a href="{{table}}?currentPage={{pages.lastPage}}&searchString={{searchString}}&classification={{../currentClassification}}">Last Page</a>
+                </li>
+            {{else}}
+                <li class="pageNumber" id="pageLast">
+                    <a href="{{table}}?currentPage={{pages.lastPage}}&classification={{../currentClassification}}">Last Page</a>
+                </li>
+            {{/if}}
+        {{else}} 
+            {{#if searchString}}
+                <li class="pageNumber" id="pageLast" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.lastPage}}&searchString={{searchString}}&classification={{../currentClassification}}">Last Page</a>
+                </li>
+            {{else}}
+                <li class="pageNumber" id="pageLast" style="visibility: hidden">
+                    <a href="{{table}}?currentPage={{pages.lastPage}}&classification={{../currentClassification}}">Last Page</a>
+                </li>
+            {{/if}}
+
+        {{/if}}
+    </ul>
+</pagination>

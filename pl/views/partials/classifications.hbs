@@ -1,0 +1,11 @@
+
+<select name="classification">
+    <option value="">Pick one: </option>
+    {{#each classifications}}
+        {{#if this.isCurrent}}
+            <option value="{{this.signId}}" selected="selected" color="reds" style="background-color:Tomato;"> {{this.signum}} </option>
+        {{else}}
+            <option value="{{this.signId}}" class="classificationEmpty"> {{this.signum}} </option>
+        {{/if}}
+    {{/each}}
+</select>

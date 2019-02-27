@@ -1,0 +1,30 @@
+<search>
+    <div>
+        <form action="{{table}}" method="GET">
+            <input type="search" name="searchString" id="sb1" placeholder="{{placeholder}}">
+            <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+            {{#if classifications}}
+                <div>Classification:
+                    <select name="classification">
+                        <option value="">Pick one: </option>
+                        {{#each classifications}}
+                            {{#if this.isSelected}}
+                                {{#if this.books}}
+                                    <option value="{{this.signum}}" selected="selected"> {{this.signum}} </option>
+                                {{else}}
+                                    <option value="{{this.signum}}" selected="selected" class="classificationEmpty" style="background-color:Tomato;"> {{this.signum}} </option>
+                                {{/if}}
+                            {{else}}
+                                {{#if this.books}}
+                                    <option value="{{this.signum}}"> {{this.signum}} </option>
+                                {{else}}
+                                    <option value="{{this.signum}}" class="classificationEmpty" color="reds" style="background-color:Tomato;"> {{this.signum}} </option>
+                                {{/if}}
+                            {{/if}}
+                        {{/each}}
+                    </select>
+                </div>
+            {{/if}}
+        </form>
+    </div>
+</search>

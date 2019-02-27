@@ -1,0 +1,26 @@
+
+<form action="/accounts/edit/{{accountInfo.Id}}" method="POST">
+    <div id="book_info">
+        {{#isSuper session.authorityId}}
+            Username <input type="text" name="userName" value="{{accountInfo.userName}}"><br>
+        {{/isSuper}}
+        {{#hasAdminRights session.authorityId}}
+            Password: <input type="text" name="password" placeholder="**************"><br>
+        {{/hasAdminRights}}
+        {{#isSuper session.authorityId}}
+            Firstname <input type="text" name="firstName" value="{{accountInfo.firstName}}"><br>
+            Lastname <input type="text" name="lastName" value="{{accountInfo.lastName}}"><br>
+            AuthorityId: 
+            {{#if levels}}
+                <select name="authorityId">
+                    {{#each levels}}
+                        <option value="{{this.key}}">{{this.value}}</option>
+                    {{/each}}
+                <select>
+                <br>
+            {{/if}}
+        {{/isSuper}}
+        <input type="hidden" id="Id" name="Id" value="{{accountInfo.Id}}">
+    </div>
+    <input type="submit" value="Submit">
+</form>

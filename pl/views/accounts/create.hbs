@@ -1,0 +1,20 @@
+<form action="/accounts/create" method="POST">
+    Username<br>
+    <input type="text" name="userName" placeholder="Enter Username"  ><br>
+    Password<br>
+    <input type="text" name="password" placeholder="Enter Password" ><br>
+    First Name<br>
+    <input type="text" name="firstName" placeholder="Enter name" ><br>
+    Last name<br>
+    <input type="text" name="lastName" placeholder="Enter lastName" ><br>
+    AuthorityId: 
+    {{#if levels}}
+        <select name="authorityId">
+            {{#each levels}}
+                <option value="{{this.key}}">{{this.value}}</option>
+            {{/each}}
+        <select>
+        <br>
+    {{/if}}
+    <input type="submit" value="Create">
+</form>

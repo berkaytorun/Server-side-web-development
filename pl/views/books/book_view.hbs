@@ -1,0 +1,40 @@
+
+
+<div id="book_info">
+    <div>ISBN: {{book.ISBN}}</div>
+    <div>Title: {{book.title}}</div>
+    {{#if book.classification}}
+        <div>Signum: {{book.classification.signum}}</div>
+        <div>Description: {{book.classification.description}}</div>
+    {{/if}}
+    <div>publicationYear: {{book.publicationYear}}</div>
+    <div>PublicationInfo: {{book.publicationInfo}}</div>
+    <div>Pages: {{book.pages}}</div>
+</div>
+
+{{#hasAdminRights session.authorityId}}
+    <a href="/books/edit/{{book.ISBN}}"><input type="submit" value="Edit"></a>
+{{/hasAdminRights}}
+
+{{#if book.authors}}
+    <div>
+        <div>
+            Authors: 
+        </div>
+        <hr>
+        {{#each book.authors}}
+            <div>
+                First Name: {{this.firstName}}<br>
+                Last Name: {{this.lastName}}<br>
+            </div>
+            <a href="/authors/{{this.Id}}"><input type="submit" value="Go"></a>
+            
+            <form action="/books/unlinkAuthor" method="POST">
+                <input name="bookISBN" value="{{../book.ISBN}}" hidden="true">
+                <input name="authorId" value="{{this.Id}}" hidden="true">
+                <button>Remove author from book.</button>
+            </form>
+            <hr>
+        {{/each}}
+    </div>
+{{/if}}
