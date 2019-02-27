@@ -16,6 +16,12 @@
             <div>firstName: {{this.firstName}}</div>
             <div>lastName: {{this.lastName}}</div>
             <div>birthYear: {{this.birthYear}}</div>
+            {{#if this.books}}
+                {{#each this.books}}
+                    ISBN: {{this.ISBN}}<br>
+                    title: {{this.title}}<br>
+                {{/each}}
+            {{/if}}
         </a>
     </div>
     {{#hasAdminRights ../session.authorityId}}
