@@ -12,6 +12,10 @@
     <div>Pages: {{book.pages}}</div>
 </div>
 
+{{#hasAdminRights session.authorityId}}
+    <a href="/books/edit/{{book.ISBN}}"><input type="submit" value="Edit"></a>
+{{/hasAdminRights}}
+
 {{#if book.authors}}
     <div>
         <div>
@@ -34,7 +38,3 @@
         {{/each}}
     </div>
 {{/if}}
-
-{{#hasAdminRights session.authorityId}}
-    <input type="submit" value="Edit">
-{{/hasAdminRights}}

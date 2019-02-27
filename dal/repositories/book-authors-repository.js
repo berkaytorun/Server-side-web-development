@@ -54,7 +54,8 @@ exports.create = function(bookAuthor) {
         }).catch((error) => {
             if (error.errors == null || error.errors.length == 0) {
                 if (error.message) {
-                    reject([error.message])
+                    reject([{message: error.message}])
+                    return;
                 }
                 else {
                     setTimeout(function() { throw error; });
