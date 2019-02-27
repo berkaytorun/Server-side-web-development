@@ -1,17 +1,16 @@
 
-<a href="/books/edit/{{book.ISBN}}" method="GET">
-    <div id="book_info">
-        <div>ISBN: {{book.ISBN}}</div>
-        <div>Title: {{book.title}}</div>
-        {{#if book.classification}}
-            <div>Signum: {{book.classification.signum}}</div>
-            <div>Description: {{book.classification.description}}</div>
-        {{/if}}
-        <div>publicationYear: {{book.publicationYear}}</div>
-        <div>PublicationInfo: {{book.publicationInfo}}</div>
-        <div>Pages: {{book.pages}}</div>
-    </div>
-</a>
+
+<div id="book_info">
+    <div>ISBN: {{book.ISBN}}</div>
+    <div>Title: {{book.title}}</div>
+    {{#if book.classification}}
+        <div>Signum: {{book.classification.signum}}</div>
+        <div>Description: {{book.classification.description}}</div>
+    {{/if}}
+    <div>publicationYear: {{book.publicationYear}}</div>
+    <div>PublicationInfo: {{book.publicationInfo}}</div>
+    <div>Pages: {{book.pages}}</div>
+</div>
 
 {{#if book.authors}}
     <div>
@@ -38,4 +37,4 @@
 
 {{#hasAdminRights session.authorityId}}
     <input type="submit" value="Edit">
-{{/hasAdminRights}}>
+{{/hasAdminRights}}

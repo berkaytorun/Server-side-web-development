@@ -1,12 +1,20 @@
 
 <div id="book_info">
-    <div>Id: {{author.Id}}</div>
     <div>FirstName: {{author.firstName}}</div>
-    <div>LastName: {{author.lastName}}</div>
-    <div>BirthYear: {{author.birthYear}}</div>
+    <div>FirstName: {{author.lastName}}</div>
 </div> 
 {{#hasAdminRights session.authorityId}}
     <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
+{{/hasAdminRights}}
+
+
+{{#hasAdminRights session.authorityId}}
+    Add book:
+    <form action="/authors/addBook" method="POST">
+        Book ISBN: <input name="bookISBN">
+        <input name="authorId" value="{{author.Id}}" hidden="true">
+        <button>Add book.</button>
+    </form>
 {{/hasAdminRights}}
 
 {{#if author.books}}
