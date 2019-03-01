@@ -70,7 +70,6 @@ main{
     overflow: hidden;
 }
 
-
 body{
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -89,7 +88,6 @@ p{
     margin: 0 1px 0 1px;
     width: auto;
     text-decoration: none !important;
-    
     height: 24px;
     width: 26px;
 }
@@ -124,9 +122,6 @@ pagination ul li a{
     height: 24px;
     width: 26px;
     padding: 0 4px 0 4px;
-   
-}
-pagintion ul li {
 }
 
 #loggedIn{

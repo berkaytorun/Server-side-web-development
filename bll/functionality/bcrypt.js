@@ -1,6 +1,5 @@
 
-const bcrypt = require("bcryptjs")
-const errorHandler = require("../../error_handler")
+const passwordHasher = require("bcryptjs")
 
 exports.encrypt = function(stringToHash) {
     return new Promise(function(resolve, reject) {
@@ -8,8 +7,8 @@ exports.encrypt = function(stringToHash) {
             // password not changed
             resolve(stringToHash)
         }
-        bcrypt.genSalt(10, function(error, salt) {
-            bcrypt.hash(stringToHash, salt, function(error, hashedString) {
+        passwordHasher.genSalt(10, function(error, salt) {
+            passwordHasher.hash(stringToHash, salt, function(error, hashedString) {
                 if (error) {
                     reject(error)
                 }
@@ -24,10 +23,12 @@ exports.encrypt = function(stringToHash) {
 exports.compare = function(password, passwordObject) {
     return new Promise(function(resolve, reject) {
         // As of bcryptjs 2.4.0, compare returns a promise if callback is omitted:
-        bcrypt.compare(password, passwordObject.password)
+        passwordHasher.compare(password, passwordObject.password)
         .then(function(success) {
             if (!success) {
-                throw (errorHandler.handle("Wrong username or password"))
+                reject (error=[
+                    {message:"Wrong username or password"}
+                ])
             }
             resolve(passwordObject)
         }).catch(function(error) {
