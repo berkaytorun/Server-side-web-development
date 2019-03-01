@@ -14,3 +14,9 @@ exports.databaseInfo = {
         idle: 10000
     }
 }
+
+exports.authorityLevel = {
+    MODERATOR: 1,
+    ADMIN: 2,
+    SUPER: 3
+}

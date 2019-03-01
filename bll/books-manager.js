@@ -2,6 +2,8 @@
 const bookRepository = require("../dal/repositories/books-repository")
 const classificationsReository = require("../dal/repositories/classification-repository")
 
+const authorityLevel = require("../objects").authorityLevel
+
 exports.findAll = function(options) {
     const wrapper = []
     return new Promise(function(resolve, reject) {
@@ -21,8 +23,7 @@ exports.findAll = function(options) {
 exports.create = function(authorityId, book) {
     return new Promise(function(resolve, reject) {
 
-        const ADMIN = 2
-        if (authorityId == undefined || authorityId < ADMIN) {
+        if (authorityId == undefined || authorityId < authorityLevel.ADMIN) {
             throw [{message: "You do not have permission to do that."}]
         }
 
@@ -34,8 +35,6 @@ exports.create = function(authorityId, book) {
         })
     })
 }
-
-
 
 exports.findOne = function(book) {
     return new Promise(function(resolve, reject) {
@@ -51,11 +50,8 @@ exports.findOne = function(book) {
 exports.update = function(authorityId, book, oldISBN) {
     return new Promise(function(resolve, reject) {
 
-        
-
-        const ADMIN = 2
-        if (authorityId == undefined || authorityId < ADMIN) {
-            throw [{message: "You do not have permissions for that."}]
+        if (authorityId == undefined || authorityId < authorityLevel.ADMIN) {
+            throw [{message: "You do not have permission to do that."}]
         }
 
         return bookRepository.update(book, oldISBN)
@@ -70,9 +66,8 @@ exports.update = function(authorityId, book, oldISBN) {
 exports.delete = function(authorityId, book) {
     return new Promise(function(resolve, reject) {
 
-        const ADMIN = 2
-        if (authorityId == undefined || authorityId < ADMIN) {
-            throw [{message: "You do not have permissions for that."}]
+        if (authorityId == undefined || authorityId < authorityLevel.ADMIN) {
+            throw [{message: "You do not have permission to do that."}]
         }
 
         return bookRepository.delete(book)
