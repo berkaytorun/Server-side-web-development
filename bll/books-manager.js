@@ -21,6 +21,7 @@ exports.findAll = function(options) {
 exports.create = function(authorityId, book) {
     return new Promise(function(resolve, reject) {
 
+        const ADMIN = 2
         if (authorityId == undefined || authorityId < ADMIN) {
             throw [{message: "You do not have permission to do that."}]
         }

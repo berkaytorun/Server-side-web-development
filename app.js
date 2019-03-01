@@ -2,6 +2,7 @@ const express = require("express")
 const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 var session = require('express-session')
+var MySQLStore = require('express-mysql-session')(session);
 
 const app = express()
 
@@ -10,11 +11,21 @@ const SEC = 15
 const MIN = 15
 const HOUR = 0
 
+const dbInfo = require("./objects").databaseInfo
 
+var options = {
+    host: dbInfo.host,
+    port: dbInfo.port,
+    user: dbInfo.login,
+    password: dbInfo.password,
+    database: dbInfo.databaseName
+};
+ 
+var sessionStore = new MySQLStore(options);
 
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-    store: "",
+    store: sessionStore,
     secret: 'keyboard cat',
     resave: false,
     rolling:true,

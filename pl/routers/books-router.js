@@ -186,7 +186,7 @@ router.post("/unlinkAuthor", function(req, res) {
         bookISBN: req.body.bookISBN
     }
 
-    return bookAuthorManager.delete(req.session.authorId, bookAuthor)
+    return bookAuthorManager.delete(req.session.authorityId, bookAuthor)
     .then(function() {
         return bookManager.findOne({ISBN: bookAuthor.bookISBN})
     }).then(function(book) {

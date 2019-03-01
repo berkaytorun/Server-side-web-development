@@ -22,9 +22,10 @@
         {{/hasAdminRights}}
 
         {{#if author.books}}
+
             {{#each author.books}}
-                <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
-                <a href="/books/{{this.ISBN}}"><input type="submit" value="Go"></a>
+                <span value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </span><br>
+                <a href="/books/{{this.ISBN}}"><input type="submit" value="Go"></a><br>
             {{/each}}
         {{/if}}
     </div>
