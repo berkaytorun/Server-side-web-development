@@ -27,7 +27,7 @@ exports.delete = function(bookAuthor) {
                     reject([error.message])
                 }
                 else {
-                    setTimeout(function() { throw error; });
+                    throw error;
                 }
             }
             return reject(error.errors)
@@ -58,7 +58,7 @@ exports.create = function(bookAuthor) {
                     return;
                 }
                 else {
-                    setTimeout(function() { throw error; });
+                    throw error;
                 }
             }
             for (let i = 0; i < error.errors.length; i++) {

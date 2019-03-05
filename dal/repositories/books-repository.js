@@ -8,231 +8,223 @@ const classificationsReository = require("../repositories/classification-reposit
 const Author = require("../models/author_model").Author
 
 exports.findAll = function(options) {
-    return new Promise(function(resolve, reject) {
 
-        const toInclude = { 
-            include: [
-                {model: Author},
-                {model: Classification}
-            ] 
-        }
-        if (options && options.classification != "") {
-            toInclude.include[1] = {
-                model: Classification,
-                required: true,
-                where: {
-                    signum: {[Op.like]: options.classification}
-                }
+    const toInclude = { 
+        include: [
+            {model: Author},
+            {model: Classification}
+        ] 
+    }
+    if (options && options.classification != "") {
+        toInclude.include[1] = {
+            model: Classification,
+            required: true,
+            where: {
+                signum: {[Op.like]: options.classification}
             }
         }
+    }
 
-        const toSearch = {
-            where: { }
+    const toSearch = {
+        where: { }
+    }
+    if (options && options.searchString !== "") {
+        toSearch.where = {
+            [Op.or]: [
+                {ISBN: {
+                        [Op.like]: options.searchString, 
+                    }
+                },
+                {title: {
+                        [Op.like]: options.searchString, 
+                    }
+                },
+            ]
         }
-        if (options && options.searchString !== "") {
-            toSearch.where = {
-                [Op.or]: [
-                    {ISBN: {
-                            [Op.like]: options.searchString, 
-                        }
-                    },
-                    {title: {
-                            [Op.like]: options.searchString, 
-                        }
-                    },
-                ]
-            }
-        }
+    }
 
-        let findWhere = {
+    let findWhere = {
+    
+        distinct: true,
+        order: [
+            ['title', 'ASC']
+        ],
         
-            distinct: true,
-            order: [
-                ['title', 'ASC']
-            ],
-            
-            limit: options.limit,
-            offset: options.offset,
-            
-            where: toSearch.where,
-            include: toInclude.include
-        }
+        limit: options.limit,
+        offset: options.offset,
+        
+        where: toSearch.where,
+        include: toInclude.include
+    }
 
-        Book.findAndCountAll(findWhere)
-        .then((books)=> {
-            if (books.rows.length > 0) {
-                books.rows.count = books.count
-                resolve(books.rows)
+    return Book.findAndCountAll(findWhere)
+    .then((books)=> {
+        if (books.rows.length > 0) {
+            books.rows.count = books.count
+            return (books.rows)
+        }
+        else {
+            let errors = []
+            if (options.classification != "") {
+                classificationsReository.findOne({signum: options.classification})
+                .then(function(classification) {
+                    if (options.searchString != "") {
+                        errors.push({message: "There are no books matching in the classification."})
+                    }
+                    else {
+                        errors.push({message: "Classification empty"})
+                    }
+                    throw errors
+                }).catch(function(error) {
+                    // classification does not exist
+                    errors.push({message: "Classification does not exist."})
+                    throw errors
+                })
+
             }
             else {
-                let errors = []
-                if (options.classification != "") {
-                    classificationsReository.findOne({signum: options.classification})
-                    .then(function(classification) {
-                        if (options.searchString != "") {
-                            errors.push({message: "There are no books matching in the classification."})
-                        }
-                        else {
-                            errors.push({message: "Classification empty"})
-                        }
-                        reject(errors)
-                    }).catch(function(error) {
-                        // classification does not exist
-                        errors.push({message: "Classification does not exist."})
-                        reject(errors)
-                    })
-
-                }
-                else {
-                    errors.push({message: "3"})
-                    reject(errors)
-                }
+                errors.push({message: "3"})
+                throw errors
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
-            return reject(error.errors)
-        })
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
     })
 }
     
 exports.findOne = function(book) {
-    return new Promise(function(resolve, reject) {
-
-        Book.findOne({
-            where: {
-                ISBN: book.ISBN,
+    
+    return Book.findOne({
+        where: {
+            ISBN: book.ISBN,
+        },
+        include:[ 
+            { 
+                model: Author,
+                required: false
             },
-            include:[ 
-                { 
-                    model: Author,
-                    required: false
-                },
-                {
-                    model: Classification,
-                    required: false
-                }
+            {
+                model: Classification,
+                required: false
+            }
+        ]
+        
+    }).then((book)=> {
+        if (book) {
+            resolve(book)
+        }
+        else {
+            const errors = [
+                {message: "No matches found"}
             ]
-            
-        }).then((book)=> {
-            if (book) {
-                resolve(book)
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
             else {
-                const errors = [
-                    {message: "No matches found"}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
-            }
-            return reject(error.errors)
-        })
+        }
+        throw error.errors
     })
 }
 
 exports.delete = function(book) {
-    return new Promise(function(resolve, reject) {
-
-        Book.destroy({
-            where: {
-                ISBN: book.ISBN,
-            }
-        }).then((book)=> {
-            if (book) {
-                resolve()
+    
+    return Book.destroy({
+        where: {
+            ISBN: book.ISBN,
+        }
+    }).then((book)=> {
+        if (book) {
+            resolve()
+        }
+        else {
+            const errors = [
+                {message: "No matches found"}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
             else {
-                const errors = [
-                    {message: "No matches found"}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
-            }
-            return reject(error.errors)
-        })
+        }
+        throw error.errors
     })
 }
 
 exports.update = function(book, oldISBN) {
-    return new Promise(function(resolve, reject) {
-        Book.update(book, {where: {ISBN: oldISBN},})
-        .then(function(affectedBooks) {
-            if (affectedBooks > 0) {
-                return resolve(affectedBooks)
+    
+    return Book.update(book, {where: {ISBN: oldISBN},})
+    .then(function(affectedBooks) {
+        if (affectedBooks > 0) {
+            return affectedBooks
+        }
+        else {
+            const errors = [
+                {message: "No matches found"}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
             else {
-                const errors = [
-                    {message: "No matches found"}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
-            }
-            return reject(error.errors)
-        })
+        }
+        throw error.errors
     })
 }
 
 
 exports.create = function(book) {
-    return new Promise(function(resolve, reject) {
-        Book.create(book).then((book) => {
-            if (book) {
-                const newBook = {
-                    ISBN: book.ISBN,
-                    title: book.title,
-                    signId: book.signId,
-                    publicationYear: book.publicationYear,
-                    publicationInfo: book.publicationInfo,
-                    pages: book.pages
-                }
-                return resolve(newBook)
+    
+    return Book.create(book).then((book) => {
+        if (book) {
+            const newBook = {
+                ISBN: book.ISBN,
+                title: book.title,
+                signId: book.signId,
+                publicationYear: book.publicationYear,
+                publicationInfo: book.publicationInfo,
+                pages: book.pages
+            }
+            return newBook
+        }
+        else {
+            const errors = [
+                {message: "Could not create book"}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                [error.message]
             }
             else {
-                const errors = [
-                    {message: "Could not create book"}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
-            }
-            return reject(error.errors)
-        })
+        }
+        throw error.errors
     })
 }

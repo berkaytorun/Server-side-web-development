@@ -76,15 +76,13 @@ router.post("/login", function (req, res) {
 })
 
 router.get("/logout", function(req, res) {
-    accountManager.logout(req.session)
-    .then(function() {
-        res.render("home.hbs")
-    }).catch(function(errors) {
+    
+    req.session.destroy(function(err) {
+        // Destroy this session
         const model = {
-            errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("accounts/login.hbs", model)
     })
 })
 

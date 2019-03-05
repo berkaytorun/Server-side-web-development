@@ -1,36 +1,22 @@
 
 const bookAuthorRepository = require("../dal/repositories/book-authors-repository")
 
+const authorityLevel = require("../objects").authorityLevel
+
 exports.delete = function(authorityId, bookAuthor) {
-    return new Promise(function(resolve, reject) {
 
-        const ADMIN = 2
-        if (authorityId == undefined || authorityId < ADMIN) {
-            throw [{message: "You do not have permissions for that."}]
-        }
+    if (authorityId == undefined || authorityId < authorityLevel.ADMIN) {
+        throw [{message: "You do not have permissions for that."}]
+    }
 
-        return bookAuthorRepository.delete(bookAuthor)
-        .then(function() {
-            resolve()
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    return bookAuthorRepository.delete(bookAuthor)
 }
 
 exports.create = function(authorityId, bookAuthor) {
-    return new Promise(function(resolve, reject) {
 
-        const ADMIN = 2
-        if (authorityId == undefined || authorityId < ADMIN) {
-            throw [{message: "You do not have permissions for that."}]
-        }
+    if (authorityId == undefined || authorityId < authorityLevel.ADMIN) {
+        throw [{message: "You do not have permissions for that."}]
+    }
 
-        return bookAuthorRepository.create(bookAuthor)
-        .then(function() {
-            resolve()
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    return bookAuthorRepository.create(bookAuthor)
 }
