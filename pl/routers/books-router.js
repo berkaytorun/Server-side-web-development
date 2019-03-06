@@ -9,7 +9,10 @@ const bookAuthorManager = require("../../bll/book-authors-manager")
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/create", function(req, res) {
-    res.render("books/book_create.hbs")
+    const model = {
+        session: req.session
+    }
+    res.render("books/book_create.hbs", model)
 })
 
 router.post("/create", function(req, res) {

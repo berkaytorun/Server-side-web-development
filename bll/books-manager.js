@@ -1,23 +1,17 @@
 
-const bookRepository = require("../dal/repositories/books-repository")
+const booksRepository = require("../dal/repositories/books-repository")
 const classificationsReository = require("../dal/repositories/classification-repository")
 
 const authorityLevel = require("../objects").authorityLevel
 
-exports.findAll = function(options) {
-    const wrapper = []
-    return bookRepository.findAll(options)
-    .then(function(books) {
-        wrapper.push(books)
+exports.findAll = async function(options) {
 
-        return classificationsReository.findAll()
-    }).then(function(classifications) {
-        wrapper.push(classifications)
+    const books = booksRepository.findAll(options)
+    const classifications = classificationsReository.findAll()
+    const wrapper = await Promise.all([books, classifications])
 
-        return Promise.resolve(wrapper)
-    }).catch(function(error) {
-        throw error
-    })
+    return wrapper
+
 }
 
 exports.create = function(authorityId, book) {
@@ -25,11 +19,11 @@ exports.create = function(authorityId, book) {
         return Promise.reject([{message: "You do not have permission to do that."}])
     }
 
-    return bookRepository.create(book)
+    return booksRepository.create(book)
 }
 
 exports.findOne = function(book) {
-    return bookRepository.findOne(book)
+    return booksRepository.findOne(book)
 }
 
 exports.update = function(authorityId, book, oldISBN) {
@@ -38,7 +32,7 @@ exports.update = function(authorityId, book, oldISBN) {
         return Promise.reject([{message: "You do not have permission to do that."}])
     }
 
-    return bookRepository.update(book, oldISBN)
+    return booksRepository.update(book, oldISBN)
 }
 
 exports.delete = function(authorityId, book) {
@@ -47,6 +41,6 @@ exports.delete = function(authorityId, book) {
         throw [{message: "You do not have permission to do that."}]
     }
 
-    return bookRepository.delete(book)
+    return booksRepository.delete(book)
     
 }

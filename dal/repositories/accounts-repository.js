@@ -160,7 +160,7 @@ exports.update = function(account) {
         }
         else {
             const errors = [
-                {message: "No matches found"}
+                {message: "No matches found."}
             ]
             throw errors
         }

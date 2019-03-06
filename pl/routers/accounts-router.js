@@ -76,14 +76,8 @@ router.post("/login", function (req, res) {
 })
 
 router.get("/logout", function(req, res) {
-    
-    req.session.destroy(function(err) {
-        // Destroy this session
-        const model = {
-            session: req.session
-        }
-        res.render("accounts/login.hbs", model)
-    })
+    req.session.destroy(function(err) { })
+    res.render("accounts/login.hbs")
 })
 
 router.get("/", function(req, res) {
