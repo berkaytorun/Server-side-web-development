@@ -16,8 +16,8 @@ exports.create = async function(authorityId, book) {
     return await booksRepository.create(book)
 }
 
-exports.findOne = function(book) {
-    return booksRepository.findOne(book)
+exports.findByPk = function(book) {
+    return booksRepository.findByPk(book)
 }
 
 exports.update = function(authorityId, book, oldISBN) {

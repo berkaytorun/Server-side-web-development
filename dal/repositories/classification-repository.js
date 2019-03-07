@@ -40,7 +40,7 @@ exports.findAll = function() {
 
 exports.findOne = function(classification) {
 
-    return Classification.findAll({
+    return Classification.findOne({
         where: { signum: classification.signum },
         include: [
             {

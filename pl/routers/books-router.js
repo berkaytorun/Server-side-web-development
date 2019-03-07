@@ -69,11 +69,24 @@ router.get("/", async function(req, res) {
     try {
         const booksPromise = bookManager.findAll(req.query)
         const classificationsPromise = classificationManager.findAll()
-
+        
         const wrapper = await Promise.all([booksPromise, classificationsPromise])
         
         const books = wrapper[0]
         const classifications = wrapper[1]
+        
+        if (books == null) {
+            for (i = 0; i < classifications.length; i++) {
+                if (classifications[i].signum == req.query.classification) {
+                    if (classifications[i].books.length == 0) {
+                        throw [{message: "Classification empty"}]
+                    }
+                    else {
+                        throw [{message: "No matches found."}]
+                    }
+                }
+            }
+        }
 
         if (req.query.classification) {
             for (let i = 0; i < classifications.length; i++) {
@@ -165,7 +178,7 @@ router.post("/classificationDelete/:SIGNUM", async function(req, res) {
 router.get("/edit/:ISBN", async function(req, res) {
     
     try {
-        const bookPromise = bookManager.findOne({ISBN: req.params.ISBN})
+        const bookPromise = bookManager.findByPk({ISBN: req.params.ISBN})
         let classificationsPromise = classificationManager.findAll()
         
         const wrapper = await Promise.all([bookPromise, classificationsPromise])
@@ -203,7 +216,7 @@ router.post("/unlinkAuthor", async function(req, res) {
 
     try {
         const successPromise = bookAuthorManager.delete(req.session.authorityId, bookAuthor)
-        const bookPromise = bookManager.findOne({ISBN: bookAuthor.bookISBN})
+        const bookPromise = bookManager.findByPk({ISBN: bookAuthor.bookISBN})
 
         const wrapper = await Promise.all([successPromise, bookPromise])
         const book = wrapper[1]
@@ -261,7 +274,7 @@ router.post("/edit/:ISBN", async function(req, res) {
 router.get("/:ISBN", async function (req, res) {
 
     try {
-        const book = await bookManager.findOne({ISBN: req.params.ISBN})
+        const book = await bookManager.findByPk({ISBN: req.params.ISBN})
 
         const model = {
             book: book,

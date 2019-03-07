@@ -8,7 +8,12 @@ exports.findAll = function() {
 }
 
 exports.findOne = function(classification) {
-    return classificationsReository.findOne(classification)
+    try {
+        return classificationsReository.findOne(classification)
+    }
+    catch (error) {
+        return Promise.resolve(null)
+    }
 }
 
 exports.findByPk = function(classification) {
