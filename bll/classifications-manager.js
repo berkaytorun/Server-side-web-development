@@ -11,6 +11,10 @@ exports.findOne = function(classification) {
     return classificationsReository.findOne(classification)
 }
 
+exports.findByPk = function(classification) {
+    return classificationsReository.findByPk(classification)
+}
+
 exports.delete = function(authorityId, classification) {
 
     if (authorityId == undefined || authorityId < authorityLevel.SUPER) {

@@ -119,7 +119,7 @@ exports.findOne = function(book) {
         
     }).then((book)=> {
         if (book) {
-            resolve(book)
+            return book
         }
         else {
             const errors = [
@@ -146,9 +146,9 @@ exports.delete = function(book) {
         where: {
             ISBN: book.ISBN,
         }
-    }).then((book)=> {
-        if (book) {
-            resolve()
+    }).then((result)=> {
+        if (result) {
+            return result
         }
         else {
             const errors = [
