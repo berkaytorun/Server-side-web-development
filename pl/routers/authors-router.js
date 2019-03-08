@@ -4,13 +4,15 @@ const router = express.Router();
 
 const authorManager = require("../../bll/authors-manager")
 const bookAuthorManager = require("../../bll/book-authors-manager")
+const bookManager = require("../../bll/books-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
-router.get("/", function(req, res) {
+router.get("/", async function(req, res) {
 
-    authorManager.findAll(req.query)
-    .then(function(authors) {
+    try {
+        const authors = await authorManager.findAll(req.query)
+
         const pages = (authors.count) / req.query.limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
 
@@ -23,13 +25,13 @@ router.get("/", function(req, res) {
             session: req.session
         }
         res.render("authors/authors_list.hbs", model)
-    }).catch(function(errors) {
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
-    })
+    }
 })
 
 router.get("/create", function(req, res) {
@@ -39,146 +41,165 @@ router.get("/create", function(req, res) {
     res.render("authors/author_create.hbs", model)
 })
 
-router.post("/create", function(req, res) {
+router.post("/create", async function(req, res) {
     
-    const author = {
-        firstName: req.body.firstName,
-        lastName:req.body.lastName,
-        birthYear:req.body.birthYear,
-    }
+    try {
+        const author = {
+            firstName: req.body.firstName,
+            lastName:req.body.lastName,
+            birthYear:req.body.birthYear,
+        }
+        
+        const newAuthor = await authorManager.create(req.session.authorityId, author)
 
-    authorManager.create(req.session.authorityId, author)
-    .then(function(author) {
         const model = {
-            author: author,
+            author: newAuthor,
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
-    })
+    }
 })
 
-router.post("/addBook", function(req, res) {
+router.post("/addBook", async function(req, res) {
     
-    const bookAuthor = {
-        bookISBN: req.body.bookISBN,
-        authorId: req.body.authorId,
-    }
+    try {
+        const bookAuthor = {
+            bookISBN: req.body.bookISBN,
+            authorId: req.body.authorId,
+        }
 
-    bookAuthorManager.create(req.session.authorityId, bookAuthor)
-    .then(function() {
-        return authorManager.findOne({Id: bookAuthor.authorId})
-    }).then(function(author) {
+        const bookAuthorPromise = bookAuthorManager.create(req.session.authorityId, bookAuthor)
+        const authorPromise = authorManager.findOne({Id: bookAuthor.authorId})
+        const bookPromise = bookManager.findByPk({ISBN: bookAuthor.bookISBN})
+
+        const wrapper = await Promise.all([bookAuthorPromise, authorPromise, bookPromise])
+
+        const author = wrapper[1]
+        const book = wrapper[2]
+
+        author.books.push(book)
+
         const model = {
             author: author,
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("error.hbs", model)        
+    }
 })
 
 
-router.get("/edit/:Id", function(req, res) {
-    const author = {
-        Id: req.params.Id
-    }
-    authorManager.findOne(author)
-    .then(function(authorInfo) {
+router.get("/edit/:Id", async function(req, res) {
+
+    try {
+        const author = await authorManager.findOne({Id: req.params.Id})
         const model = {
             author: author,
             session: req.session
         }
         res.render("authors/author_edit.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
-    })
+    }
 })
 
-router.post("/edit/:Id", function(req, res) {
-    const author = {
-        Id: req.params.Id,
-        firstName:  req.body.firstName,
-        lastName:   req.body.lastName,
-        birthYear:  req.body.birthYear,
-    }
-    authorManager.update(req.session.authorityId, author)
-    .then(function() {
+router.post("/edit/:Id", async function(req, res) {
+
+    try {
+        
         const author = {
             Id: req.params.Id,
+            firstName:  req.body.firstName,
+            lastName:   req.body.lastName,
+            birthYear:  req.body.birthYear,
         }
-        return authorManager.findOne(author)
-    }).then(function(authorInfo) {
+
+        const updatePromise = authorManager.update(req.session.authorityId, author)
+        const authorPromise = authorManager.findOne(author)
+
+        const wrapper = await Promise.all([updatePromise, authorPromise])
+        const newAuthor = wrapper[1]
+        
         const model = {
-            author: authorInfo,
+            author: newAuthor,
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
-    })
+    }
 })
 
 // Search for a specific Author via ID
-router.get("/:Id", function (req, res) {
-    const author = {
-        Id: req.params.Id
-    }
-    authorManager.findOne(author)
-    .then(function(authorInfo) {
+router.get("/:Id", async function (req, res) {
+
+    try {
+            
+        const author = await authorManager.findOne({Id: req.params.Id})
+        
         const model = {
-            author: authorInfo,
+            author: author,
             session: req.session
         }
         res.render("authors/author_view.hbs", model)
-    }).catch(function(errors) {
+        
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
-    })
+    }
 })
 
 
-router.post("/delete/:Id", function(req, res) {
+router.post("/delete/:Id", async function(req, res) {
+
+    try {
+        
+        await authorManager.delete(req.session.authorityId, {Id: req.params.Id})
     
-    const author = {
-        Id: req.params.Id
-    } 
-    authorManager.delete(req.session.authorityId, author)
-    .then(function() {
-        const message = {
-            errors: [
-                {message: "Author was removed"}
-            ]
+        const errors = [
+            {message: "Author was removed"}
+        ]
+
+        const model = {
+            errors: errors,
+            session: req.session
         }
-        res.render("error.hbs", message)
-    }).catch(function(errors) {
+
+        res.render("error.hbs", model)
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
         res.render("error.hbs", model)
-    })
+    }
 })
 
 

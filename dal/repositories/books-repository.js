@@ -61,31 +61,10 @@ exports.findAll = function(options) {
     .then((books)=> {
         if (books.rows.length > 0) {
             books.rows.count = books.count
-            return (books.rows)
+            return books.rows
         }
         else {
-            let errors = []
-            if (options.classification != "") {
-                classificationsReository.findOne({signum: options.classification})
-                .then(function(classification) {
-                    if (options.searchString != "") {
-                        errors.push({message: "There are no books matching in the classification."})
-                    }
-                    else {
-                        errors.push({message: "Classification empty"})
-                    }
-                    throw errors
-                }).catch(function(error) {
-                    // classification does not exist
-                    errors.push({message: "Classification does not exist."})
-                    throw errors
-                })
-
-            }
-            else {
-                errors.push({message: "3"})
-                throw errors
-            }
+            return null
         }
     }).catch((error) => {
         if (error.errors == null || error.errors.length == 0) {
@@ -100,12 +79,9 @@ exports.findAll = function(options) {
     })
 }
     
-exports.findOne = function(book) {
+exports.findByPk = function(book) {
     
-    return Book.findOne({
-        where: {
-            ISBN: book.ISBN,
-        },
+    return Book.findByPk(book.ISBN, {
         include:[ 
             { 
                 model: Author,
@@ -119,7 +95,7 @@ exports.findOne = function(book) {
         
     }).then((book)=> {
         if (book) {
-            resolve(book)
+            return book
         }
         else {
             const errors = [
@@ -146,9 +122,9 @@ exports.delete = function(book) {
         where: {
             ISBN: book.ISBN,
         }
-    }).then((book)=> {
-        if (book) {
-            resolve()
+    }).then((result)=> {
+        if (result) {
+            return result
         }
         else {
             const errors = [

@@ -39,12 +39,14 @@ exports.login = function(account) {
         account.firstName = "This account does not exist"
         account.lastName = "Temporary temp super account account"
         account.authorityId = 3
+        account.authority = {name: "Super"}
         return Promise.resolve(account)
     }
-    return Account.find({
+    return Account.findOne({
         where: {
             userName: account.userName
-        }
+        },
+        include: [{model: Authority}]
     })
     .then((account) => {
         if (account) {
@@ -127,7 +129,7 @@ exports.findAll = function(options) {
     })
 }
 
-exports.findOne = function(account) {
+exports.findByPk = function(account) {
     return Account.findByPk(account.Id,{ include: [Authority] })
     .then((account)=> {
         if (account) {

@@ -1,6 +1,6 @@
 
 <select name="classification">
-    <option value="">Pick one: </option>
+    <option value="{{book.signId}}">Pick one: </option>
     {{#each classifications}}
         {{#if this.isCurrent}}
             <option value="{{this.signId}}" selected="selected" color="reds" style="background-color:#0e8;" > {{this.signum}} </option>

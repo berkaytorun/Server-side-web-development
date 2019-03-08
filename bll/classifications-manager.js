@@ -8,7 +8,16 @@ exports.findAll = function() {
 }
 
 exports.findOne = function(classification) {
-    return classificationsReository.findOne(classification)
+    try {
+        return classificationsReository.findOne(classification)
+    }
+    catch (error) {
+        return Promise.resolve(null)
+    }
+}
+
+exports.findByPk = function(classification) {
+    return classificationsReository.findByPk(classification)
 }
 
 exports.delete = function(authorityId, classification) {

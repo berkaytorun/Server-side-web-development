@@ -3,10 +3,6 @@ const passwordHasher = require("bcryptjs")
 
 exports.encrypt = function(stringToHash) {
     return new Promise(function(resolve, reject) {
-        if (stringToHash == "") {
-            // password not changed
-            resolve(stringToHash)
-        }
         passwordHasher.genSalt(10, function(error, salt) {
             passwordHasher.hash(stringToHash, salt, function(error, hashedString) {
                 if (error) {
