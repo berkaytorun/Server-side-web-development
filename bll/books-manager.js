@@ -4,16 +4,16 @@ const classificationsReository = require("../dal/repositories/classification-rep
 
 const authorityLevel = require("../objects").authorityLevel
 
-exports.findAll = async function(options) {
+exports.findAll = function(options) {
     return booksRepository.findAll(options)
 }
 
 exports.create = async function(authorityId, book) {
-    if (authorityId == undefined || authorityId < authorityLevel.ADMIN) {
+    if (authorityId == undefined || authorityId < authorityLevel.MODERATOR) {
         return Promise.reject([{message: "You do not have permission to do that."}])
     }
 
-    return await booksRepository.create(book)
+    return booksRepository.create(book)
 }
 
 exports.findByPk = function(book) {
