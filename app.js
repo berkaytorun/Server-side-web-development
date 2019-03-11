@@ -54,10 +54,6 @@ app.engine("hbs", hbs({
 app.set("views", __dirname + "/pl/views/")
 
 
-// Access the session as req.session
-app.get('/', function(req, res, next) {
-})
-
 // Setup req object
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
@@ -82,18 +78,27 @@ setTimeout(function() {
     const routerAccounts = require("./pl/routers/accounts-router")
     const routerBooks = require("./pl/routers/books-router")
     const routerAuthors = require("./pl/routers/authors-router")
+    const routerClasssifications = require("./pl/routers/classsifications-router")
     
-    app.use("/accounts", routerAccounts)
-    app.use("/books", routerBooks)
-    app.use("/authors", routerAuthors)
-    
-    app.get("/home", function (req, res) {
+
+    app.post("/accounts/logout", function(req, res) {
+        req.session.destroy(function(err) { })
+        res.render("accounts/login.hbs")
+    })
+
+ 
+    app.get("/", function (req, res) {
         const model = {
             accountId: req.session.accountId,
             session: req.session
         }
         res.render("home.hbs",model)
     })  
+
+    app.use("/accounts", routerAccounts)
+    app.use("/books", routerBooks)
+    app.use("/authors", routerAuthors)
+    app.use("/classifications",routerClasssifications)
 
     app.get("/about", function (req, res) {
         new Promise(function (resolve, reject) {
@@ -114,6 +119,7 @@ setTimeout(function() {
         })
     })
 
+    
     const port = process.env.PORT || 8080
 
     app.listen(port)

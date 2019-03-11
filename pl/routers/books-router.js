@@ -37,7 +37,7 @@ router.post("/create", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -52,14 +52,14 @@ router.post("/delete/:ISBN", async function(req, res) {
                 {message: "Book was removed"}
             ]
         }
-        res.render("error.hbs", message)
+        res.render("status_report.hbs", message)
     }
     catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -75,7 +75,8 @@ router.get("/", async function(req, res) {
         const books = wrapper[0]
         const classifications = wrapper[1]
         
-        if (books == null) {
+        if (!books) {
+            if (!req.query.classification) { throw [{message: "No matches found."}] }
             for (i = 0; i < classifications.length; i++) {
                 if (classifications[i].signum == req.query.classification) {
                     if (classifications[i].books.length == 0) {
@@ -121,7 +122,7 @@ router.get("/", async function(req, res) {
             res.render("books/books_classification_delete.hbs", model)
         }
         else {
-            res.render("error.hbs", model)
+            res.render("status_report.hbs", model)
         }
     }
 })
@@ -171,7 +172,7 @@ router.post("/classificationDelete/:SIGNUM", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -203,7 +204,7 @@ router.get("/edit/:ISBN", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -232,7 +233,7 @@ router.post("/unlinkAuthor", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -266,7 +267,7 @@ router.post("/edit/:ISBN", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -287,7 +288,7 @@ router.get("/:ISBN", async function (req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 

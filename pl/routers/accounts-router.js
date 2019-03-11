@@ -38,7 +38,7 @@ router.post("/create", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -76,14 +76,10 @@ router.post("/login", async function (req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)   
+        res.render("status_report.hbs", model)   
     }
 })
 
-router.get("/logout", function(req, res) {
-    req.session.destroy(function(err) { })
-    res.render("accounts/login.hbs")
-})
 
 router.get("/", async function(req, res) {
     
@@ -113,7 +109,7 @@ router.get("/", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -134,7 +130,7 @@ router.get("/edit/:Id", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -165,7 +161,7 @@ router.post("/edit/:Id", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -184,7 +180,7 @@ router.get("/:Id", async function(req, res) {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 
@@ -199,14 +195,14 @@ router.post("/delete/:Id", async function(req, res) {
             ],
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
+        res.render("status_report.hbs", model)
     }
 })
 

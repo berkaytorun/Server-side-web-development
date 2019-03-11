@@ -26,11 +26,12 @@
 
         <nav>
             <ul>
-                <li><a href="/home">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
                 
                 {{#if session.loggedIn}}
-                    <li><a href="/accounts">View all accouts</a></li>
+                    <li><a href="/accounts">Accounts</a></li>
+                    <li><a href="/classsifications">Classsifications</a></li>
                 {{/if}}
                     <li><a href="/books">Book</a></li>
                     <li><a href="/authors">Authors</a></li>
@@ -38,9 +39,10 @@
                     <li class="login"><a href="/accounts/login">Login</a></li>
                 {{/unless }}
                 {{#if session.loggedIn}}
-                    <li class="login">
-                        <a href="/accounts/logout">Log out.</a>
-                    </li>
+                        <li class="login">
+                            <form action="/accounts/logout" method="post">
+                            <input type="submit" value="Log out"></form>
+                        </li>
                 {{/if}}
             </ul>
         </nav>
