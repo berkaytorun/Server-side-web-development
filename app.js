@@ -6,11 +6,6 @@ var MySQLStore = require('express-mysql-session')(session);
 
 const app = express()
 
-const MS = 1000
-const SEC = 15
-const MIN = 15
-const HOUR = 0
-
 const dbInfo = require("./objects").databaseInfo
 
 var options = {
@@ -22,6 +17,11 @@ var options = {
 };
  
 var sessionStore = new MySQLStore(options);
+
+const MS = 1000
+const SEC = 15
+const MIN = 15
+const HOUR = 0
 
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({

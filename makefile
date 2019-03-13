@@ -7,6 +7,7 @@ install:
 	sudo npm install express-handlebars
 	sudo npm install body-parser
 	sudo npm install express-session
+	sudo npm install express-mysql-session
 
 	sudo npm install --save mysql2
 	sudo npm install --save sequelize

@@ -28,3 +28,5 @@ router.get("/", async function(req, res) {
         res.render("status_report.hbs", model)
     }
 })
+
+module.exports = router
