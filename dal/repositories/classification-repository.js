@@ -4,103 +4,131 @@ const Book = require("../models/book_model").Book
 
 
 exports.findAll = function() {
-    return new Promise(function(resolve, reject) {
 
-        Classification.findAll({
-            where: { },
-            include: [
-                {
-                    model: Book,
-                    required: false,
-                }
+    return Classification.findAll({
+        where: { },
+        include: [
+            {
+                model: Book,
+                required: false,
+            }
+        ]
+    }).then((classification)=> {
+
+        if (classification) {
+            return classification
+        }
+        else {
+            const errors = [
+                {message: "No classifications found."}
             ]
-        }).then((classification)=> {
-
-            if (classification) {
-                resolve(classification)
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
             else {
-                const errors = [
-                    {message: "No classifications found."}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
-            }
-            return reject(error.errors)
-        })
+        }
+        throw error.errors
     })
+    
 }
 
 exports.findOne = function(classification) {
-    return new Promise(function(resolve, reject) {
 
-        Classification.findAll({
-            where: { signum: classification.signum },
-            include: [
-                {
-                    model: Book,
-                    required: false,
-                }
+    return Classification.findOne({
+        where: { signum: classification.signum },
+        include: [
+            {
+                model: Book,
+                required: false,
+            }
+        ]
+    }).then((classification)=> {
+
+        if (classification) {
+            return classification
+        }
+        else {
+            const errors = [
+                {message: "No classifications found."}
             ]
-        }).then((classification)=> {
-
-            if (classification) {
-                resolve(classification)
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
             else {
-                const errors = [
-                    {message: "No classifications found."}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
+        }
+        throw error.errors
+    })
+}
+
+exports.findByPk = function(classification) {
+
+    return Classification.findByPk(classification.signId, {
+        include: [
+            {
+                model: Book,
+                required: false,
             }
-            return reject(error.errors)
-        })
+        ]
+    }).then((classification)=> {
+
+        if (classification) {
+            return classification
+        }
+        else {
+            const errors = [
+                {message: "No classifications found."}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
     })
 }
 
 
 exports.delete = function(classification) {
-    return new Promise(function(resolve, reject) {
 
-        Classification.destroy({
-            where: { signum: classification.signum }
-        }).then((result)=> {
-            if (result) {
-                resolve(classification.signum + " deleted")
+    return Classification.destroy({
+        where: { signum: classification.signum }
+    }).then((result)=> {
+        if (result) {
+            return classification.signum + " deleted"
+        }
+        else {
+            const errors = [
+                {message: "Classification was not deleted. Please try again"}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
             }
             else {
-                const errors = [
-                    {message: "Classification was not delted. Please try again"}
-                ]
-                reject(errors)
+                throw error;
             }
-        }).catch((error) => {
-            if (error.errors == null || error.errors.length == 0) {
-                if (error.message) {
-                    reject([error.message])
-                }
-                else {
-                    setTimeout(function() { throw error; });
-                }
-            }
-            return reject(error.errors)
-        })
+        }
+        throw error.errors
     })
 }

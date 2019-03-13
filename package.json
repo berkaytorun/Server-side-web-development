@@ -1,33 +1,31 @@
 {
-  "name": "website",
+  "name": "project",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "",
+  "main": "app.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "bootstrap": "^4.2.1",
-    "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
-    "express-handlebars": "^3.0.0",
+    "express-handlebars": "^3.0.2",
+    "express-mysql-session": "^2.1.0",
     "express-session": "^1.15.6",
     "mysql2": "^1.6.5",
-    "sequelize": "^4.42.0",
-    "sqlite3": "^4.0.6"
+    "sequelize": "^4.43.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/Ylli_Sahiti/server-side-project.git"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://gitlab.com/Ylli_Sahiti/server-side-project/issues"
   },
-  "homepage": "https://gitlab.com/Ylli_Sahiti/server-side-project#readme",
-  "devDependencies": {},
-  "description": ""
+  "homepage": "https://gitlab.com/Ylli_Sahiti/server-side-project#readme"
 }

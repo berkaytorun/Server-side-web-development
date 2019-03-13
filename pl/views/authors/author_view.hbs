@@ -1,27 +1,33 @@
-
-{{#if session.loggedIn}}
-    <div id="book_info">
+<div id="wrapper">
+    <div id="book_info" style="width: 45%;">
         <div>First Name: {{author.firstName}}</div>
-        <div>First Name: {{author.lastName}}</div>
+        <div>Last Name: {{author.lastName}}</div>
         <div>Birth Year: {{author.birthYear}}</div>
+        
+        {{#if session.loggedIn}}
+            <div id="editButton">
+                {{#hasAdminRights session.authorityId}}
+                    <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
+                {{/hasAdminRights}}
+            </div>
+        {{/if}}
     </div>
-    {{#hasAdminRights session.authorityId}}
-        <a href="./edit/{{author.Id}}"><input type="submit" value="Edit"></a>
-    {{/hasAdminRights}}
+    <div id="rightContent" style="width: 55%">
+        {{#hasAdminRights session.authorityId}}
+            <form action="/authors/addBook" method="POST">
+                <input name="bookISBN" placeholder="Add book with ISBN" required="true">
+                <input name="authorId" value="{{author.Id}}" hidden="true">
+                <button><i class="fas fa-book-medical"></i></button>
+            </form>
+        {{/hasAdminRights}}
 
+        {{#if author.books}}
 
-    {{#hasAdminRights session.authorityId}}
-        <form action="/authors/addBook" method="POST">
-            <input name="bookISBN" placeholder="ISBN" required="true">
-            <input name="authorId" value="{{author.Id}}" hidden="true">
-            <button>Add book.</button>
-        </form>
-    {{/hasAdminRights}}
+            {{#each author.books}}
+                <span value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </span><br>
+                <a href="/books/{{this.ISBN}}"><input type="submit" value="Go"></a><br>
+            {{/each}}
+        {{/if}}
+    </div>
+</div>
 
-    {{#if author.books}}
-        {{#each author.books}}
-            <option value="{{this.ISBN}}">{{this.ISBN}} / {{this.title}} </option>
-            <a href="/books/{{this.ISBN}}"><input type="submit" value="Go"></a>
-        {{/each}}
-    {{/if}}
-{{/if}}

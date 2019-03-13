@@ -16,6 +16,7 @@ nav{
     border-bottom: 1px solid black;
     position: -webkit-sticky; /* Safari */
     position: sticky;
+    z-index: 1;
     top: 0;
     background-color: aqua;
 }
@@ -30,7 +31,7 @@ nav ul li {
 nav ul li a{
     text-decoration: none;
 }
-nav ul li a:hover{
+nav ul li a:hover,a:active{
     background-color: #0aa;
     text-decoration: none !important;
 }
@@ -48,6 +49,7 @@ main{
     padding: 3px 0 3px 3px;
     margin: 5px 0 5px 0;
     border: 1px solid black;
+    
 }
 
 #book_info{
@@ -68,7 +70,6 @@ main{
     overflow: hidden;
 }
 
-
 body{
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -83,21 +84,26 @@ p{
 }
 .pageNumber {
     border: 1px solid #0ee !important;
-    margin: 0;
-    padding: 0 4px 0 4px;
+    text-align: center;
+    margin: 0 1px 0 1px;
+    width: auto;
     text-decoration: none !important;
+    height: 24px;
+    width: 26px;
 }
 #pageLast {
     border: 1px solid #0ee !important;
     margin: 0 2px 0 auto;
     padding: 0 4px 0 4px;
     text-decoration: none;
+    width: auto;
 }
 #pageFirst {
     border: 1px solid #0ee !important;
     margin: 0 auto 0 2px;
     padding: 0 4px 0 4px;
     text-decoration: none;
+    width: auto;
 }
 
 .pagination {
@@ -110,6 +116,12 @@ pagination ul li a:link,a:visited{
 pagination ul li:hover {
     text-decoration: none;
     background-color: #0aa;
+}
+
+pagination ul li a{
+    height: 24px;
+    width: 26px;
+    padding: 0 4px 0 4px;
 }
 
 #loggedIn{

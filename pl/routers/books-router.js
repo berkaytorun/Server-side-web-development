@@ -9,11 +9,14 @@ const bookAuthorManager = require("../../bll/book-authors-manager")
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/create", function(req, res) {
-    res.render("books/book_create.hbs")
+    const model = {
+        session: req.session
+    }
+    res.render("books/book_create.hbs", model)
 })
 
-router.post("/create", function(req, res) {
-    
+router.post("/create", async function(req, res) {
+        
     const book = {
         ISBN: req.body.ISBN,
         title: req.body.title,
@@ -21,51 +24,70 @@ router.post("/create", function(req, res) {
         publicationYear:req.body.publicationYear,
         pages:req.body.pages,
     }
-    
-    bookManager.create(req.session.authorityId, book)
-    .then(function(book) {
+
+    try {
         const model = {
-            book: book,
+            book: await bookManager.create(req.session.authorityId, book),
             session: req.session
         }
         res.render("books/book_view.hbs", model)
-    }).catch(function(errors) {
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.post("/delete/:ISBN", function(req, res) {
+router.post("/delete/:ISBN", async function(req, res) {
     
-    const book = {ISBN: req.params.ISBN}
+    const book = { ISBN: req.params.ISBN }
 
-    bookManager.delete(req.session.authorityId, book)
-    .then(function() {
+    try {
+        await bookManager.delete(req.session.authorityId, book)
         const message = {
             errors: [
                 {message: "Book was removed"}
             ]
         }
-        res.render("error.hbs", message)
-    }).catch(function(errors) {
+        res.render("status_report.hbs", message)
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
 // search for many books that match a string and filters
-router.get("/", function(req, res) {
+router.get("/", async function(req, res) {
     
-    bookManager.findAll(req.query)
-    .then(function(wrapper) {
+    try {
+        const booksPromise = bookManager.findAll(req.query)
+        const classificationsPromise = classificationManager.findAll()
+        
+        const wrapper = await Promise.all([booksPromise, classificationsPromise])
+        
         const books = wrapper[0]
         const classifications = wrapper[1]
+        
+        if (!books) {
+            if (!req.query.classification) { throw [{message: "No matches found."}] }
+            for (i = 0; i < classifications.length; i++) {
+                if (classifications[i].signum == req.query.classification) {
+                    if (classifications[i].books.length == 0) {
+                        throw [{message: "Classification empty"}]
+                    }
+                    else {
+                        throw [{message: "No matches found."}]
+                    }
+                }
+            }
+        }
 
         if (req.query.classification) {
             for (let i = 0; i < classifications.length; i++) {
@@ -89,7 +111,8 @@ router.get("/", function(req, res) {
             session: req.session
         }
         res.render("books/books_list.hbs", model)
-    }).catch(function(errors) {
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
@@ -99,23 +122,25 @@ router.get("/", function(req, res) {
             res.render("books/books_classification_delete.hbs", model)
         }
         else {
-            res.render("error.hbs", model)
+            res.render("status_report.hbs", model)
         }
-    })
+    }
 })
 
-router.post("/classificationDelete/:SIGNUM", function(req, res) {
+router.post("/classificationDelete/:SIGNUM", async function(req, res) {
+
     const classification = {
         signum: req.params.SIGNUM
     }
-    
-    classificationManager.delete(req.session.authorityId, classification)
-    .then(function() {
-        return bookManager.findAll(req.query)
-    }).then(function(wrapper) {
 
-        const books = wrapper[0]
-        const classifications = wrapper[1]
+    try {
+        const successPromise = classificationManager.delete(req.session.authorityId, classification)
+        const booksPromise = bookManager.findAll(req.query)
+        const classificationsPromise = classificationManager.findAll()
+
+        const wrapper = await Promise.all([successPromise, booksPromise, classificationsPromise])
+        const books = wrapper[1]
+        const classifications = wrapper[2]
 
         if (req.query.classification) {
             for (let i = 0; i < classifications.length; i++) {
@@ -140,24 +165,27 @@ router.post("/classificationDelete/:SIGNUM", function(req, res) {
         }
 
         res.render("books/books_list.hbs", model)
-    }).catch(function(errors) {
+
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.get("/edit/:ISBN", function(req, res) {
-    let book = {
-        ISBN: req.params.ISBN
-    }
-    bookManager.findOne(book)
-    .then(function(bookInfo) {
-        book = bookInfo
-        return classificationManager.findAll()
-    }).then(function(classifications) {
+router.get("/edit/:ISBN", async function(req, res) {
+    
+    try {
+        const bookPromise = bookManager.findByPk({ISBN: req.params.ISBN})
+        let classificationsPromise = classificationManager.findAll()
+        
+        const wrapper = await Promise.all([bookPromise, classificationsPromise])
+        const book = wrapper[0]
+        const classifications = wrapper[1]
+
         for (let i = 0; i < classifications.length; i++) {
             if (classifications[i].signId == book.signId) {
                 classifications[i].isCurrent = true
@@ -170,92 +198,98 @@ router.get("/edit/:ISBN", function(req, res) {
             session: req.session
         }
         res.render("books/book_edit.hbs", model)
-    }).catch(function(errors) {
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.post("/unlinkAuthor", function(req, res) {
+router.post("/unlinkAuthor", async function(req, res) {
 
     const bookAuthor = {
         authorId: req.body.authorId,
         bookISBN: req.body.bookISBN
     }
 
-    return bookAuthorManager.delete(req.session, bookAuthor)
-    .then(function() {
-        return bookManager.findOne({ISBN: bookAuthor.bookISBN})
-    }).then(function(book) {
+    try {
+        const successPromise = bookAuthorManager.delete(req.session.authorityId, bookAuthor)
+        const bookPromise = bookManager.findByPk({ISBN: bookAuthor.bookISBN})
+
+        const wrapper = await Promise.all([successPromise, bookPromise])
+        const book = wrapper[1]
+
         const model = {
             book: book,
             session: req.session
         }
         res.render("books/book_view.hbs", model)
-    }).catch(function(errors) {
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.post("/edit/:ISBN", function(req, res) {
+router.post("/edit/:ISBN", async function(req, res) {
+
     let book = {
         ISBN: req.body.ISBN,
         title: req.body.title,
         pages:req.body.pages,
         publicationInfo:req.body.publicationInfo,
         publicationYear:req.body.publicationYear,
-    }
-    if (req.body.classification != "") {
-        book.signId = req.body.classification
+        signId: req.body.classification
     }
     const oldISBN = req.params.ISBN
-    bookManager.update(req.session.authorityId, book, oldISBN)
-    .then(function() {
-        const book = {
-            ISBN: req.body.ISBN
-        }
-        return bookManager.findOne(book)
-    }).then(function(bookInfo) {
-        const model = {
-            book: bookInfo,
-            session: req.session
-        }
-        res.render("books/book_view.hbs", model)
-    }).catch(function(errors) {
-        const model = {
-            errors: errors,
-            session: req.session
-        }
-        res.render("error.hbs", model)
-    })
-})
 
-// Search for a specific book via ISBN
-router.get("/:ISBN", function (req, res) {
-    const book = {
-        ISBN: req.params.ISBN
-    }
-    bookManager.findOne(book)
-    .then(function(book) {
+    try {
+        const successPromise = bookManager.update(req.session.authorityId, book, oldISBN)
+        const classificationPromise = classificationManager.findByPk({ signId: book.signId })
+
+        const wrapper = await Promise.all([successPromise, classificationPromise])
+        book.classification  = wrapper[1]
+        
         const model = {
             book: book,
             session: req.session
         }
         res.render("books/book_view.hbs", model)
-    }).catch(function(errors) {
+    }
+    catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
+})
+
+// Search for a specific book via ISBN
+router.get("/:ISBN", async function (req, res) {
+
+    try {
+        const book = await bookManager.findByPk({ISBN: req.params.ISBN})
+
+        const model = {
+            book: book,
+            session: req.session
+        }
+        res.render("books/book_view.hbs", model)
+    }
+    catch (errors) {
+        const model = {
+            errors: errors,
+            session: req.session
+        }
+        res.render("status_report.hbs", model)
+    }
 })
 
 

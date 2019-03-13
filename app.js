@@ -2,19 +2,30 @@ const express = require("express")
 const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 var session = require('express-session')
+var MySQLStore = require('express-mysql-session')(session);
 
 const app = express()
+
+const dbInfo = require("./objects").databaseInfo
+
+var options = {
+    host: dbInfo.host,
+    port: dbInfo.port,
+    user: dbInfo.login,
+    password: dbInfo.password,
+    database: dbInfo.databaseName
+};
+ 
+var sessionStore = new MySQLStore(options);
 
 const MS = 1000
 const SEC = 15
 const MIN = 15
 const HOUR = 0
 
-
-
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-    store: "",
+    store: sessionStore,
     secret: 'keyboard cat',
     resave: false,
     rolling:true,
@@ -43,10 +54,6 @@ app.engine("hbs", hbs({
 app.set("views", __dirname + "/pl/views/")
 
 
-// Access the session as req.session
-app.get('/', function(req, res, next) {
-})
-
 // Setup req object
 app.use(function(req, res, next) {
     if (!req.query) { req.query = { } }
@@ -71,18 +78,27 @@ setTimeout(function() {
     const routerAccounts = require("./pl/routers/accounts-router")
     const routerBooks = require("./pl/routers/books-router")
     const routerAuthors = require("./pl/routers/authors-router")
+    const routerClasssifications = require("./pl/routers/classsifications-router")
     
-    app.use("/accounts", routerAccounts)
-    app.use("/books", routerBooks)
-    app.use("/authors", routerAuthors)
-    
-    app.get("/home", function (req, res) {
+
+    app.post("/accounts/logout", function(req, res) {
+        req.session.destroy(function(err) { })
+        res.render("accounts/login.hbs")
+    })
+
+ 
+    app.get("/", function (req, res) {
         const model = {
             accountId: req.session.accountId,
             session: req.session
         }
         res.render("home.hbs",model)
     })  
+
+    app.use("/accounts", routerAccounts)
+    app.use("/books", routerBooks)
+    app.use("/authors", routerAuthors)
+    app.use("/classifications",routerClasssifications)
 
     app.get("/about", function (req, res) {
         new Promise(function (resolve, reject) {
@@ -103,6 +119,9 @@ setTimeout(function() {
         })
     })
 
-    app.listen(8080)
+    
+    const port = process.env.PORT || 8080
+
+    app.listen(port)
 
 }, startDelay)

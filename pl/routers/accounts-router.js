@@ -14,7 +14,7 @@ router.get("/create", function(req, res) {
     res.render("accounts/create.hbs", model)
 })
 
-router.post("/create", function(req, res) {
+router.post("/create", async function(req, res) {
 
     const account = {
         userName: req.body.userName,
@@ -24,20 +24,22 @@ router.post("/create", function(req, res) {
         authorityId: req.body.authorityId
     }
 
-    accountManager.create(req.session.authorityId, account)
-    .then(function(account) {
+    try {
+        await accountManager.create(req.session.authorityId, account)
+        
         const model = {
             account: account,
             session: req.session
         }
         res.render("accounts/account_view.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
 router.get("/login", function (req, res) {
@@ -47,51 +49,43 @@ router.get("/login", function (req, res) {
     res.render("accounts/login.hbs", model)
 })
 
-router.post("/login", function (req, res) {
+router.post("/login", async function (req, res) {
+
     const account = {
         userName: req.body.userName,
         password: req.body.password
     }
-    accountManager.login(account)
-    .then(function(account) {
+
+    try {
         
-        req.session.accountId = account.Id
-        req.session.authorityId = account.authorityId
+        const dbAccount = await accountManager.login(account)
+
+        req.session.accountId = dbAccount.Id
+        req.session.authorityId = dbAccount.authorityId
 
         req.session.loggedIn = true
-        req.session.userName = account.userName
+        req.session.userName = dbAccount.userName
 
         const model = {
-            account: account,
+            account: dbAccount,
             session: req.session,
         }
         res.render("accounts/account_view.hbs", model)
-    }).catch(function(errors) {
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)   
+    }
 })
 
-router.get("/logout", function(req, res) {
-    accountManager.logout(req.session)
-    .then(function() {
-        res.render("home.hbs")
-    }).catch(function(errors) {
-        const model = {
-            errors: errors,
-            session: req.session
-        }
-        res.render("error.hbs", model)
-    })
-})
 
-router.get("/", function(req, res) {
+router.get("/", async function(req, res) {
     
-    accountManager.findAll(req.session.authorityId, req.query)
-    .then(function(accounts) {
+    try {
+        const accounts = await accountManager.findAll(req.session.authorityId, req.query)
+
         if (!accounts) { 
             const model = { session: req.session }
             res.render("accounts/accounts_list.hbs", model)
@@ -109,39 +103,38 @@ router.get("/", function(req, res) {
             session: req.session
         }
         res.render("accounts/accounts_list.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
 
-router.get("/edit/:Id", function(req, res) {
-    const query = {
-        Id: req.params.Id
-    }
-    
-    accountManager.findOne(req.session.authorityId, query)
-    .then(function(accountInfo) {
+router.get("/edit/:Id", async function(req, res) {
+
+    try {
+        const account = await accountManager.findByPk(req.session.authorityId, {Id: req.params.Id})
         const model = {
             levels: require("../../dal/models/account_model").levels,
-            accountInfo:accountInfo,
+            accountInfo: account,
             session: req.session
         }
         res.render("accounts/account_edit.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.post("/edit/:Id", function(req, res) {
+router.post("/edit/:Id", async function(req, res) {
 
     const account = {
         Id: req.params.Id,
@@ -152,66 +145,65 @@ router.post("/edit/:Id", function(req, res) {
         authorityId: req.body.authorityId,
     }
 
-    accountManager.update(req.session.authorityId, account)
-    .then(function() {
-        const account = {
-            Id: req.params.Id,
-        }
-        return accountManager.findOne(req.session.authorityId, account)
-    }).then(function(accountInfo) {
+    try {
+        await accountManager.update(req.session.authorityId, account)
+        const updatedAccount = await accountManager.findByPk(req.session.authorityId, account)
+
         const model = {
             levels: require("../../dal/models/account_model").levels,
-            account: accountInfo,
+            account: updatedAccount,
             session: req.session
         }
         res.render("accounts/account_view.hbs", model)
-    }).catch(function(errors) {
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.get("/:Id", function(req, res) {
-    const account = {
-        Id: req.params.Id
-    } 
-    accountManager.findOne(req.session.authorityId, account)
-    .then(function(accountInfo) {
+router.get("/:Id", async function(req, res) {
+    
+    try {
+        const account = await accountManager.findByPk(req.session.authorityId, {Id: req.params.Id})
+
         const model = {
-            account: accountInfo,
+            account: account,
             session: req.session
         }
         res.render("accounts/account_view.hbs", model)
-    }).catch(function(errors) {
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
-router.post("/delete/:Id", function(req, res) {
-    const account = { Id: req.params.Id }
-    accountManager.delete(req.session.authorityId, account)
-    .then(function() {
+router.post("/delete/:Id", async function(req, res) {
+
+    try {
+        await accountManager.delete(req.session.authorityId, { Id: req.params.Id })
+
         const model = {
             errors: [
                 {message: "Account removed"}
             ],
             session: req.session
         }
-        res.render("error.hbs", model)
-    }).catch(function(errors) {
+        res.render("status_report.hbs", model)
+
+    } catch (errors) {
         const model = {
             errors: errors,
             session: req.session
         }
-        res.render("error.hbs", model)
-    })
+        res.render("status_report.hbs", model)
+    }
 })
 
 

@@ -3,137 +3,69 @@ const bcrypt = require("./functionality/bcrypt")
 
 const accountRepository = require("../dal/repositories/accounts-repository")
 
-exports.create = function(authorityId, account) {
-    return new Promise(function(resolve, reject) {
-        
-        const SUPER = 3
-        if (authorityId == undefined || authorityId < SUPER) {
-            throw [{ message: "You do not have the permissions to do that." }]
-        }
+const authorityLevel = require("../objects").authorityLevel
 
-        bcrypt.encrypt(account.password)
-        .then(function(hashedPassword) {
-            account.password = hashedPassword
-            return accountRepository.create(account)
-        }).then(function(account) {
+exports.create = async function(authorityId, account) {
+    if (authorityId == undefined || authorityId < authorityLevel.SUPER) {
+        return Promise.reject([{ message: "You do not have the permissions to do that." }])
+    }
 
-            resolve(account)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    account.password = await bcrypt.encrypt(account.password)
+    return accountRepository.create(account)
 }
 
-exports.login = function(account) {
-    return new Promise(function(resolve, reject) {
+exports.login = async function(account) {
 
-        return accountRepository.login(account)
-        .then(function(dbAccount) {
-            if (dbAccount.userName == "Super" && dbAccount.password == "SupersecretPasswordNobodyCanGuess(/&(/)&#") {
-                // for dev purpose.. remove this if / else upon release!
-                return new Promise(function(resolve, reject ) { resolve(dbAccount) })
-            }
-            else {
-                return bcrypt.compare(account.password, dbAccount)
-            }
-        }).then(function(account) {
-            resolve(account)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    const dbAccount = await accountRepository.login(account)
+    if (dbAccount.userName == "Super" && dbAccount.password == "SupersecretPasswordNobodyCanGuess(/&(/)&#") {
+        // for dev purpose.. remove this if / else upon release!
+        return dbAccount
+    }
+    else {
+        return bcrypt.compare(account.password, dbAccount)
+    }
 }
 
 exports.findAll = function(authorityId, options) {
-    return new Promise(function(resolve, reject) {
+    if (authorityId == undefined) {
+        return Promise.reject([{ message: "You do not have the permissions to do that." }])
+    }
 
-        if (authorityId == undefined) {
-            resolve("")
-        }
-
-        return accountRepository.findAll(options)
-        .then(function(accounts) {
-            resolve(accounts)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    return accountRepository.findAll(options)
 }
 
-exports.logout = function(session) {
-    return new Promise(function(resolve, reject) {
-        session.destroy(function(err) {
-            // Destroy this session
-            if (err) {
-                reject(err)
-            }
-            resolve()
-        })
-    })
-}
+exports.findByPk = function(authorityId, account) {
+    if (authorityId == undefined) {
+        return Promise.reject([{ message: "You do not have the permissions to do that." }])
+    }
 
-exports.findOne = function(authorityId, account) {
-    return new Promise(function(resolve, reject) {
-        
-        if (authorityId == undefined) {
-            throw [{ message: "You do not have the permissions to do that." }]
-        }
-
-        return accountRepository.findOne(account)
-        .then(function(accountInfo) {
-            resolve(accountInfo)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    return accountRepository.findByPk(account)
 }
 
 
-exports.update = function(authorityId, account) {
-    return new Promise(function(resolve, reject) {
-
-        const ADMIN = 2
-        const SUPER = 3
-        if (authorityId == undefined || (authorityId == ADMIN &&
-            (account.userName || account.firstName || account.lastName || account.authorityId)
-            )
-                ) {
-            throw [{ message: "You do not have the permissions to do that." }]
-        }
-        else if (authorityId < ADMIN) {
-            throw [{ message: "You do not have the permissions to do that." }]
-        }
-
-        bcrypt.encrypt(account.password)
-        .then(function(hashedPassword) {
-            if (hashedPassword == "") {
-                delete account.password
-            }
-            else {
-                account.password = hashedPassword
-            }
-            return accountRepository.update(account)
-        }).then(function(accounts) {
-            resolve(accounts)
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+exports.update = async function(authorityId, account) {
+    if (authorityId == undefined || (authorityId == authorityLevel.ADMIN &&
+        (account.userName || account.firstName || account.lastName || account.authorityId))) {
+        return Promise.reject([{ message: "You do not have the permissions to do that." }])
+    }
+    else if (authorityId < authorityLevel.ADMIN) {
+        return Promise.reject([{ message: "You do not have the permissions to do that." }])
+    }
+    
+    if (account.password) {
+        account.password = await bcrypt.encrypt(account.password)
+    }
+    else {
+        delete account.password
+    }
+    return accountRepository.update(account)
 }
 
 exports.delete = function(authorityId, account) {
-    return new Promise(function(resolve, reject) {
-        
-        const SUPER = 3
-        if (authorityId == undefined || authorityId < SUPER) {
-            throw [{ message: "You do not have the permissions to do that." }]
-        }
 
-        return accountRepository.delete(account)
-        .then(function() {
-            resolve()
-        }).catch(function(error) {
-            reject(error)
-        })
-    })
+    if (authorityId == undefined || authorityId < authorityLevel.SUPER) {
+        return Promise.reject([{ message: "You do not have the permissions to do that." }])
+    }
+
+    return accountRepository.delete(account)
 }

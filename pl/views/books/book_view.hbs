@@ -14,27 +14,28 @@
 
 {{#hasAdminRights session.authorityId}}
     <a href="/books/edit/{{book.ISBN}}"><input type="submit" value="Edit"></a>
-{{/hasAdminRights}}
 
-{{#if book.authors}}
-    <div>
+{{/hasAdminRights}}
+    {{#if book.authors}}
         <div>
-            Authors: 
-        </div>
-        <hr>
-        {{#each book.authors}}
             <div>
-                First Name: {{this.firstName}}<br>
-                Last Name: {{this.lastName}}<br>
+                Authors: 
             </div>
-            <a href="/authors/{{this.Id}}"><input type="submit" value="Go"></a>
-            
-            <form action="/books/unlinkAuthor" method="POST">
-                <input name="bookISBN" value="{{../book.ISBN}}" hidden="true">
-                <input name="authorId" value="{{this.Id}}" hidden="true">
-                <button>Remove author from book.</button>
-            </form>
             <hr>
-        {{/each}}
-    </div>
-{{/if}}
+            {{#each book.authors}}
+                <div>
+                    First Name: {{this.firstName}}<br>
+                    Last Name: {{this.lastName}}<br>
+                </div>
+                <a href="/authors/{{this.Id}}"><input type="submit" value="Go"></a>
+                
+                <form action="/books/unlinkAuthor" method="POST">
+                    <input name="bookISBN" value="{{../book.ISBN}}" hidden="true">
+                    <input name="authorId" value="{{this.Id}}" hidden="true">
+                    <button>Remove author from book.</button>
+                </form>
+                <hr>
+            {{/each}}
+        </div>
+    {{/if}}
+

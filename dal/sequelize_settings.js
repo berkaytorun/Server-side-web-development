@@ -1,17 +1,14 @@
 
+const dbInfo = require("../objects").databaseInfo
+
 const Sequelize = require('sequelize')
 
-const db = new Sequelize('projectGroupN', 'groupN', 'lkjwmnmnfsdlk', {
-    host: 'petersmysql.cgonxecdluoj.eu-west-1.rds.amazonaws.com',
-    dialect: 'mysql',
-    operatorsAliases: false,
+const db = new Sequelize(dbInfo.databaseName, dbInfo.login, dbInfo.password, {
+    host: dbInfo.host,
+    dialect: dbInfo.dialect,
+    operatorsAliases: dbInfo.operatorsAliases,
 
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
+    pool: dbInfo.pool
 })
 exports.Sequelize = Sequelize
 exports.db = db
