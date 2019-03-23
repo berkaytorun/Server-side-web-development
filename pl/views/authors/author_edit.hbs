@@ -10,6 +10,7 @@
             <input type="text" name="birthYear" value="{{this.birthYear}}">
             <input type="hidden" id="Id" name="Id" value="{{this.Id}}">
         </div>
+        <input type="hidden" name="_csrf" value="{{_csrf}}">
         <input type="submit" value="Submit">
     </form>
 {{/hasAdminRights}}

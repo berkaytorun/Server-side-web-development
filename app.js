@@ -3,6 +3,8 @@ const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 var session = require('express-session')
 var MySQLStore = require('express-mysql-session')(session);
+var csrf = require('csurf');
+var cookieParser = require('cookie-parser')
 
 const app = express()
 
@@ -17,6 +19,7 @@ var options = {
 };
  
 var sessionStore = new MySQLStore(options);
+const csrfProtection = csrf({ cookie: true  })
 
 const MS = 1000
 const SEC = 15
@@ -42,6 +45,8 @@ app.use(express.static("public"))
 app.use(bodyParser.urlencoded({
     extended: false
 }))
+app.use(cookieParser())
+app.use(csrfProtection)
 
 app.engine("hbs", hbs({
     defaultLayout: "main",
@@ -67,6 +72,10 @@ app.use(function(req, res, next) {
     if (!req.query.classification) { req.query.classification = "" }
 
     req.query.offset = (req.query.currentPage - 1) * req.query.limit
+
+    var token = req.csrfToken();
+    res.cookie('csrf-token', token);
+    res.locals._csrf  = token;
 
     return next()
 })

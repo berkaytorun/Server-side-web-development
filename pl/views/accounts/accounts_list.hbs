@@ -21,6 +21,7 @@
         <div id="rightContent">
             <div id="deleteButton">
                 <form action="/accounts/delete/{{Id}}"  method="post">
+                <input type="hidden" name="_csrf" value="{{_csrf}}">
                     <button type="submit" > <i class="fas fa-trash-alt"></i></button>
                 </form>
             </div>

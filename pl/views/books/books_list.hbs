@@ -3,6 +3,7 @@
 
 {{#if session.loggedIn}}
     <form action="/books/create" method="GET">
+        <input type="hidden" name="_csrf" value="{{_csrf}}">
         <button type="submit">Create Book</button>
     </form>
 {{/if}}
@@ -39,11 +40,13 @@
     <div id="rightContent">
         <div id="deleteButton">
             <form action="/books/delete/{{ISBN}}" id="deleteForm" method="post">
+                <input type="hidden" name="_csrf" value="{{_csrf}}">
                 <button type="submit" > <i class="fas fa-trash-alt"></i></button>
             </form>
         </div>
         <div id="editButton">
             <form action="/books/edit/{{ISBN}}" method="GET">
+                <input type="hidden" name="_csrf" value="{{_csrf}}">
                 <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
             </form>
         </div>

@@ -13,6 +13,7 @@
             <input type="text" name="publicationInfo" value="{{book.publicationInfo}}"><br>
             Pages<br>
             <input type="text" name="pages" value="{{book.pages}}">
+            <input type="hidden" name="_csrf" value="{{_csrf}}">
             
             {{#hasAdminRights session.authorityId}}
                 <br>

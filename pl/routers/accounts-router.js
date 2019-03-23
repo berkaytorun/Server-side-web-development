@@ -1,7 +1,6 @@
 
 const express = require('express')
 const router = express.Router();
-
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 const accountManager = require("../../bll/accounts-manager")
@@ -42,7 +41,7 @@ router.post("/create", async function(req, res) {
     }
 })
 
-router.get("/login", function (req, res) {
+router.get("/login",function (req, res) {
     const model = {
         session: req.session
     }

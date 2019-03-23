@@ -30,6 +30,7 @@
                 <a href="/authors/{{this.Id}}"><input type="submit" value="Go"></a>
                 
                 <form action="/books/unlinkAuthor" method="POST">
+                    <input type="hidden" name="_csrf" value="{{_csrf}}">
                     <input name="bookISBN" value="{{../book.ISBN}}" hidden="true">
                     <input name="authorId" value="{{this.Id}}" hidden="true">
                     <button>Remove author from book.</button>
