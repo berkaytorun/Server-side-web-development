@@ -21,13 +21,13 @@
     <div id="rightContent">
         <div id="deleteButton">
             <form action="/authors/delete/{{this.Id}}" id="deleteForm" method="post">
-                <input type="hidden" name="_csrf" value="{{_csrf}}">
+                <input type="hidden" name="_csrf" value="{{../_csrf}}">
                 <button type="submit" > <i class="fas fa-trash-alt"></i></button>
             </form>
         </div>
         <div id="editButton">
             <form action="/authors/edit/{{this.Id}}" method="GET">
-                <input type="hidden" name="_csrf" value="{{_csrf}}">
+                <input type="hidden" name="_csrf" value="{{../_csrf}}">
                 <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
             </form>
         </div>

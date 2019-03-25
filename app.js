@@ -3,6 +3,7 @@ const hbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 var session = require('express-session')
 var MySQLStore = require('express-mysql-session')(session);
+
 var csrf = require('csurf');
 var cookieParser = require('cookie-parser')
 
