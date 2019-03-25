@@ -22,7 +22,7 @@ var sessionStore = new MySQLStore(options);
 const csrfProtection = csrf({ cookie: true  })
 
 const MS = 1000
-const SEC = 15
+const SEC = 0
 const MIN = 15
 const HOUR = 0
 

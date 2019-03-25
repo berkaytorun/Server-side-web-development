@@ -2,7 +2,7 @@
     <div>
         <form action="{{table}}" method="GET">
             <input type="hidden" name="_csrf" value="{{_csrf}}">
-            <input type="search" name="searchString" id="sb1" placeholder="{{placeholder}}">
+            <input type="search" name="searchString" id="sb1" placeholder="{{placeholder}}" value="{{this.searchString}}">
             <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
             {{#if classifications}}
                 <div>Classification:
