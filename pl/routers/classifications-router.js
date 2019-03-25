@@ -59,39 +59,37 @@ router.get("/:signId", async function (req, res) {
     }
 })
 
-router.post("/delete/:SIGNUM", async function(req, res) {
+router.post("/delete/:SIGNID", async function(req, res) {
 
-    const classification = {
-        signum: req.params.SIGNUM
+    let classification = {
+        signId: req.params.SIGNID
     }
 
     try {
 
+        const wrapper = await Promise.all([
+            classificationManager.findByPk(classification),
+            bookManager.findBooksByClassification(classification)
+        ])
 
-        const books = bookManager.findBooksByClassification(req.query)
-
-        const classifications = classificationManager.findAll(req.query)
-
-
+        classification = wrapper[0]
+        const books = wrapper[1]
+        
+        if (!classification) {
+            throw [{message: "Classification does not exist."}]
+        }
+        if (books.length > 0) {
+            throw [{message: "Classification is not empty. It can not be deleted"}]
+        }
 
         await classificationManager.delete(req.session.authorityId, classification)
-
-
-        
-        const pages = (classifications.count) / req.query.limit
-        const pagesArray = generatePageNumbers(pages, req.query.currentPage)
         
         const model = {
-            pages: pagesArray,
-            classifications: classifications,
-            currentClassification: req.query.classification,
-            searchString: req.query.searchString,
-            table: req.baseUrl,
-            placeholder: "Search for a title or an ISBN",
+            errors: [{message: "Classification " + classification.signum + " deleted."}],
             session: req.session
         }
 
-        res.render("classifications/classifications_list.hbs", model)
+        res.render("status_report.hbs", model)
 
     }
     catch (errors) {

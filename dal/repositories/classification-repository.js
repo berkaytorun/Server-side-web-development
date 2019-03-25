@@ -136,7 +136,7 @@ exports.delete = function(classification) {
 
     return Classification.destroy({
         where: { 
-            signum: classification.signum
+            signId: classification.signId
         }
     }).then((result)=> {
         if (result) {

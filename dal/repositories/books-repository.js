@@ -79,16 +79,14 @@ exports.findAll = function(options) {
     })
 }
 
-exports.findBooksByClassification = function(options) {
+exports.findBooksByClassification = function(classification) {
     return Book.findAll({
         where: {
-            classification: "Pubbz JavaScript"
+            signId: classification.signId
         }
-    })
-    .then((books)=> {
-        if (books.rows.length > 0) {
-            books.rows.count = books.count
-            return books.rows
+    }).then((books)=> {
+        if (books) {
+            return books
         }
         else {
             return null

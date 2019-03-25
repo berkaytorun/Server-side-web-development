@@ -7,8 +7,8 @@ const authorityLevel = require("../objects").authorityLevel
 exports.findAll = function(options) {
     return booksRepository.findAll(options)
 }
-exports.findBooksByClassification = function(options) {
-    return booksRepository.findBooksByClassification(options)
+exports.findBooksByClassification = function(classification) {
+    return booksRepository.findBooksByClassification(classification)
 }
 
 exports.create = async function(authorityId, book) {
