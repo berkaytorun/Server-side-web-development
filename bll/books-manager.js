@@ -7,6 +7,9 @@ const authorityLevel = require("../objects").authorityLevel
 exports.findAll = function(options) {
     return booksRepository.findAll(options)
 }
+exports.findBooksByClassification = function(options) {
+    return booksRepository.findBooksByClassification(options)
+}
 
 exports.create = async function(authorityId, book) {
     if (authorityId == undefined || authorityId < authorityLevel.MODERATOR) {

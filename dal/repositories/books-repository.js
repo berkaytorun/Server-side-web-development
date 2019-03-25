@@ -78,6 +78,33 @@ exports.findAll = function(options) {
         throw error.errors
     })
 }
+
+exports.findBooksByClassification = function(options) {
+    return Book.findAll({
+        where: {
+            classification: "Pubbz JavaScript"
+        }
+    })
+    .then((books)=> {
+        if (books.rows.length > 0) {
+            books.rows.count = books.count
+            return books.rows
+        }
+        else {
+            return null
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
+    })
+}
     
 exports.findByPk = function(book) {
     

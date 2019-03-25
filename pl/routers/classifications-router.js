@@ -3,6 +3,7 @@ const router = express.Router();
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 const classificationManager = require("../../bll/classifications-manager")
+const bookManager = require("../../bll/books-manager")
 
 
 // search for many books that match a string and filters
@@ -48,6 +49,50 @@ router.get("/:signId", async function (req, res) {
             session: req.session
         }
         res.render("classifications/classifications_view.hbs", model)
+    }
+    catch (errors) {
+        const model = {
+            errors: errors,
+            session: req.session
+        }
+        res.render("status_report.hbs", model)
+    }
+})
+
+router.post("/delete/:SIGNUM", async function(req, res) {
+
+    const classification = {
+        signum: req.params.SIGNUM
+    }
+
+    try {
+
+
+        const books = bookManager.findBooksByClassification(req.query)
+
+        const classifications = classificationManager.findAll(req.query)
+
+
+
+        await classificationManager.delete(req.session.authorityId, classification)
+
+
+        
+        const pages = (classifications.count) / req.query.limit
+        const pagesArray = generatePageNumbers(pages, req.query.currentPage)
+        
+        const model = {
+            pages: pagesArray,
+            classifications: classifications,
+            currentClassification: req.query.classification,
+            searchString: req.query.searchString,
+            table: req.baseUrl,
+            placeholder: "Search for a title or an ISBN",
+            session: req.session
+        }
+
+        res.render("classifications/classifications_list.hbs", model)
+
     }
     catch (errors) {
         const model = {

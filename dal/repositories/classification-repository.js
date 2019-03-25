@@ -135,7 +135,9 @@ exports.findByPk = function(classification) {
 exports.delete = function(classification) {
 
     return Classification.destroy({
-        where: { signum: classification.signum }
+        where: { 
+            signum: classification.signum
+        }
     }).then((result)=> {
         if (result) {
             return classification.signum + " deleted"

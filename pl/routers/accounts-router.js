@@ -41,7 +41,7 @@ router.post("/create", async function(req, res) {
     }
 })
 
-router.get("/login",function (req, res) {
+router.get("/login", function (req, res) {
     const model = {
         session: req.session
     }
@@ -183,7 +183,7 @@ router.get("/:Id", async function(req, res) {
     }
 })
 
-router.post("/delete/:Id", async function(req, res) {
+router.post("/delete/:Id",async function(req, res) {
 
     try {
         await accountManager.delete(req.session.authorityId, { Id: req.params.Id })
