@@ -1,15 +1,15 @@
 
-const classificationsReository = require("../dal/repositories/classification-repository")
+const classificationsRepository = require("../dal/repositories/classification-repository")
 
 const authorityLevel = require("../objects").authorityLevel
 
-exports.findAll = function() {
-    return classificationsReository.findAll()
+exports.findAll = function(options) {
+    return classificationsRepository.findAll(options)
 }
 
 exports.findOne = function(classification) {
     try {
-        return classificationsReository.findOne(classification)
+        return classificationsRepository.findOne(classification)
     }
     catch (error) {
         return Promise.resolve(null)
@@ -17,7 +17,7 @@ exports.findOne = function(classification) {
 }
 
 exports.findByPk = function(classification) {
-    return classificationsReository.findByPk(classification)
+    return classificationsRepository.findByPk(classification)
 }
 
 exports.delete = function(authorityId, classification) {
@@ -26,5 +26,5 @@ exports.delete = function(authorityId, classification) {
         throw [{message: "You do not have permission to do that."}]
     }
 
-    return classificationsReository.delete(classification)
+    return classificationsRepository.delete(classification)
 }

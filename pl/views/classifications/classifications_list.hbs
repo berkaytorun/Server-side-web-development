@@ -1,0 +1,42 @@
+{{> pagination}}
+{{> search}}
+
+{{#if session.loggedIn}}
+    <form action="/authors/create" method="GET">
+        <input type="hidden" name="_csrf" value="{{_csrf}}">
+        <button type="submit">Create Classification</button>
+    </form>
+{{/if}}
+
+{{#each classifications}}
+<div id="wrapper">
+    <div id="book_info">
+        <a href="/classifications/{{this.signId}}">
+            <div hidden="true">Id: {{this.signId}}</div>
+            <div>signum: {{this.signum}}</div>
+            <div>description: {{this.description}}</div>
+        </a>
+    </div>
+    {{#hasAdminRights ../session.authorityId}}
+    <div id="rightContent">
+        {{#unless this.books }}
+        <div id="deleteButton">
+            <form action="/classifications/delete/{{this.signId}}" id="deleteForm" method="post">
+                <input type="hidden" name="_csrf" value="{{_csrf}}">
+                <button type="submit" > <i class="fas fa-trash-alt"></i></button>
+            </form>
+        </div>
+        {{/unless}}
+        <div id="editButton">
+            <form action="/classifications/edit/{{this.signId}}" method="GET">
+                <input type="hidden" name="_csrf" value="{{_csrf}}">
+                <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
+            </form>
+        </div>
+    </div>
+    {{/hasAdminRights}}
+    
+</div>
+{{/each}}
+
+{{> pagination}}

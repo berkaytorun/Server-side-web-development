@@ -68,7 +68,12 @@ router.get("/", async function(req, res) {
     
     try {
         const booksPromise = bookManager.findAll(req.query)
-        const classificationsPromise = classificationManager.findAll()
+
+        const limit = req.query.limit
+        delete req.query.limit
+        delete req.query.offset
+
+        const classificationsPromise = classificationManager.findAll(req.query)
         
         const wrapper = await Promise.all([booksPromise, classificationsPromise])
         
@@ -97,7 +102,7 @@ router.get("/", async function(req, res) {
             }
         }
 
-        const pages = (books.count) / req.query.limit
+        const pages = (books.count) / limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
         
         const model = {

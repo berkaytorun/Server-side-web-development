@@ -89,6 +89,12 @@ setTimeout(function() {
     const routerAuthors = require("./pl/routers/authors-router")
     const routerClasssifications = require("./pl/routers/classsifications-router")
     
+    app.use("/accounts", routerAccounts)
+    app.use("/books", routerBooks)
+    app.use("/authors", routerAuthors)
+    app.use("/classifications",routerClasssifications)
+
+
 
     app.post("/accounts/logout", function(req, res) {
         req.session.destroy(function(err) { })
@@ -104,10 +110,6 @@ setTimeout(function() {
         res.render("home.hbs",model)
     })  
 
-    app.use("/accounts", routerAccounts)
-    app.use("/books", routerBooks)
-    app.use("/authors", routerAuthors)
-    app.use("/classifications",routerClasssifications)
 
     app.get("/about", function (req, res) {
         new Promise(function (resolve, reject) {

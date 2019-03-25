@@ -1,12 +1,41 @@
 
+const Op = require('sequelize').Op
+
 const Classification = require("../models/classification_model").Classification
 const Book = require("../models/book_model").Book
 
 
-exports.findAll = function() {
+exports.findAll = function(options) {
 
-    return Classification.findAll({
-        where: { },
+    
+    const toSearch = {
+        where: { }
+    }
+    if (options && options.searchString !== "") {
+        toSearch.where = {
+            [Op.or]: [
+                {signId: {
+                        [Op.like]: options.searchString, 
+                    }
+                },
+                {signum: {
+                        [Op.like]: options.searchString, 
+                    }
+                },
+            ]
+        }
+    }
+
+    return Classification.findAndCountAll({
+        distinct: true,
+        order: [
+            ['signum', 'ASC']
+        ],
+        
+        limit: options.limit,
+        offset: options.offset,
+
+        where: toSearch.where,
         include: [
             {
                 model: Book,
@@ -14,15 +43,12 @@ exports.findAll = function() {
             }
         ]
     }).then((classification)=> {
-
-        if (classification) {
-            return classification
+        if (classification.rows.length > 0) {
+            classification.rows.count = classification.count
+            return classification.rows
         }
         else {
-            const errors = [
-                {message: "No classifications found."}
-            ]
-            throw errors
+            return null
         }
     }).catch((error) => {
         if (error.errors == null || error.errors.length == 0) {
