@@ -153,6 +153,6 @@ search{
     background-color: aqua  !important;
 }
 
-body {
-    background-color: pink;
+#pagination ul{
+    display: inline;
 }
