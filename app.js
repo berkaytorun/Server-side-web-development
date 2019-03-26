@@ -89,11 +89,13 @@ setTimeout(function() {
     const routerBooks = require("./pl/routers/books-router")
     const routerAuthors = require("./pl/routers/authors-router")
     const routerClassifications = require("./pl/routers/classifications-router")
-    
+    const routerApiBooks = require("./pl/routers/api/books-router")
+
     app.use("/authors", routerAuthors)
     app.use("/accounts", routerAccounts)
     app.use("/books", routerBooks)
-    app.use("/classifications",routerClassifications)
+    app.use("/classifications", routerClassifications)
+    app.use("/api/books", routerApiBooks)
 
 
 
