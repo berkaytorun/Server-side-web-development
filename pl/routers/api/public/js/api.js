@@ -48,7 +48,7 @@ function initiatePaginatio(jsonObj) {
         }
 
         txt += ' <li class="' + classBundle + '" ' + isCurrent + '">' +
-            '    <' + anchorTag + ' href="/books?currentPage=' + pageValue + ' " ' + searchString + '" onclick=fn('+pageValue+') > ' + pageValue + '</' + anchorTag + '>' +
+            '    <' + anchorTag + ' href="/books?currentPage=' + pageValue + ' " ' + searchString + '" onclick=paginationcallback('+pageValue+') > ' + pageValue + '</' + anchorTag + '>' +
             '    </li>';
     }
     txt += ' </ul>       '
@@ -81,8 +81,8 @@ function initiateBook(jsonObj) {
     document.getElementById("entirepage").innerHTML = txt
 
 }
-function fn(event) {
+function paginationcallback(pagevalue) {
 
-    startScript(event)
+    startScript(pagevalue)
 }
 startScript()
