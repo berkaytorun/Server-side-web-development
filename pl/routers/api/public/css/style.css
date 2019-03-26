@@ -1,0 +1,158 @@
+#entirepage{
+    width: 960px;
+    border: 2px solid black;
+    background-color: aqua;
+    margin: 0 auto;
+}
+
+header{
+	text-align: center;
+    font-size: 300%;
+    position: relative;
+}
+
+
+nav{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    background-color: aqua;
+}
+nav ul{
+    margin:0 ;
+    padding: 5px;
+}
+nav ul li {
+    display: inline;
+    border:1px solid #0ee;
+}
+nav ul li a{
+    text-decoration: none;
+}
+nav ul li a:hover,a:active{
+    background-color: #0aa;
+    text-decoration: none !important;
+}
+
+main{
+    padding: 5px;
+}
+
+#sb1{
+    width: 60%;
+}
+
+#wrapper{
+    position: relative;
+    padding: 3px 0 3px 3px;
+    margin: 5px 0 5px 0;
+    border: 1px solid black;
+    
+}
+
+#book_info{
+    width: 95%;
+    display: inline-block;
+    overflow: hidden;
+}
+#book_info a:hover{
+    color: darkgrey;
+    text-decoration: none;
+}
+#book_info a:link, a:visited {
+    text-decoration: none;
+}
+
+#rightContent{
+    float: right;
+    overflow: hidden;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+p{
+    color: #0E708D;
+}
+
+#pageCurrent {
+    background-color: #0cc;
+    border: 1px solid #0ee;
+    text-decoration: none;
+}
+.pageNumber {
+    border: 1px solid #0ee !important;
+    text-align: center;
+    margin: 0 1px 0 1px;
+    width: auto;
+    text-decoration: none !important;
+    height: 24px;
+    width: 26px;
+}
+#pageLast {
+    border: 1px solid #0ee !important;
+    margin: 0 2px 0 auto;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+    width: auto;
+}
+#pageFirst {
+    border: 1px solid #0ee !important;
+    margin: 0 auto 0 2px;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+    width: auto;
+}
+
+.pagination {
+    margin: 0px;
+    padding-bottom: 3px;
+}
+pagination ul li a:link,a:visited{
+    text-decoration: none;
+}
+pagination ul li:hover {
+    text-decoration: none;
+    background-color: #0aa;
+}
+
+pagination ul li a{
+    height: 24px;
+    width: 26px;
+    padding: 0 4px 0 4px;
+}
+
+#loggedIn{
+    font-size: 11px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+.login{
+    margin: 0 1px 0 auto ;
+    float: right;
+}
+
+search{
+ text-align: center;   
+}
+
+.isDisabled {
+    border: 1px solid #0ee !important;
+    text-align: center;
+    margin: 0 1px 0 1px;
+    width: auto;
+    text-decoration: none !important;
+    height: 24px;
+    width: 26px;
+    opacity: 1;
+    text-decoration: none;
+    background-color: aqua  !important;
+}
+
+body {
+    background-color: pink;
+}
