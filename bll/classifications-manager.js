@@ -7,6 +7,14 @@ exports.findAll = function(options) {
     return classificationsRepository.findAll(options)
 }
 
+exports.editByPk = function(authorityId, classification) {
+    if (authorityId == undefined || authorityId < authorityLevel.SUPER) {
+        throw [{message: "You do not have permission to do that."}]
+    }
+
+    return classificationsRepository.editByPk(classification)
+}
+
 exports.findOne = function(classification) {
     try {
         return classificationsRepository.findOne(classification)

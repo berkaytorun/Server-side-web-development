@@ -47,12 +47,11 @@ router.post("/delete/:ISBN", async function(req, res) {
 
     try {
         await bookManager.delete(req.session.authorityId, book)
-        const message = {
-            errors: [
-                {message: "Book was removed"}
-            ]
+        const model = {
+            errors: [{message: "Book was removed"}],
+            session: req.session
         }
-        res.render("status_report.hbs", message)
+        res.render("status_report.hbs", model)
     }
     catch (errors) {
         const model = {

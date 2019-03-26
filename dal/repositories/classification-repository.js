@@ -131,6 +131,37 @@ exports.findByPk = function(classification) {
     })
 }
 
+exports.editByPk = function(classification) {
+
+    return Classification.update(
+        classification, 
+        {where: {
+            signId: classification.signId
+        }
+    }).then((classification)=> {
+
+        if (classification) {
+            return classification
+        }
+        else {
+            const errors = [
+                {message: "Classificaiton not found."}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
+    })
+}
+
 
 exports.delete = function(classification) {
 

@@ -24,12 +24,6 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
     return db.sync({force: true})
 }).then(function(result) {
     require("./database").initMockData(db)
-    /*
-    db.query('show tables')
-    .then((allTables) => {
-    console.log(allTables);
-    })
-    */
     delayTimer = 1000
     if (resetDatabase == false) { delayTimer = 0 }
     setTimeout(function() {

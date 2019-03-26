@@ -3,12 +3,12 @@
     <form action="../edit/{{author.Id}}" method="POST">
         <div id="book_info">
             Firstname<br>
-             <input type="text" name="firstName" value="{{this.firstName}}"><br>
+             <input type="text" name="firstName" value="{{author.firstName}}"><br>
             Lastname<br>
-              <input type="text" name="lastName" value="{{this.lastName}}"><br>
+              <input type="text" name="lastName" value="{{author.lastName}}"><br>
             BirthYear<br>
-            <input type="text" name="birthYear" value="{{this.birthYear}}">
-            <input type="hidden" id="Id" name="Id" value="{{this.Id}}">
+            <input type="text" name="birthYear" value="{{author.birthYear}}">
+            <input type="hidden" id="Id" name="Id" value="{{author.Id}}">
         </div>
         <input type="hidden" name="_csrf" value="{{_csrf}}">
         <input type="submit" value="Submit">
