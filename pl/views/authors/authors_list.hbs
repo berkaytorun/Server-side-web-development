@@ -1,6 +1,5 @@
 {{> pagination}}
 {{> search}}
-
 {{#if session.loggedIn}}
     <form action="/authors/create" method="GET">
         <input type="hidden" name="_csrf" value="{{_csrf}}">

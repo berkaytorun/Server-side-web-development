@@ -78,6 +78,31 @@ exports.findAll = function(options) {
         throw error.errors
     })
 }
+
+exports.findBooksByClassification = function(classification) {
+    return Book.findAll({
+        where: {
+            signId: classification.signId
+        }
+    }).then((books)=> {
+        if (books) {
+            return books
+        }
+        else {
+            return null
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
+    })
+}
     
 exports.findByPk = function(book) {
     
