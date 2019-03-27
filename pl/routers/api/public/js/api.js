@@ -1,5 +1,5 @@
 
-function startScript(page) {
+function startScript(page, searchStringValue) {
 
     var request = new XMLHttpRequest();
 
@@ -9,22 +9,42 @@ function startScript(page) {
         currentPage = "currentPage=" + page
     }
 
-    request.open("GET", "http://localhost:8080/api/books?" + currentPage);
+    let searchString =  ""
+    if(searchStringValue) {
+        searchString = "&searchString=" + searchStringValue
+    }
+
+    
+    request.open("GET", "http://localhost:8080/api/books?" + currentPage + searchString);
+
 
     request.addEventListener("load", function () {
         if (request.status === 200) {
 
             let jsonObj = JSON.parse(request.responseText)
 
+            let oldSearch = ""
+            if (document.getElementById("search").getAttribute("latestSearch")) {
+                oldSearch = document.getElementById("search").getAttribute("latestSearch").toString()
+                
+            }
             initiateBook(jsonObj)
-            initiatePaginatio(jsonObj)
-
+            initiatePagination(jsonObj,searchStringValue)
+            initiateSearch(jsonObj, oldSearch)
+        }
+        else if (request.status === 404){
+            document.getElementById("search").setAttribute("latestSearch", "")
+            document.getElementById("sb1").value = ""
+            alert("No match found")
+        }
+        else{
+            alert("Unknown Error")
         }
     });
-    request.send("{hadsf: oiauffds}");
+    request.send("");
 }
 
-function initiatePaginatio(jsonObj) {
+function initiatePagination(jsonObj, previousSearchString) {
 
     let txt = document.getElementById("pagination").innerHTML
     txt += '<ul class="pagination justify-content-center"> '
@@ -37,18 +57,18 @@ function initiatePaginatio(jsonObj) {
             isCurrent = "id=\"pageCurrent\""
         }
         let searchString = ""
+        if (previousSearchString) {
+            searchString = previousSearchString
+        }
 
         let classBundle = "pageNumber"
-        if (jsonObj.searchString) {
-            searchString = "&searchString=" + jsonObj.searchString
-        }
         if (pageValue == "...") {
             classBundle = "isDisabled"
             anchorTag = "p"
         }
 
         txt += ' <li class="' + classBundle + '" ' + isCurrent + '">' +
-            '    <' + anchorTag + ' href="/books?currentPage=' + pageValue + ' " ' + searchString + '" onclick=paginationcallback('+pageValue+') > ' + pageValue + '</' + anchorTag + '>' +
+            '    <' + anchorTag + ' href="#"'+ ' id="test" onclick=paginationcallback(' + pageValue + ') >' + pageValue + '</' + anchorTag + '>' +
             '    </li>';
     }
     txt += ' </ul>       '
@@ -57,10 +77,12 @@ function initiatePaginatio(jsonObj) {
 
 
 function initiateBook(jsonObj) {
-    console.log(jsonObj)
+
     document.getElementById("entirepage").innerHTML ='        <div id="pagination">' +
                                                     '' +
                                                     '        </div>' +
+                                                    '   <div id="search">'+
+                                                    '        </div>'+
                                                     '';
 
 
@@ -83,6 +105,36 @@ function initiateBook(jsonObj) {
 }
 function paginationcallback(pagevalue) {
 
-    startScript(pagevalue)
+    const searchBar = document.getElementById("search")
+    const theSearchString = searchBar.getAttribute("latestSearch").toString()
+
+    startScript(pagevalue, theSearchString)
+
 }
+
+function initiateSearch(jsonObj, oldSearch){
+
+    let txt = document.getElementById("search").innerHTML
+     txt =
+        '<div>' +
+'            <input type="search" name="searchString" id="sb1" placeholder="'+jsonObj.placeholder+'" value='+jsonObj.searchString+'>'+
+'            <p id="searchButton" onClick="searchCallback()"><i class="fa fa-search"> </i>'+
+        '</div>'
+    
+    document.getElementById("search").innerHTML = txt
+
+    document.getElementById("search").setAttribute("latestSearch", oldSearch)
+}
+
+function searchCallback() {
+    
+    let searchText = document.getElementById("sb1").value
+
+    const searchBar = document.getElementById("search")
+    searchBar.setAttribute("latestSearch", searchText);
+    
+    startScript("1", searchText)
+}
+
+
 startScript()
