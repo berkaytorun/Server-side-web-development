@@ -87,7 +87,7 @@ function initiateBook(jsonObj) {
 
     let txt = document.getElementById("entirepage").innerHTML
     //const ourURL = "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books/"
-    const ourURL = "http://localhost:8080/api/books/"
+    const ourURL = "http://localhost:8080/books/"
     
     for (let i = 0; i < jsonObj.books.length; i++) {
         txt += '<div id="wrapper">' +

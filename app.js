@@ -49,6 +49,11 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser())
 app.use(csrfProtection)
 
+app.use(function(req, res, next){
+    res.locals.session = req.session
+    next()
+})
+
 app.engine("hbs", hbs({
     defaultLayout: "main",
     extname: ".hbs",

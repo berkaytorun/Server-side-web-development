@@ -6,7 +6,7 @@ const classificationManager = require("../../bll/classifications-manager")
 const bookManager = require("../../bll/books-manager")
 
 
-// search for many books that match a string and filters
+// search for many Classification that match a string
 router.get("/", async function(req, res) {
     
     try {
@@ -27,6 +27,41 @@ router.get("/", async function(req, res) {
             session: req.session
         }
         res.render("classifications/classifications_list.hbs", model)
+    }
+    catch (errors) {
+        const model = {
+            errors: errors,
+            session: req.session
+        }
+        res.render("status_report.hbs", model)
+    }
+})
+router.get("/create", function(req, res) {
+    const model = {
+        session: req.session
+    }
+    res.render("classifications/classifications_create.hbs", model)
+})
+
+router.post("/create", async function(req, res) {
+        
+    const classification = {
+        signId: req.params.SIGNID,
+        signum: req.body.signum,
+        description: req.body.description
+    }
+
+    try {
+        const largestId = await classificationManager.findHighestPk(req.session.authorityId, classification)
+        classification.signId = largestId + 1
+        await classificationManager.create(req.session.authorityId, classification)
+
+
+        const model = {
+            classification: classification,
+            session: req.session
+        }
+        res.render("classifications/classifications_view.hbs", model)
     }
     catch (errors) {
         const model = {
@@ -168,5 +203,7 @@ router.get("/:signId", async function (req, res) {
         res.render("status_report.hbs", model)
     }
 })
+
+
 
 module.exports = router

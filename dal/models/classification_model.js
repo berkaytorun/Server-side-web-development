@@ -11,7 +11,8 @@ exports.Classification = db.define('classification', {
         unique: {
             args: true,
             msg: "That classification already exists."
-        }
+        },
+        
     },
     signum: {
         type: Sequelize.CHAR(50), // size 50
@@ -25,6 +26,9 @@ exports.Classification = db.define('classification', {
     },
     description: {
         type: Sequelize.CHAR(255),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [classifications.description.min, classifications.description.max],

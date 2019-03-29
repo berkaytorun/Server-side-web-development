@@ -31,7 +31,7 @@ exports.create = function(account) {
     })
 }
 
-exports.login = function(account) {
+exports.getUserByUsername = function(account) {
     if (account.userName == "1" && account.password == "1") {
         account.Id = 999999999
         account.password = "SupersecretPasswordNobodyCanGuess(/&(/)&#"

@@ -34,7 +34,7 @@ exports.Author = db.define('author', {
         validate: {
             len: {
                 args: [authorVal.birthYear.min, authorVal.birthYear.max],
-                msg: "Birthday must be between exactly " + authorVal.birthYear.min + " characters long."
+                msg: "Birthday must be between  " + authorVal.birthYear.min + " and " + authorVal.birthYear.max + " characters long."
             }
         }
     }

@@ -24,10 +24,10 @@ router.post("/create", async function(req, res) {
     }
 
     try {
-        await accountManager.create(req.session.authorityId, account)
+        const newAccount = await accountManager.create(req.session.authorityId, account)
         
         const model = {
-            account: account,
+            account: newAccount,
             session: req.session
         }
         res.render("accounts/account_view.hbs", model)
@@ -57,16 +57,16 @@ router.post("/login", async function (req, res) {
 
     try {
         
-        const dbAccount = await accountManager.login(account)
+        const loggedInAccount = await accountManager.login(account)
 
-        req.session.accountId = dbAccount.Id
-        req.session.authorityId = dbAccount.authorityId
+        req.session.accountId = loggedInAccount.Id
+        req.session.authorityId = loggedInAccount.authorityId
 
         req.session.loggedIn = true
-        req.session.userName = dbAccount.userName
+        req.session.userName = loggedInAccount.userName
 
         const model = {
-            account: dbAccount,
+            account: loggedInAccount,
             session: req.session,
         }
         res.render("accounts/account_view.hbs", model)

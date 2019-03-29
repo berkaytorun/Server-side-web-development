@@ -16,7 +16,8 @@ exports.create = async function(authorityId, account) {
 
 exports.login = async function(account) {
 
-    const dbAccount = await accountRepository.login(account)
+    const dbAccount = await accountRepository.getUserByUsername(account)
+
     if (dbAccount.userName == "Super" && dbAccount.password == "SupersecretPasswordNobodyCanGuess(/&(/)&#") {
         // for dev purpose.. remove this if / else upon release!
         return dbAccount

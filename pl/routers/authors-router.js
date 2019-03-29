@@ -132,14 +132,10 @@ router.post("/edit/:Id", async function(req, res) {
             birthYear:  req.body.birthYear,
         }
 
-        const updatePromise = authorManager.update(req.session.authorityId, author)
-        const authorPromise = authorManager.findOne(author)
-
-        const wrapper = await Promise.all([updatePromise, authorPromise])
-        const newAuthor = wrapper[1]
+        await authorManager.update(req.session.authorityId, author)
         
         const model = {
-            author: newAuthor,
+            author: author,
             session: req.session
         }
         res.render("authors/author_view.hbs", model)

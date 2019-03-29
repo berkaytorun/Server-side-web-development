@@ -162,6 +162,41 @@ exports.editByPk = function(classification) {
     })
 }
 
+exports.findHighestPk = function(classification) {
+    return Classification.findAll(
+        classification, 
+        {
+            order: [
+                ['signId', 'DESC']
+            ]
+    }).then((allClassifications)=> {
+
+        if (allClassifications.length) {
+            let largest = -1
+            for (let i = 0; i < allClassifications.length; i++) {
+                if (parseInt(allClassifications[i].signId) > largest) {
+                    largest = parseInt(allClassifications[i].signId)
+                }
+            }
+            return largest
+        }
+        else {
+            return 0
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
+    })
+}
+
+
 
 exports.delete = function(classification) {
 
@@ -183,6 +218,33 @@ exports.delete = function(classification) {
         if (error.errors == null || error.errors.length == 0) {
             if (error.message) {
                 throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
+    })
+}
+
+
+
+exports.create = function(classification) {
+    
+    return Classification.create(classification).then((classification) => {
+        if (classification) {
+            return classification
+        }
+        else {
+            const errors = [
+                {message: "Could not create classification"}
+            ]
+            throw errors
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                [error.message]
             }
             else {
                 throw error;
