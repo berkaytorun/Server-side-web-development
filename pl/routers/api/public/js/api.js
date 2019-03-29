@@ -1,4 +1,7 @@
 
+
+
+
 function startScript(page, searchStringValue) {
 
     var request = new XMLHttpRequest();
@@ -15,7 +18,7 @@ function startScript(page, searchStringValue) {
     }
 
     
-    request.open("GET", "http://localhost:8080/api/books?" + currentPage + searchString);
+    request.open("GET", "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books?" + currentPage + searchString);
 
 
     request.addEventListener("load", function () {
@@ -87,7 +90,7 @@ function initiateBook(jsonObj) {
 
 
     let txt = document.getElementById("entirepage").innerHTML
-    const ourURL = "http://localhost:8080/books/"
+    const ourURL = "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books/"
     for (let i = 0; i < jsonObj.books.length; i++) {
         txt += '<div id="wrapper">' +
             '   <div id="book_info">' +

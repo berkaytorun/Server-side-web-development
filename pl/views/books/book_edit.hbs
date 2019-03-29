@@ -20,23 +20,6 @@
                 <input type="submit" value="Submit">
             {{/hasAdminRights}}
             
-            {{#if book.authors}}
-                <div>
-                    <div>
-                        Authors: 
-                    </div>
-                    <hr>
-                    {{#each book.authors}}
-                        <a href="/authors/{{this.Id}}">
-                            <div>
-                                First Name: {{this.firstName}}<br>
-                                Last Name: {{this.lastName}}<br>
-                            </div>
-                        </a>
-                        <hr>
-                    {{/each}}
-                </div>
-            {{/if}}
         </div>
         
     </form>

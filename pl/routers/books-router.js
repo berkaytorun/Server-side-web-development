@@ -184,7 +184,7 @@ router.get("/edit/:ISBN", async function(req, res) {
     
     try {
         const bookPromise = bookManager.findByPk({ISBN: req.params.ISBN})
-        let classificationsPromise = classificationManager.findAll()
+        let classificationsPromise = classificationManager.findAll(req.query)
         
         const wrapper = await Promise.all([bookPromise, classificationsPromise])
         const book = wrapper[0]
