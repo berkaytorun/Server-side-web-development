@@ -18,8 +18,8 @@ function startScript(page, searchStringValue) {
     }
 
     
-    request.open("GET", "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books?" + currentPage + searchString);
-
+    //request.open("GET", "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books?" + currentPage + searchString);
+    request.open("GET", "http://localhost:8080/api/books?" + currentPage + searchString);
 
     request.addEventListener("load", function () {
         if (request.status === 200) {
@@ -47,7 +47,7 @@ function startScript(page, searchStringValue) {
     request.send("");
 }
 
-function initiatePagination(jsonObj, previousSearchString) {
+function initiatePagination(jsonObj) {
 
     let txt = document.getElementById("pagination").innerHTML
     txt += '<ul class="pagination justify-content-center"> '
@@ -58,10 +58,6 @@ function initiatePagination(jsonObj, previousSearchString) {
         let anchorTag = "p"
         if (page.isCurrent) {
             isCurrent = "id=\"pageCurrent\""
-        }
-        let searchString = ""
-        if (previousSearchString) {
-            searchString = previousSearchString
         }
 
         let classBundle = "pageNumber"
@@ -81,7 +77,7 @@ function initiatePagination(jsonObj, previousSearchString) {
 
 function initiateBook(jsonObj) {
 
-    document.getElementById("entirepage").innerHTML ='        <div id="pagination">' +
+    document.getElementById("entirepage").innerHTML ='<div id="pagination">' +
                                                     '' +
                                                     '        </div>' +
                                                     '   <div id="search">'+
@@ -90,22 +86,24 @@ function initiateBook(jsonObj) {
 
 
     let txt = document.getElementById("entirepage").innerHTML
-    const ourURL = "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books/"
+    //const ourURL = "http://librarytool-env.jhdg9ip35x.eu-central-1.elasticbeanstalk.com/api/books/"
+    const ourURL = "http://localhost:8080/api/books/"
+    
     for (let i = 0; i < jsonObj.books.length; i++) {
         txt += '<div id="wrapper">' +
             '   <div id="book_info">' +
-            '        <a href=' + ourURL + jsonObj.books[i].ISBN + '/>' +
-            '            <div>ISBN: ' + jsonObj.books[i].ISBN + '</div>' +
-            '            <div>Title: ' + jsonObj.books[i].title + '</div>' +
-            '            <div>publicationYear: ' + jsonObj.books[i].publicationYear + '</div>' +
-            '            <div>Pages: ' + jsonObj.books[i].pages + '</div>' +
+            '        <a href=' + escapeString(ourURL) + escapeString(jsonObj.books[i].ISBN) + '/>' +
+            '            <div>ISBN: ' + escapeString(jsonObj.books[i].ISBN) + '</div>' +
+            '            <div>Title: ' + escapeString(jsonObj.books[i].title) + '</div>' +
+            '            <div>publicationYear: ' + escapeString(jsonObj.books[i].publicationYear) + '</div>' +
+            '            <div>Pages: ' + escapeString(jsonObj.books[i].pages) + '</div>' +
             '        </a>' +
             '   </div>' +
             '</div>';
     }
     document.getElementById("entirepage").innerHTML = txt
-
 }
+
 function paginationcallback(pagevalue) {
 
     const searchBar = document.getElementById("search")
@@ -119,10 +117,10 @@ function initiateSearch(jsonObj, oldSearch){
 
     let txt = document.getElementById("search").innerHTML
      txt =
-        '<div>' +
-'            <input type="search" name="searchString" id="sb1" placeholder="'+jsonObj.placeholder+'" value='+jsonObj.searchString+'>'+
-'            <p id="searchButton" onClick="searchCallback()"><i class="fa fa-search"> </i>'+
-        '</div>'
+'       <div>' +
+'            <input type="search" name="searchString" id="sb1" placeholder="' + jsonObj.placeholder + '" value=' + jsonObj.searchString + '>' +
+'            <p id="searchButton" onClick="searchCallback()"><i class="fa fa-search"> </i>' +
+'       </div>'
     
     document.getElementById("search").innerHTML = txt
 
@@ -139,5 +137,49 @@ function searchCallback() {
     startScript("1", searchText)
 }
 
+function escapeString(value) {
+    if (!value) {
+        return value
+    }
+    for (let i = 0; i < value.length; i++) {
+        if (value[i] === "<") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "&lt" + endString
+        }
+        else if (value[i] === ">") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "&gt" + endString
+        }
+        else if (value[i] === "'") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "/'" + endString
+        }
+        else if (value[i] === '"') {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + '/"' + endString
+        }
+        else if (value[i] === '´') {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + '/´' + endString
+        }
+        else if (value[i] === "(") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "/(" + endString
+        }
+        else if (value[i] === ")") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "/)" + endString
+        }
+        else if (value[i] === "[") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "/[" + endString
+        }
+        else if (value[i] === "]") {
+            const endString = i === value.length - 1 ? "" : value.substring(i + 1)
+            value = value.substring(0, i) + "/]" + endString
+        }
+    }
+    return value
+}
 
 startScript()
