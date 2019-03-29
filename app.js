@@ -81,6 +81,12 @@ app.use(function(req, res, next) {
     return next()
 })
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+});
+  
 const startDelay = require("./dal/sequelize_settings")
 
 setTimeout(function() {
