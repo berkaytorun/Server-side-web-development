@@ -8,7 +8,7 @@ const bookManager = require("../../bll/books-manager")
 
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
-router.get("/", async function(req, res) {
+router.get("/", async function (req, res) {
 
     try {
         const authors = await authorManager.findAll(req.query)
@@ -21,54 +21,47 @@ router.get("/", async function(req, res) {
             authors: authors,
             searchString: req.query.searchString,
             table: req.baseUrl,
-            placeholder:"Search for a Name of Author",
-            session: req.session
+            placeholder: "Search for a Name of Author"
         }
         res.render("authors/authors_list.hbs", model)
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
-router.get("/create", function(req, res) {
-    const model = {
-        session: req.session
-    }
-    res.render("authors/author_create.hbs", model)
+router.get("/create", function (req, res) {
+    res.render("authors/author_create.hbs")
 })
 
-router.post("/create", async function(req, res) {
-    
+router.post("/create", async function (req, res) {
+
     try {
         const author = {
             firstName: req.body.firstName,
-            lastName:req.body.lastName,
-            birthYear:req.body.birthYear,
+            lastName: req.body.lastName,
+            birthYear: req.body.birthYear,
         }
-        
+
         const newAuthor = await authorManager.create(req.session.authorityId, author)
 
         const model = {
             author: newAuthor,
-            session: req.session
         }
         res.render("authors/author_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
-router.post("/addBook", async function(req, res) {
-    
+router.post("/addBook", async function (req, res) {
+
     try {
         const bookAuthor = {
             bookISBN: req.body.bookISBN,
@@ -76,8 +69,8 @@ router.post("/addBook", async function(req, res) {
         }
 
         const bookAuthorPromise = bookAuthorManager.create(req.session.authorityId, bookAuthor)
-        const authorPromise = authorManager.findOne({Id: bookAuthor.authorId})
-        const bookPromise = bookManager.findByPk({ISBN: bookAuthor.bookISBN})
+        const authorPromise = authorManager.findOne({ Id: bookAuthor.authorId })
+        const bookPromise = bookManager.findByPk({ ISBN: bookAuthor.bookISBN })
 
         const wrapper = await Promise.all([bookAuthorPromise, authorPromise, bookPromise])
 
@@ -88,62 +81,56 @@ router.post("/addBook", async function(req, res) {
 
         const model = {
             author: author,
-            session: req.session
         }
         res.render("authors/author_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
-        res.render("status_report.hbs", model)        
+        res.render("status_report.hbs", model)
     }
 })
 
 
-router.get("/edit/:Id", async function(req, res) {
+router.get("/edit/:Id", async function (req, res) {
 
     try {
-        const author = await authorManager.findOne({Id: req.params.Id})
+        const author = await authorManager.findOne({ Id: req.params.Id })
         const model = {
             author: author,
-            session: req.session
         }
         res.render("authors/author_edit.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
-router.post("/edit/:Id", async function(req, res) {
+router.post("/edit/:Id", async function (req, res) {
 
     try {
-        
+
         const author = {
             Id: req.params.Id,
-            firstName:  req.body.firstName,
-            lastName:   req.body.lastName,
-            birthYear:  req.body.birthYear,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            birthYear: req.body.birthYear,
         }
 
         await authorManager.update(req.session.authorityId, author)
-        
+
         const model = {
             author: author,
-            session: req.session
         }
         res.render("authors/author_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -153,38 +140,35 @@ router.post("/edit/:Id", async function(req, res) {
 router.get("/:Id", async function (req, res) {
 
     try {
-            
-        const author = await authorManager.findOne({Id: req.params.Id})
-        
+
+        const author = await authorManager.findOne({ Id: req.params.Id })
+
         const model = {
             author: author,
-            session: req.session
         }
         res.render("authors/author_view.hbs", model)
-        
+
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
 
-router.post("/delete/:Id", async function(req, res) {
+router.post("/delete/:Id", async function (req, res) {
 
     try {
-        
-        await authorManager.delete(req.session.authorityId, {Id: req.params.Id})
-    
+
+        await authorManager.delete(req.session.authorityId, { Id: req.params.Id })
+
         const errors = [
-            {message: "Author was removed"}
+            { message: "Author was removed" }
         ]
 
         const model = {
             errors: errors,
-            session: req.session
         }
 
         res.render("status_report.hbs", model)
@@ -192,7 +176,6 @@ router.post("/delete/:Id", async function(req, res) {
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }

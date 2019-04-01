@@ -74,7 +74,6 @@ router.get("/search", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
-            session: req.session
         }
         res.status(200).send(model)
     }
@@ -101,7 +100,6 @@ router.get("/", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
-            session: req.session
         }
         res.status(200).json(model)
     }

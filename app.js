@@ -112,16 +112,12 @@ setTimeout(function() {
 
     app.post("/accounts/logout", function(req, res) {
         req.session.destroy(function(err) { })
-        res.render("accounts/login.hbs")
+        res.redirect("./login")
     })
 
  
     app.get("/", function (req, res) {
-        const model = {
-            accountId: req.session.accountId,
-            session: req.session
-        }
-        res.render("home.hbs",model)
+        res.render("home.hbs")
     })  
 
 
@@ -134,11 +130,7 @@ setTimeout(function() {
                 reject()
             }
         }).then(function () {
-            const model = {
-                accountId: req.session.accountId,
-                session: req.session
-            }
-            res.render("about.hbs",model)
+            res.render("about.hbs")
         }).catch(result => {
             res.status(res.status).json(res)
         })

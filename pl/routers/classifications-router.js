@@ -24,23 +24,18 @@ router.get("/", async function(req, res) {
             table: req.baseUrl,
             placeholder: "Search for a Classification name or Id",
             classifications: classifications,
-            session: req.session
         }
         res.render("classifications/classifications_list.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 router.get("/create", function(req, res) {
-    const model = {
-        session: req.session
-    }
-    res.render("classifications/classifications_create.hbs", model)
+    res.render("classifications/classifications_create.hbs")
 })
 
 router.post("/create", async function(req, res) {
@@ -59,14 +54,12 @@ router.post("/create", async function(req, res) {
 
         const model = {
             classification: classification,
-            session: req.session
         }
         res.render("classifications/classifications_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -84,14 +77,12 @@ router.get("/edit/:SIGNID", async function(req, res) {
 
         const model = {
             classification: classification,
-            session: req.session
         }
         res.render("classifications/classifications_edit.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -128,14 +119,12 @@ router.post("/edit/:SIGNID", async function(req, res) {
             table: req.baseUrl,
             placeholder: "Search for a Classification name or Id",
             classifications: wrapper[1],
-            session: req.session
         }
         res.render("classifications/classifications_list.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -168,7 +157,6 @@ router.post("/delete/:SIGNID", async function(req, res) {
         
         const model = {
             errors: [{message: "Classification " + classification.signum + " deleted."}],
-            session: req.session
         }
 
         res.render("status_report.hbs", model)
@@ -177,7 +165,6 @@ router.post("/delete/:SIGNID", async function(req, res) {
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -191,14 +178,12 @@ router.get("/:signId", async function (req, res) {
 
         const model = {
             classification: classification,
-            session: req.session
         }
         res.render("classifications/classifications_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }

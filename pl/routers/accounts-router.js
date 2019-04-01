@@ -8,7 +8,6 @@ const accountManager = require("../../bll/accounts-manager")
 router.get("/create", function(req, res) {
     const model = {
         levels: require("../../dal/models/account_model").levels,
-        session: req.session
     }
     res.render("accounts/create.hbs", model)
 })
@@ -28,24 +27,19 @@ router.post("/create", async function(req, res) {
         
         const model = {
             account: newAccount,
-            session: req.session
         }
         res.render("accounts/account_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
 router.get("/login", function (req, res) {
-    const model = {
-        session: req.session
-    }
-    res.render("accounts/login.hbs", model)
+    res.render("accounts/login.hbs")
 })
 
 router.post("/login", async function (req, res) {
@@ -67,13 +61,11 @@ router.post("/login", async function (req, res) {
 
         const model = {
             account: loggedInAccount,
-            session: req.session,
         }
         res.render("accounts/account_view.hbs", model)
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)   
     }
@@ -86,8 +78,8 @@ router.get("/", async function(req, res) {
         const accounts = await accountManager.findAll(req.session.authorityId, req.query)
 
         if (!accounts) { 
-            const model = { session: req.session }
-            res.render("accounts/accounts_list.hbs", model)
+        
+            res.render("accounts/accounts_list.hbs")
             return
         }
         const pages = (accounts.count) / req.query.limit
@@ -99,14 +91,12 @@ router.get("/", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a user name or filter by authority level",
-            session: req.session
         }
         res.render("accounts/accounts_list.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -120,14 +110,12 @@ router.get("/edit/:Id", async function(req, res) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
             accountInfo: account,
-            session: req.session
         }
         res.render("accounts/account_edit.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -151,14 +139,12 @@ router.post("/edit/:Id", async function(req, res) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
             account: updatedAccount,
-            session: req.session
         }
         res.render("accounts/account_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -171,13 +157,11 @@ router.get("/:Id", async function(req, res) {
 
         const model = {
             account: account,
-            session: req.session
         }
         res.render("accounts/account_view.hbs", model)
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -192,14 +176,12 @@ router.post("/delete/:Id",async function(req, res) {
             errors: [
                 {message: "Account removed"}
             ],
-            session: req.session
         }
         res.render("status_report.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }

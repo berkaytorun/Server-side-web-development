@@ -9,10 +9,7 @@ const bookAuthorManager = require("../../bll/book-authors-manager")
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/create", function(req, res) {
-    const model = {
-        session: req.session
-    }
-    res.render("books/book_create.hbs", model)
+    res.render("books/book_create.hbs")
 })
 
 router.post("/create", async function(req, res) {
@@ -28,14 +25,12 @@ router.post("/create", async function(req, res) {
     try {
         const model = {
             book: await bookManager.create(req.session.authorityId, book),
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -49,14 +44,12 @@ router.post("/delete/:ISBN", async function(req, res) {
         await bookManager.delete(req.session.authorityId, book)
         const model = {
             errors: [{message: "Book was removed"}],
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -112,14 +105,12 @@ router.get("/", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
-            session: req.session
         }
         res.render("books/books_list.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         if (errors[0].message == "Classification empty") {
             model.signum = req.query.classification
@@ -165,7 +156,6 @@ router.post("/classificationDelete/:SIGNUM", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
-            session: req.session
         }
 
         res.render("books/books_list.hbs", model)
@@ -174,7 +164,6 @@ router.post("/classificationDelete/:SIGNUM", async function(req, res) {
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -199,14 +188,12 @@ router.get("/edit/:ISBN", async function(req, res) {
         const model = {
             book: book,
             classifications: classifications,
-            session: req.session
         }
         res.render("books/book_edit.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -228,14 +215,12 @@ router.post("/unlinkAuthor", async function(req, res) {
 
         const model = {
             book: book,
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -262,14 +247,12 @@ router.post("/edit/:ISBN", async function(req, res) {
         
         const model = {
             book: book,
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -283,14 +266,12 @@ router.get("/:ISBN", async function (req, res) {
 
         const model = {
             book: book,
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
