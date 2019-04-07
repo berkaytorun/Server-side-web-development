@@ -1,5 +1,5 @@
 
-const bcrypt = require("./functionality/bcrypt")
+const passEncrypter = require("./functionality/bcrypt")
 
 const accountRepository = require("../dal/repositories/accounts-repository")
 
@@ -10,14 +10,14 @@ exports.create = async function(authorityId, account) {
         return Promise.reject([{ message: "You do not have the permissions to do that." }])
     }
 
-    account.password = await bcrypt.encrypt(account.password)
+    account.password = await passEncrypter.encrypt(account.password)
     return accountRepository.create(account)
 }
 
 exports.login = async function(account) {
 
     const dbAccount = await accountRepository.getAccount(account)
-    return bcrypt.compare(account.password, dbAccount)
+    return passEncrypter.compare(account.password, dbAccount)
 }
 
 exports.findAll = function(authorityId, options) {
@@ -32,7 +32,7 @@ exports.findByPk = function(authorityId, account) {
     if (authorityId == undefined) {
         return Promise.reject([{ message: "You do not have the permissions to do that." }])
     }
-
+    
     return accountRepository.findByPk(account)
 }
 
@@ -47,7 +47,7 @@ exports.update = async function(authorityId, account) {
     }
     
     if (account.password) {
-        account.password = await bcrypt.encrypt(account.password)
+        account.password = await passEncrypter.encrypt(account.password)
     }
     else {
         delete account.password
