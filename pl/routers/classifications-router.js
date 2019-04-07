@@ -41,16 +41,12 @@ router.get("/create", function(req, res) {
 router.post("/create", async function(req, res) {
         
     const classification = {
-        signId: req.params.SIGNID,
         signum: req.body.signum,
         description: req.body.description
     }
 
     try {
-        const largestId = await classificationManager.findHighestPk(req.session.authorityId, classification)
-        classification.signId = largestId + 1
         await classificationManager.create(req.session.authorityId, classification)
-
 
         const model = {
             classification: classification,

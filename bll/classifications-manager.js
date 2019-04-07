@@ -15,14 +15,6 @@ exports.editByPk = function(authorityId, classification) {
     return classificationsRepository.editByPk(classification)
 }
 
-exports.findHighestPk = function(authorityId, classification) {
-    if (authorityId == undefined || authorityId < authorityLevel.SUPER) {
-        throw [{message: "You do not have permission to do that."}]
-    }
-
-    return classificationsRepository.findHighestPk(classification)
-}
-
 exports.findOne = function(classification) {
     try {
         return classificationsRepository.findOne(classification)

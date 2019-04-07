@@ -8,11 +8,11 @@ exports.Classification = db.define('classification', {
     signId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         unique: {
             args: true,
             msg: "That classification already exists."
         },
-        
     },
     signum: {
         type: Sequelize.CHAR(classifications.signum.max),

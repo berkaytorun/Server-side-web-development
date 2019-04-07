@@ -23,7 +23,7 @@ exports.Author = db.define('author', {
         }
     },
     lastName: {
-        type: Sequelize.CHAR(50),
+        type: Sequelize.CHAR(authorVal.lastName.max),
         dialectOptions: {
           charset: 'utf8mb4',
         },
@@ -35,7 +35,7 @@ exports.Author = db.define('author', {
         }
     },
     birthYear: {
-        type: Sequelize.CHAR(10),
+        type: Sequelize.CHAR(authorVal.birthYear.max),
         dialectOptions: {
           charset: 'utf8mb4',
         },

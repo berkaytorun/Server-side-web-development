@@ -16,7 +16,7 @@ exports.db = db
 // CAUTION !
 // resetDatabase = true means it deletes all tables and resets everything.
 // use at own risk!!
-let resetDatabase = false
+let resetDatabase = true
 let delayTimer = 0
 
 require("./database").initRelations()

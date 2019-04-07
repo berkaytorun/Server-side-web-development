@@ -15,6 +15,14 @@ exports.Book = db.define('book', {
         unique: {
             args: true,
             msg: "That ISBN already exists."
+        },
+        validate: {
+            len: {
+                args: [bookValid.ISBN.min, bookValid.ISBN.max],
+                msg: "ISBN needs to be between " +
+                    bookValid.ISBN.min + " and " +
+                    bookValid.ISBN.max + " characters long."
+            }
         }
     },
     title: {
