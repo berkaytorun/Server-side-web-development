@@ -20,7 +20,7 @@ exports.findAll = function(options) {
             model: Classification,
             required: true,
             where: {
-                signum: {[Op.like]: options.classification}
+                signum: {[Op.like]: "%" + options.classification + "%"}
             }
         }
     }
@@ -32,11 +32,11 @@ exports.findAll = function(options) {
         toSearch.where = {
             [Op.or]: [
                 {ISBN: {
-                        [Op.like]: options.searchString, 
+                        [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
                 {title: {
-                        [Op.like]: options.searchString, 
+                        [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
             ]

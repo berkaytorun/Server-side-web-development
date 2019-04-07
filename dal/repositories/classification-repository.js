@@ -15,11 +15,11 @@ exports.findAll = function(options) {
         toSearch.where = {
             [Op.or]: [
                 {signId: {
-                        [Op.like]: options.searchString, 
+                        [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
                 {signum: {
-                        [Op.like]: options.searchString, 
+                        [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
             ]
