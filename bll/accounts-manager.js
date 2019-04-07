@@ -16,15 +16,8 @@ exports.create = async function(authorityId, account) {
 
 exports.login = async function(account) {
 
-    const dbAccount = await accountRepository.getUserByUsername(account)
-
-    if (dbAccount.userName == "Super" && dbAccount.password == "SupersecretPasswordNobodyCanGuess(/&(/)&#") {
-        // for dev purpose.. remove this if / else upon release!
-        return dbAccount
-    }
-    else {
-        return bcrypt.compare(account.password, dbAccount)
-    }
+    const dbAccount = await accountRepository.getAccount(account)
+    return bcrypt.compare(account.password, dbAccount)
 }
 
 exports.findAll = function(authorityId, options) {
@@ -62,11 +55,14 @@ exports.update = async function(authorityId, account) {
     return accountRepository.update(account)
 }
 
-exports.delete = function(authorityId, account) {
+exports.delete = function(requestingAccount, accountToDelete) {
 
-    if (authorityId == undefined || authorityId < authorityLevel.SUPER) {
+    if (requestingAccount.authorityId == undefined || requestingAccount.authorityId < authorityLevel.SUPER) {
         return Promise.reject([{ message: "You do not have the permissions to do that." }])
     }
+    else if (requestingAccount.accountId == accountToDelete.accountId) {
+        return Promise.reject([{ message: "You can not delete yourself." }])
+    }
 
-    return accountRepository.delete(account)
+    return accountRepository.delete(accountToDelete)
 }

@@ -28,6 +28,19 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
     if (resetDatabase == false) { delayTimer = 0 }
     setTimeout(function() {
         db.query('SET FOREIGN_KEY_CHECKS = 1')
+
+        const accountManager = require("../bll/accounts-manager")
+        
+        const superAccount = {
+            userName: "1",
+            password: "1",
+            firstName: "Super",
+            lastName: "None",
+            authorityId: 3
+        }
+
+        accountManager.create(3, superAccount)
+
     }, delayTimer)
     return delayTimer
 }).catch(function(error) {

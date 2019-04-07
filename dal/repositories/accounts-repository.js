@@ -31,17 +31,7 @@ exports.create = function(account) {
     })
 }
 
-exports.getUserByUsername = function(account) {
-    if (account.userName == "1" && account.password == "1") {
-        account.Id = 999999999
-        account.password = "SupersecretPasswordNobodyCanGuess(/&(/)&#"
-        account.userName = "Super"
-        account.firstName = "This account does not exist"
-        account.lastName = "Temporary temp super account account"
-        account.authorityId = 3
-        account.authority = {name: "Super"}
-        return Promise.resolve(account)
-    }
+exports.getAccount = function(account) {
     return Account.findOne({
         where: {
             userName: account.userName
@@ -183,7 +173,7 @@ exports.update = function(account) {
 exports.delete = function(account) {
     return Account.destroy({
         where: {
-            Id: account.Id,
+            Id: account.accountId,
         }
     }).then((account)=> {
         if (account) {

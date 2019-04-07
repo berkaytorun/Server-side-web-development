@@ -169,8 +169,16 @@ router.get("/:Id", async function(req, res) {
 
 router.post("/delete/:Id",async function(req, res) {
 
+    const requestingAccount = {
+        accountId: req.session.accountId,
+        authorityId: req.session.authorityId
+    }
+    const accountToDelete = {
+        accountId: req.params.Id
+    }
+
     try {
-        await accountManager.delete(req.session.authorityId, { Id: req.params.Id })
+        await accountManager.delete(requestingAccount, accountToDelete)
 
         const model = {
             errors: [
