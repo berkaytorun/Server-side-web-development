@@ -21,7 +21,7 @@ const accValid = {
 
 const bookValid = {
     ISBN: {
-        min: 15,
+        min: 0,
         max: 15
     },
     title: {

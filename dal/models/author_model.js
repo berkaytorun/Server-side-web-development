@@ -11,7 +11,10 @@ exports.Author = db.define('author', {
         autoIncrement: true
     },
     firstName: {
-        type: Sequelize.CHAR(50),
+        type: Sequelize.CHAR(authorVal.firstName.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [authorVal.firstName.min, authorVal.firstName.max],
@@ -21,6 +24,9 @@ exports.Author = db.define('author', {
     },
     lastName: {
         type: Sequelize.CHAR(50),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [authorVal.lastName.min, authorVal.lastName.max],
@@ -30,7 +36,9 @@ exports.Author = db.define('author', {
     },
     birthYear: {
         type: Sequelize.CHAR(10),
-        allowNull: true,
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [authorVal.birthYear.min, authorVal.birthYear.max],

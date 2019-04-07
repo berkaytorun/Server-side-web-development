@@ -13,6 +13,9 @@ const db = new Sequelize(dbInfo.databaseName, dbInfo.login, dbInfo.password, {
 exports.Sequelize = Sequelize
 exports.db = db
 
+// CAUTION !
+// resetDatabase = true means it deletes all tables and resets everything.
+// use at own risk!!
 let resetDatabase = false
 let delayTimer = 0
 
