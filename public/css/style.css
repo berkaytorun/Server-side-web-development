@@ -11,6 +11,7 @@ header{
     position: relative;
 }
 
+
 nav{
     border-top: 1px solid black;
     border-bottom: 1px solid black;
@@ -137,4 +138,21 @@ pagination ul li a{
 
 search{
  text-align: center;   
+}
+
+.isDisabled {
+    border: 1px solid #0ee !important;
+    text-align: center;
+    margin: 0 1px 0 1px;
+    width: auto;
+    text-decoration: none !important;
+    height: 24px;
+    width: 26px;
+    opacity: 1;
+    text-decoration: none;
+    background-color: aqua  !important;
+}
+
+#pagination ul{
+    display: inline;
 }

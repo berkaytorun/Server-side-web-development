@@ -25,11 +25,11 @@ exports.findAll = function(options) {
         findWhere.where = {
             [Op.or]: [
                 {firstName: {
-                    [Op.like]: options.searchString, 
+                    [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
                 {lastName: {
-                    [Op.like]: options.searchString, 
+                    [Op.like]: "%" + options.searchString + "%", 
                     }
                 }
             ]

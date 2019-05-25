@@ -4,6 +4,9 @@ const bodyParser = require("body-parser")
 var session = require('express-session')
 var MySQLStore = require('express-mysql-session')(session);
 
+var csrf = require('csurf');
+var cookieParser = require('cookie-parser')
+
 const app = express()
 
 const dbInfo = require("./objects").databaseInfo
@@ -17,9 +20,10 @@ var options = {
 };
  
 var sessionStore = new MySQLStore(options);
+const csrfProtection = csrf({ cookie: true  })
 
 const MS = 1000
-const SEC = 15
+const SEC = 0
 const MIN = 15
 const HOUR = 0
 
@@ -42,6 +46,13 @@ app.use(express.static("public"))
 app.use(bodyParser.urlencoded({
     extended: false
 }))
+app.use(cookieParser())
+app.use(csrfProtection)
+
+app.use(function(req, res, next){
+    res.locals.session = req.session
+    next()
+})
 
 app.engine("hbs", hbs({
     defaultLayout: "main",
@@ -68,9 +79,19 @@ app.use(function(req, res, next) {
 
     req.query.offset = (req.query.currentPage - 1) * req.query.limit
 
+    var token = req.csrfToken();
+    res.cookie('csrf-token', token);
+    res.locals._csrf  = token;
+
     return next()
 })
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+});
+  
 const startDelay = require("./dal/sequelize_settings")
 
 setTimeout(function() {
@@ -78,27 +99,27 @@ setTimeout(function() {
     const routerAccounts = require("./pl/routers/accounts-router")
     const routerBooks = require("./pl/routers/books-router")
     const routerAuthors = require("./pl/routers/authors-router")
-    const routerClasssifications = require("./pl/routers/classsifications-router")
-    
+    const routerClassifications = require("./pl/routers/classifications-router")
+    const routerApiBooks = require("./pl/routers/api/books-router")
+
+    app.use("/authors", routerAuthors)
+    app.use("/accounts", routerAccounts)
+    app.use("/books", routerBooks)
+    app.use("/classifications", routerClassifications)
+    app.use("/api/books", routerApiBooks)
+
+
 
     app.post("/accounts/logout", function(req, res) {
         req.session.destroy(function(err) { })
-        res.render("accounts/login.hbs")
+        res.redirect("./login")
     })
 
  
     app.get("/", function (req, res) {
-        const model = {
-            accountId: req.session.accountId,
-            session: req.session
-        }
-        res.render("home.hbs",model)
+        res.render("home.hbs")
     })  
 
-    app.use("/accounts", routerAccounts)
-    app.use("/books", routerBooks)
-    app.use("/authors", routerAuthors)
-    app.use("/classifications",routerClasssifications)
 
     app.get("/about", function (req, res) {
         new Promise(function (resolve, reject) {
@@ -109,11 +130,7 @@ setTimeout(function() {
                 reject()
             }
         }).then(function () {
-            const model = {
-                accountId: req.session.accountId,
-                session: req.session
-            }
-            res.render("about.hbs",model)
+            res.render("about.hbs")
         }).catch(result => {
             res.status(res.status).json(res)
         })

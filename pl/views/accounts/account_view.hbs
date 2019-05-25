@@ -1,5 +1,6 @@
 <form action="/accounts/edit/{{account.Id}}" method="GET">
     <div id="book_info">
+        <input type="hidden" name="_csrf" value="{{_csrf}}">
         <div>Id: {{account.Id}}</div>
         <div>User name: {{account.userName}}</div>
         <div>First Name: {{account.firstName}}</div>

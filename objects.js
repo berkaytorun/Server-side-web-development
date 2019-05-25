@@ -1,10 +1,10 @@
 exports.databaseInfo = {
-    databaseName: 'projectGroupN',
-    port: 3306,
-    login: 'groupN',
-    password: 'lkjwmnmnfsdlk',
-    host: 'petersmysql.cgonxecdluoj.eu-west-1.rds.amazonaws.com',
-    dialect: 'mysql',
+    databaseName: 'librarytooldatabase',
+port: 3306,
+login: 'master',
+password: 'mypassword',
+host: 'librarytooldatabase.cycci93lc4hk.eu-central-1.rds.amazonaws.com',
+dialect: 'mysql',
     operatorsAliases: false,
 
     pool: {

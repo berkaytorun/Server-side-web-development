@@ -1,0 +1,14 @@
+
+{{#hasAdminRights session.authorityId}}
+    <form action="../edit/{{classification.signId}}" method="POST">
+        <div id="book_info">
+            signum<br>
+             <input type="text" name="signum" value="{{classification.signum}}"><br>
+            description<br>
+              <input type="text" name="description" value="{{classification.description}}"><br>
+            <input type="hidden" id="signId" name="Id" value="{{classification.signId}}">
+        </div>
+        <input type="hidden" name="_csrf" value="{{_csrf}}">
+        <input type="submit" value="Submit">
+    </form>
+{{/hasAdminRights}}

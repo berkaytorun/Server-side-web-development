@@ -17,6 +17,7 @@
             <form action="/authors/addBook" method="POST">
                 <input name="bookISBN" placeholder="Add book with ISBN" required="true">
                 <input name="authorId" value="{{author.Id}}" hidden="true">
+                <input type="hidden" name="_csrf" value="{{_csrf}}">
                 <button><i class="fas fa-book-medical"></i></button>
             </form>
         {{/hasAdminRights}}

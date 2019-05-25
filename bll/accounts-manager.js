@@ -1,5 +1,5 @@
 
-const bcrypt = require("./functionality/bcrypt")
+const passEncrypter = require("./functionality/bcrypt")
 
 const accountRepository = require("../dal/repositories/accounts-repository")
 
@@ -10,20 +10,14 @@ exports.create = async function(authorityId, account) {
         return Promise.reject([{ message: "You do not have the permissions to do that." }])
     }
 
-    account.password = await bcrypt.encrypt(account.password)
+    account.password = await passEncrypter.encrypt(account.password)
     return accountRepository.create(account)
 }
 
 exports.login = async function(account) {
 
-    const dbAccount = await accountRepository.login(account)
-    if (dbAccount.userName == "Super" && dbAccount.password == "SupersecretPasswordNobodyCanGuess(/&(/)&#") {
-        // for dev purpose.. remove this if / else upon release!
-        return dbAccount
-    }
-    else {
-        return bcrypt.compare(account.password, dbAccount)
-    }
+    const dbAccount = await accountRepository.getAccount(account)
+    return passEncrypter.compare(account.password, dbAccount)
 }
 
 exports.findAll = function(authorityId, options) {
@@ -38,7 +32,7 @@ exports.findByPk = function(authorityId, account) {
     if (authorityId == undefined) {
         return Promise.reject([{ message: "You do not have the permissions to do that." }])
     }
-
+    
     return accountRepository.findByPk(account)
 }
 
@@ -53,7 +47,7 @@ exports.update = async function(authorityId, account) {
     }
     
     if (account.password) {
-        account.password = await bcrypt.encrypt(account.password)
+        account.password = await passEncrypter.encrypt(account.password)
     }
     else {
         delete account.password
@@ -61,11 +55,14 @@ exports.update = async function(authorityId, account) {
     return accountRepository.update(account)
 }
 
-exports.delete = function(authorityId, account) {
+exports.delete = function(requestingAccount, accountToDelete) {
 
-    if (authorityId == undefined || authorityId < authorityLevel.SUPER) {
+    if (requestingAccount.authorityId == undefined || requestingAccount.authorityId < authorityLevel.SUPER) {
         return Promise.reject([{ message: "You do not have the permissions to do that." }])
     }
+    else if (requestingAccount.accountId == accountToDelete.accountId) {
+        return Promise.reject([{ message: "You can not delete yourself." }])
+    }
 
-    return accountRepository.delete(account)
+    return accountRepository.delete(accountToDelete)
 }

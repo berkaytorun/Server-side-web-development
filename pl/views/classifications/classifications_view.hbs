@@ -1,0 +1,20 @@
+<div id="wrapper">
+    <div id="book_info" style="width: 45%;">
+        <div>Signum: {{classification.signum}}</div>
+        <div>Description: {{classification.description}}</div>
+        
+        {{#if session.loggedIn}}
+            <div id="editButton">
+                {{#hasAdminRights session.authorityId}}
+                    <a href="./edit/{{classification.signId}}"><input type="submit" value="Edit"></a>
+                {{/hasAdminRights}}
+            </div>
+        {{/if}}
+    </div>
+    <div id="rightContent" style="width: 55%">
+        {{#if classification.books}}
+                <span> Classification {{classification.signum}} has {{classification.books.length}} many books  </span><br>
+        {{/if}}
+    </div>
+</div>
+

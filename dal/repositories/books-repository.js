@@ -20,7 +20,7 @@ exports.findAll = function(options) {
             model: Classification,
             required: true,
             where: {
-                signum: {[Op.like]: options.classification}
+                signum: {[Op.like]: "%" + options.classification + "%"}
             }
         }
     }
@@ -32,11 +32,11 @@ exports.findAll = function(options) {
         toSearch.where = {
             [Op.or]: [
                 {ISBN: {
-                        [Op.like]: options.searchString, 
+                        [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
                 {title: {
-                        [Op.like]: options.searchString, 
+                        [Op.like]: "%" + options.searchString + "%", 
                     }
                 },
             ]
@@ -62,6 +62,31 @@ exports.findAll = function(options) {
         if (books.rows.length > 0) {
             books.rows.count = books.count
             return books.rows
+        }
+        else {
+            return null
+        }
+    }).catch((error) => {
+        if (error.errors == null || error.errors.length == 0) {
+            if (error.message) {
+                throw [error.message]
+            }
+            else {
+                throw error;
+            }
+        }
+        throw error.errors
+    })
+}
+
+exports.findBooksByClassification = function(classification) {
+    return Book.findAll({
+        where: {
+            signId: classification.signId
+        }
+    }).then((books)=> {
+        if (books) {
+            return books
         }
         else {
             return null

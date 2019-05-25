@@ -1,7 +1,6 @@
 
 const express = require('express')
 const router = express.Router();
-
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 const accountManager = require("../../bll/accounts-manager")
@@ -9,7 +8,6 @@ const accountManager = require("../../bll/accounts-manager")
 router.get("/create", function(req, res) {
     const model = {
         levels: require("../../dal/models/account_model").levels,
-        session: req.session
     }
     res.render("accounts/create.hbs", model)
 })
@@ -25,28 +23,23 @@ router.post("/create", async function(req, res) {
     }
 
     try {
-        await accountManager.create(req.session.authorityId, account)
+        const newAccount = await accountManager.create(req.session.authorityId, account)
         
         const model = {
-            account: account,
-            session: req.session
+            account: newAccount,
         }
         res.render("accounts/account_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
 router.get("/login", function (req, res) {
-    const model = {
-        session: req.session
-    }
-    res.render("accounts/login.hbs", model)
+    res.render("accounts/login.hbs")
 })
 
 router.post("/login", async function (req, res) {
@@ -58,23 +51,21 @@ router.post("/login", async function (req, res) {
 
     try {
         
-        const dbAccount = await accountManager.login(account)
+        const loggedInAccount = await accountManager.login(account)
 
-        req.session.accountId = dbAccount.Id
-        req.session.authorityId = dbAccount.authorityId
+        req.session.accountId = loggedInAccount.Id
+        req.session.authorityId = loggedInAccount.authorityId
 
         req.session.loggedIn = true
-        req.session.userName = dbAccount.userName
+        req.session.userName = loggedInAccount.userName
 
         const model = {
-            account: dbAccount,
-            session: req.session,
+            account: loggedInAccount,
         }
         res.render("accounts/account_view.hbs", model)
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)   
     }
@@ -87,8 +78,8 @@ router.get("/", async function(req, res) {
         const accounts = await accountManager.findAll(req.session.authorityId, req.query)
 
         if (!accounts) { 
-            const model = { session: req.session }
-            res.render("accounts/accounts_list.hbs", model)
+        
+            res.render("accounts/accounts_list.hbs")
             return
         }
         const pages = (accounts.count) / req.query.limit
@@ -100,14 +91,12 @@ router.get("/", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a user name or filter by authority level",
-            session: req.session
         }
         res.render("accounts/accounts_list.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -121,14 +110,12 @@ router.get("/edit/:Id", async function(req, res) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
             accountInfo: account,
-            session: req.session
         }
         res.render("accounts/account_edit.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -152,14 +139,12 @@ router.post("/edit/:Id", async function(req, res) {
         const model = {
             levels: require("../../dal/models/account_model").levels,
             account: updatedAccount,
-            session: req.session
         }
         res.render("accounts/account_view.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -172,35 +157,39 @@ router.get("/:Id", async function(req, res) {
 
         const model = {
             account: account,
-            session: req.session
         }
         res.render("accounts/account_view.hbs", model)
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
 })
 
-router.post("/delete/:Id", async function(req, res) {
+router.post("/delete/:Id",async function(req, res) {
+
+    const requestingAccount = {
+        accountId: req.session.accountId,
+        authorityId: req.session.authorityId
+    }
+    const accountToDelete = {
+        accountId: req.params.Id
+    }
 
     try {
-        await accountManager.delete(req.session.authorityId, { Id: req.params.Id })
+        await accountManager.delete(requestingAccount, accountToDelete)
 
         const model = {
             errors: [
                 {message: "Account removed"}
             ],
-            session: req.session
         }
         res.render("status_report.hbs", model)
 
     } catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }

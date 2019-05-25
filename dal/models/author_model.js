@@ -11,7 +11,10 @@ exports.Author = db.define('author', {
         autoIncrement: true
     },
     firstName: {
-        type: Sequelize.CHAR(50),
+        type: Sequelize.CHAR(authorVal.firstName.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [authorVal.firstName.min, authorVal.firstName.max],
@@ -20,7 +23,10 @@ exports.Author = db.define('author', {
         }
     },
     lastName: {
-        type: Sequelize.CHAR(50),
+        type: Sequelize.CHAR(authorVal.lastName.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [authorVal.lastName.min, authorVal.lastName.max],
@@ -29,12 +35,14 @@ exports.Author = db.define('author', {
         }
     },
     birthYear: {
-        type: Sequelize.CHAR(10),
-        allowNull: true,
+        type: Sequelize.CHAR(authorVal.birthYear.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [authorVal.birthYear.min, authorVal.birthYear.max],
-                msg: "Birthday must be between exactly " + authorVal.birthYear.min + " characters long."
+                msg: "Birthday must be between  " + authorVal.birthYear.min + " and " + authorVal.birthYear.max + " characters long."
             }
         }
     }

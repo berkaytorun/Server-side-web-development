@@ -13,7 +13,10 @@ const db = new Sequelize(dbInfo.databaseName, dbInfo.login, dbInfo.password, {
 exports.Sequelize = Sequelize
 exports.db = db
 
-let resetDatabase = false
+// CAUTION !
+// resetDatabase = true means it deletes all tables and resets everything.
+// use at own risk!!
+let resetDatabase = true
 let delayTimer = 0
 
 require("./database").initRelations()
@@ -24,16 +27,23 @@ db.query('SET FOREIGN_KEY_CHECKS = 0')
     return db.sync({force: true})
 }).then(function(result) {
     require("./database").initMockData(db)
-    /*
-    db.query('show tables')
-    .then((allTables) => {
-    console.log(allTables);
-    })
-    */
     delayTimer = 1000
     if (resetDatabase == false) { delayTimer = 0 }
     setTimeout(function() {
         db.query('SET FOREIGN_KEY_CHECKS = 1')
+
+        const accountManager = require("../bll/accounts-manager")
+        
+        const superAccount = {
+            userName: "1",
+            password: "1",
+            firstName: "Super",
+            lastName: "None",
+            authorityId: 3
+        }
+
+        accountManager.create(3, superAccount)
+
     }, delayTimer)
     return delayTimer
 }).catch(function(error) {

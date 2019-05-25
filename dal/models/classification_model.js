@@ -6,29 +6,39 @@ const db = require("../sequelize_settings").db
 
 exports.Classification = db.define('classification', {
     signId: {
-        type: Sequelize.CHAR(11), // size 11
+        type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         unique: {
             args: true,
             msg: "That classification already exists."
-        }
+        },
     },
     signum: {
-        type: Sequelize.CHAR(50), // size 50
+        type: Sequelize.CHAR(classifications.signum.max),
         allowNull: true,
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [classifications.signum.min, classifications.signum.max],
-                msg: "ISBN must be between exactly " + classifications.signum.min + " characters long."
+                msg: "Signum must be between between " + classifications.signum.min +
+                " and " + classifications.signum.max + " characters long."
             }
         }
     },
     description: {
-        type: Sequelize.CHAR(255),
+        type: Sequelize.CHAR(classifications.description.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [classifications.description.min, classifications.description.max],
-                msg: "ISBN must be between exactly " + classifications.description.min + " characters long."
+                msg: "Description must be between between " + classifications.description.min +
+                " and " + classifications.description.max + " characters long."
+
             }
         }
     }

@@ -30,8 +30,15 @@ exports.generatePageNumbers = function(totalPages, currentPage) {
             pagination.pageList.push({value: i, isCurrent: false})
         }
     }
-    
+
     pagination.lastPage = end != lastPage ? lastPage : false
+
+    if (pagination.lastPage) {
+        pagination.pageList[pagination.pageList.length - 1].value = "..."
+    }
+    if (pagination.firstPage) {
+        pagination.pageList[0].value = "..."
+    }
 
     return pagination
 }

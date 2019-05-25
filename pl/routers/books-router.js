@@ -9,10 +9,7 @@ const bookAuthorManager = require("../../bll/book-authors-manager")
 const generatePageNumbers = require("../functionality/functionality").generatePageNumbers
 
 router.get("/create", function(req, res) {
-    const model = {
-        session: req.session
-    }
-    res.render("books/book_create.hbs", model)
+    res.render("books/book_create.hbs")
 })
 
 router.post("/create", async function(req, res) {
@@ -28,14 +25,12 @@ router.post("/create", async function(req, res) {
     try {
         const model = {
             book: await bookManager.create(req.session.authorityId, book),
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -47,17 +42,14 @@ router.post("/delete/:ISBN", async function(req, res) {
 
     try {
         await bookManager.delete(req.session.authorityId, book)
-        const message = {
-            errors: [
-                {message: "Book was removed"}
-            ]
+        const model = {
+            errors: [{message: "Book was removed"}],
         }
-        res.render("status_report.hbs", message)
+        res.render("status_report.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -68,7 +60,12 @@ router.get("/", async function(req, res) {
     
     try {
         const booksPromise = bookManager.findAll(req.query)
-        const classificationsPromise = classificationManager.findAll()
+
+        const limit = req.query.limit
+        delete req.query.limit
+        delete req.query.offset
+
+        const classificationsPromise = classificationManager.findAll(req.query)
         
         const wrapper = await Promise.all([booksPromise, classificationsPromise])
         
@@ -97,7 +94,7 @@ router.get("/", async function(req, res) {
             }
         }
 
-        const pages = (books.count) / req.query.limit
+        const pages = (books.count) / limit
         const pagesArray = generatePageNumbers(pages, req.query.currentPage)
         
         const model = {
@@ -108,14 +105,12 @@ router.get("/", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
-            session: req.session
         }
         res.render("books/books_list.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         if (errors[0].message == "Classification empty") {
             model.signum = req.query.classification
@@ -161,7 +156,6 @@ router.post("/classificationDelete/:SIGNUM", async function(req, res) {
             searchString: req.query.searchString,
             table: req.baseUrl,
             placeholder: "Search for a title or an ISBN",
-            session: req.session
         }
 
         res.render("books/books_list.hbs", model)
@@ -170,7 +164,6 @@ router.post("/classificationDelete/:SIGNUM", async function(req, res) {
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -180,7 +173,7 @@ router.get("/edit/:ISBN", async function(req, res) {
     
     try {
         const bookPromise = bookManager.findByPk({ISBN: req.params.ISBN})
-        let classificationsPromise = classificationManager.findAll()
+        let classificationsPromise = classificationManager.findAll(req.query)
         
         const wrapper = await Promise.all([bookPromise, classificationsPromise])
         const book = wrapper[0]
@@ -195,14 +188,12 @@ router.get("/edit/:ISBN", async function(req, res) {
         const model = {
             book: book,
             classifications: classifications,
-            session: req.session
         }
         res.render("books/book_edit.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -224,14 +215,12 @@ router.post("/unlinkAuthor", async function(req, res) {
 
         const model = {
             book: book,
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -258,14 +247,12 @@ router.post("/edit/:ISBN", async function(req, res) {
         
         const model = {
             book: book,
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }
@@ -279,14 +266,12 @@ router.get("/:ISBN", async function (req, res) {
 
         const model = {
             book: book,
-            session: req.session
         }
         res.render("books/book_view.hbs", model)
     }
     catch (errors) {
         const model = {
             errors: errors,
-            session: req.session
         }
         res.render("status_report.hbs", model)
     }

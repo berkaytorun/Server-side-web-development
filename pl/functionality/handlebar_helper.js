@@ -55,5 +55,21 @@ module.exports = {
         else{
             return options.inverse(this)
         }
+    },
+    isDots: function(value, options){
+        if(value == "..."){
+            return options.fn(this)
+        }
+        else{
+            return options.inverse(this)
+        }
+    },
+    isNotClassification: function(value, options){
+        if(value == "/classifications"){
+            return options.inverse(this)
+        }
+        else{
+            return options.fn(this)
+        }
     }
 }

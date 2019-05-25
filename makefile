@@ -11,6 +11,8 @@ install:
 
 	sudo npm install --save mysql2
 	sudo npm install --save sequelize
+	sudo npm install csurf
+	sudo npm install cookie-parser
 
 	sudo npm install bcryptjs
 	sudo npm audit fix

@@ -1,31 +1,34 @@
 {{> pagination}}
 {{> search}}
+
 {{#if session.loggedIn}}
-    <form action="/authors/create" method="GET">
+    <form action="/classifications/create" method="GET">
         <input type="hidden" name="_csrf" value="{{_csrf}}">
-        <button type="submit">Create Author</button>
+        <button type="submit">Create Classification</button>
     </form>
 {{/if}}
 
-{{#each authors}}
+{{#each classifications}}
 <div id="wrapper">
     <div id="book_info">
-        <a href="/authors/{{this.Id}}">
-            <div hidden="true">Id: {{this.Id}}</div>
-            <div>firstName: {{this.firstName}}</div>
-            <div>lastName: {{this.lastName}}</div>
+        <a href="/classifications/{{this.signId}}">
+            <div hidden="true">Id: {{this.signId}}</div>
+            <div>signum: {{this.signum}}</div>
+            <div>description: {{this.description}}</div>
         </a>
     </div>
     {{#hasAdminRights ../session.authorityId}}
     <div id="rightContent">
+        {{#unless this.books }}
         <div id="deleteButton">
-            <form action="/authors/delete/{{this.Id}}" id="deleteForm" method="post">
+            <form action="/classifications/delete/{{this.signId}}" id="deleteForm" method="post">
                 <input type="hidden" name="_csrf" value="{{../_csrf}}">
                 <button type="submit" > <i class="fas fa-trash-alt"></i></button>
             </form>
         </div>
+        {{/unless}}
         <div id="editButton">
-            <form action="/authors/edit/{{this.Id}}" method="GET">
+            <form action="/classifications/edit/{{this.signId}}" method="GET">
                 <input type="hidden" name="_csrf" value="{{../_csrf}}">
                 <button type="submit" value="Edit"><i class="fas fa-edit"></i></button>
             </form>

@@ -16,17 +16,17 @@ exports.encrypt = function(stringToHash) {
     })
 }
 
-exports.compare = function(password, passwordObject) {
+exports.compare = function(password, account) {
     return new Promise(function(resolve, reject) {
         // As of bcryptjs 2.4.0, compare returns a promise if callback is omitted:
-        passwordHasher.compare(password, passwordObject.password)
+        passwordHasher.compare(password, account.password)
         .then(function(success) {
             if (!success) {
                 reject (error=[
                     {message:"Wrong username or password"}
                 ])
             }
-            resolve(passwordObject)
+            resolve(account)
         }).catch(function(error) {
             reject(error)
         })

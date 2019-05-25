@@ -27,8 +27,8 @@
             {{#if this.isCurrent}}
                 {{#if ../searchString}}
                     <li class="pageNumber" id="pageCurrent">
-                        <a href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}">{{this.value}}</a>
-                    </li>
+                        <a href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}" >{{this.value}}</a>
+                        </li>
                 {{else}}
                     <li class="pageNumber" id="pageCurrent">
                         <a href="{{../table}}?currentPage={{this.value}}&classification={{../currentClassification}}">{{this.value}}</a>
@@ -36,13 +36,25 @@
                 {{/if}}
             {{else}}
                 {{#if ../searchString}}
-                    <li class="pageNumber" >
-                        <a href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}">{{this.value}}</a>
-                    </li>
+                     {{#isDots this.value }}
+                        <li class="isDisabled" >
+                            <p href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}" >{{this.value}}</p>
+                        </li>
+                     {{else}}
+                        <li class="pageNumber" >
+                            <a href="{{../table}}?currentPage={{this.value}}&searchString={{../searchString}}&classification={{../currentClassification}}">{{this.value}}</a>
+                        </li>
+                     {{/isDots}}
                 {{else}}
-                    <li class="pageNumber" >
-                        <a href="{{../table}}?currentPage={{this.value}}&classification={{../currentClassification}}">{{this.value}}</a>
-                    </li>
+                     {{#isDots this.value}}
+                        <li class="isDisabled" >
+                            <span>{{this.value}}</span>
+                        </li>
+                    {{else}}
+                        <li class="pageNumber" >
+                            <a href="{{../table}}?currentPage={{this.value}}&classification={{../currentClassification}}">{{this.value}}</a>
+                        </li>
+                    {{/isDots}}
                 {{/if}}
                 
             {{/if}}

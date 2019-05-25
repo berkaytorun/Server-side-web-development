@@ -6,15 +6,30 @@ const db = require("../sequelize_settings").db
 
 exports.Book = db.define('book', {
     ISBN: {
-        type: Sequelize.CHAR(15),
+        type: Sequelize.CHAR(bookValid.ISBN.max),
         primaryKey: true,
+        allowNull: false,
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         unique: {
             args: true,
             msg: "That ISBN already exists."
+        },
+        validate: {
+            len: {
+                args: [bookValid.ISBN.min, bookValid.ISBN.max],
+                msg: "ISBN needs to be between " +
+                    bookValid.ISBN.min + " and " +
+                    bookValid.ISBN.max + " characters long."
+            }
         }
     },
     title: {
         type: Sequelize.CHAR(bookValid.title.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [bookValid.title.min, bookValid.title.max],
@@ -26,6 +41,9 @@ exports.Book = db.define('book', {
     },
     publicationYear: {
         type: Sequelize.CHAR(bookValid.publicationYear.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [bookValid.publicationYear.min, bookValid.publicationYear.max],
@@ -37,6 +55,9 @@ exports.Book = db.define('book', {
     },
     publicationInfo: {
         type: Sequelize.CHAR(bookValid.publicationInfo.max),
+        dialectOptions: {
+          charset: 'utf8mb4',
+        },
         validate: {
             len: {
                 args: [bookValid.publicationInfo.min, bookValid.publicationInfo.max],
@@ -50,7 +71,7 @@ exports.Book = db.define('book', {
         type: Sequelize.INTEGER,
     },
     signId: {
-        type: Sequelize.CHAR(11),
+        type: Sequelize.INTEGER,
         unique: false
     },
 })
